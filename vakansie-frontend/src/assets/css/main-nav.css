@@ -1,0 +1,139 @@
+:root {
+  --main-nav-height:                          64px;
+  --main-nav-background-color:                rgba(0, 0, 0, 0.8);
+  --main-nav-backdrop-effect:                 saturate(180%) blur(20px);
+  --main-nav-burger-bottom-transition-closed: top 100ms ease-out 350ms, transform 250ms ease-out;
+  --main-nav-burger-bottom-transition-open:   top 250ms ease-in, transform 100ms ease-in 350ms;
+  --main-nav-burger-center-transition-closed: opacity 100ms ease-out 350ms;
+  --main-nav-burger-center-transition-open:   opacity 100ms ease-in 350ms;
+  --main-nav-burger-top-transition-closed:    top 100ms ease-out 350ms, transform 250ms ease-out;
+  --main-nav-burger-top-transition-open:      top 250ms ease-in, transform 100ms ease-in 350ms;
+  --main-nav-left-right-width:                128px;
+}
+
+#main-nav {
+  display:                 grid;
+  grid-template-columns:   var(--main-nav-left-right-width) auto var(--main-nav-left-right-width);
+  align-items:             center;
+  top:                     0;
+  left:                    0;
+  height:                  var(--main-nav-height);
+  width:                   100%;
+  position:                fixed;
+  background-color:        var(--main-nav-background-color);
+  -webkit-backdrop-filter: var(--main-nav-backdrop-effect);
+  backdrop-filter:         var(--main-nav-backdrop-effect);
+  color:                   var(--light-font-color);
+  text-transform:          uppercase;
+}
+
+.main-nav-right {
+  height:          100%;
+  display:         flex;
+  justify-content: flex-end;
+  align-items:     center;
+  padding:         0 1rem;
+}
+
+.main-nav-burger {
+  position:     relative;
+  display:      block;
+  width:        48px;
+  height:       48px;
+  cursor:       pointer;
+  justify-self: end;
+}
+
+.main-nav-burger span {
+  position: absolute;
+  z-index:  3;
+  top:      9px;
+  left:     9px;
+  width:    30px;
+  height:   30px;
+}
+
+.main-nav-burger span :nth-child(1) {
+  display:       block;
+  width:         17px;
+  height:        1px;
+  background:    #fff;
+  border-radius: 0.5px;
+  position:      absolute;
+  left:          7px;
+  top:           15px;
+  transform:     rotate(-45deg);
+  transition:    var(--main-nav-burger-top-transition-open);
+}
+
+.main-nav-burger.side-nav-closed span :nth-child(1) {
+  top:        10px;
+  transform:  rotate(0deg);
+  transition: var(--main-nav-burger-top-transition-closed);
+}
+
+.main-nav-burger span :nth-child(2) {
+  display:       block;
+  width:         17px;
+  height:        1px;
+  background:    #fff;
+  border-radius: 0.5px;
+  position:      absolute;
+  left:          7px;
+  top:           15px;
+  opacity:       0;
+  transition:    var(--main-nav-burger-center-transition-open);
+}
+
+.main-nav-burger.side-nav-closed span :nth-child(2) {
+  opacity:    1;
+  transition: var(--main-nav-burger-center-transition-closed);
+}
+
+.main-nav-burger span :nth-child(3) {
+  display:       block;
+  width:         17px;
+  height:        1px;
+  background:    #fff;
+  border-radius: 0.5px;
+  position:      absolute;
+  left:          7px;
+  top:           15px;
+  transform:     rotate(45deg);
+  transition:    var(--main-nav-burger-bottom-transition-open);
+}
+
+.main-nav-burger.side-nav-closed span :nth-child(3) {
+  top:        20px;
+  transform:  rotate(0deg);
+  transition: var(--main-nav-burger-bottom-transition-closed);
+}
+
+.main-nav-center {
+  height:          100%;
+  display:         flex;
+  justify-content: center;
+  align-items:     center;
+  padding:         0 1rem;
+}
+
+/* Media Queries */
+@media screen and (max-width: 1200px) {
+}
+
+@media screen and (max-width: 992px) {
+}
+
+@media screen and (max-width: 768px) {
+}
+
+@media screen and (max-width: 576px) {
+  :root {
+    --main-nav-left-right-width: 80px;
+  }
+
+  .main-nav-center {
+    font-size: 0.8em;
+    overflow: hidden;
+  }
+}
