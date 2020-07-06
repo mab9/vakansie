@@ -3,11 +3,13 @@ matrix:
     - language: java
       jdk: openjdk14
       install: true
-      script:
-        - bash ./vakansie-frontend/test.sh || travis_terminate_1;
     - language: node_js
       node_js: node
-      script: node ./vakansie-frontend/src/test/allTestsSuite.js
+      #script: node ./vakansie-frontend/src/test/allTestsSuite.js
+      install:
+        - npm install -g fs
+        - npm install -g http
+      script: node ./vakansie-frontend/test.js
 
 notifications:
   email:
