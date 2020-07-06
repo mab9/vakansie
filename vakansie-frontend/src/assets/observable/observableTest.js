@@ -1,6 +1,6 @@
 
 import {Observable, ObservableList} from "./observable.js"
-import { Suite } from "../test/test.js"
+import { Suite } from "../../test/test.js"
 
 const observable = Suite("observable");
 
