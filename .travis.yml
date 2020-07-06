@@ -1,5 +1,13 @@
-language: java
-jdk: openjdk14
-install: true
-script:
-  - bash ./vakansie-frontend/test.sh || travis_terminate_1;
+matrix:
+  include:
+    - language: java
+      jdk: openjdk14
+      install: true
+      script:
+        - bash ./vakansie-frontend/test.sh || travis_terminate_1;
+    - language: node_js
+      script: node ./vakansie-frontend/src/test/allTestsSuite.js
+
+notifications:
+  email:
+    - mab9.test@gmail.com
