@@ -1,6 +1,0 @@
-{
-    "type": "module",
-    "scripts": {
-        "test": "testcafe chrome,firefox ./src/test/allTestsSuite.js"
-    }
-}

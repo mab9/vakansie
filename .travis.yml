@@ -3,19 +3,8 @@ matrix:
     - language: java
       jdk: openjdk14
       install: true
-    - language: node_js
-      dist: bionic
-      addons:
-        firefox: latest
-        chrome: stable
-      services:
-        - xvfb
-      node_js: node
-      #script: node ./vakansie-frontend/src/test/allTestsSuite.js
-      before_script:
-        - fluxbox >/dev/null 2>&1 &
-        - sleep 3
-      script: node ./vakansie-frontend/test.js
+    #- language: node_js
+    #  script: node ./vakansie-frontend/test.js
 
 notifications:
   email:
