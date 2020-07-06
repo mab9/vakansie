@@ -1,7 +1,6 @@
 import {total} from "./src/test/test.js";
-
-const http = require('http');
-const fs = require('fs');
+import {http} from "http";
+import {fs} from "fs";
 
 const PORT=8080;
 
