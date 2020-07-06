@@ -1,4 +1,5 @@
 language: java
 jdk: openjdk14
 install: true
-script: node ./vakansie-frontend/src/test/asyncStarter.js
+script:
+  - bash ./vakansie-frontend/test.sh || travis_terminate_1;
