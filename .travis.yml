@@ -4,11 +4,17 @@ matrix:
       jdk: openjdk14
       install: true
     - language: node_js
+      dist: bionic
+      addons:
+        firefox: latest
+        chrome: stable
+      services:
+        - xvfb
       node_js: node
       #script: node ./vakansie-frontend/src/test/allTestsSuite.js
-      install:
-        - npm install -g fs
-        - npm install -g http
+      before_script:
+        - fluxbox >/dev/null 2>&1 &
+        - sleep 3
       script: node ./vakansie-frontend/test.js
 
 notifications:
