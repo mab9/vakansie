@@ -1,7 +1,13 @@
-export { dom }
+export {dom}
 
 const dom = innerString => {
-    const div = document.createElement("DIV");
-    div.innerHTML = innerString;
-    return div.firstChild;
+    let frag = document.createDocumentFragment();
+
+    var elem = document.createElement('div');
+    elem.innerHTML = innerString;
+
+    while (elem.childNodes[0]) {
+        frag.appendChild(elem.childNodes[0]);
+    }
+    return frag;
 };

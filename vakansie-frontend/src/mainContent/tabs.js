@@ -1,5 +1,3 @@
-import {mainContentController} from './mainContent.js'
-
 export const USER_TAB = 'USER_TAB';
 export const OVERVIEW_TAB = 'OVERVIEW_TAB';
 export const DEFAULT_TAB = USER_TAB;
@@ -31,21 +29,14 @@ const tabsProjector = ({rootElement}) => {
     const [userTab, overviewTab] = template.children;
 
     userTab.onclick = () => {
-        mainContentController.setSelectedTabValue(USER_TAB);
         setActive(userTab);
         removeActive(overviewTab);
     };
     overviewTab.onclick = () => {
-        mainContentController.setSelectedTabValue(OVERVIEW_TAB);
         setActive(overviewTab);
         removeActive(userTab);
     };
 
-    setActive(!mainContentController.getSelectedTabValue()
-        ? userTab
-        : mainContentController.getSelectedTabValue() === USER_TAB
-            ? userTab
-            : overviewTab);
     rootElement.appendChild(userTab);
     rootElement.appendChild(overviewTab);
 };

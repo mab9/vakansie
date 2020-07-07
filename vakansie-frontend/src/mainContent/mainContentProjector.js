@@ -8,12 +8,12 @@ import {MainNavView} from "../mainNav/mainNav.js";
  * @param rootElement
  */
 const bindSideNav = ({sideNavController, rootElement}) => {
-    sideNavController.onVisibilityChange((newVal, oldVal) => {
+  /*  sideNavController.onVisibilityChange((newVal, oldVal) => {
         if (newVal !== oldVal) {
             if (sideNavController.getVisibility()) rootElement.classList.remove("main-content-margin-right");
             else rootElement.classList.add("main-content-margin-right");
         }
-    })
+    }) */
 };
 
 /**
