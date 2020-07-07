@@ -1,5 +1,7 @@
 import {mainNavProjector} from "./mainNavProjector.js";
 
+export {mainNavController, MainNavView};
+
 /**
  * @return Readonly {MainNavController}
  * @constructor
@@ -26,5 +28,3 @@ const MainNavView = ({rootElement}) => {
 };
 
 const mainNavController = MainNavController();
-
-export {mainNavController, MainNavView};

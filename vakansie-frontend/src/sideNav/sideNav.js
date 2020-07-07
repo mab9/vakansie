@@ -1,5 +1,7 @@
 import {sideNavProjector} from "./sideNavProjector.js";
 
+export {sideNavController, SideNavView};
+
 /**
  * @return {SideNavController}
  * @constructor
@@ -26,4 +28,3 @@ const SideNavView = ({rootElement}) => {
 
 const sideNavController = SideNavController();
 
-export {sideNavController, SideNavView};

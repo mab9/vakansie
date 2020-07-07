@@ -1,4 +1,7 @@
 import {dom} from "../util/dom.js";
+import {appendFirst} from "../util/appendFirst.js";
+
+export {mainNavProjector}
 
 /**
  * @param rootElement
@@ -6,14 +9,14 @@ import {dom} from "../util/dom.js";
 const mainNavProjector = ({rootElement}) => {
 
     const navBarElement = dom(`
-        <div class="mainnav">
+        <NAV class="mainnav">
           <a href="#home" class="active">Vakansie</a>
           <a href="#planner">Planner</a>
           <a href="#about">About</a>
           <a href="javascript:void(0);" class="icon">
             <i class="fa fa-bars"></i>
           </a>
-        </div>`);
+        </NAV>`);
 
     const topNav = navBarElement.querySelector('.mainnav');
     const menuIcon = navBarElement.querySelector('.icon');
@@ -27,8 +30,6 @@ const mainNavProjector = ({rootElement}) => {
     }
 
     menuIcon.onclick = () => toggleResponsivenes();
-
-    rootElement.appendChild(navBarElement);
+    appendFirst(rootElement)(navBarElement);
 };
 
-export {mainNavProjector}

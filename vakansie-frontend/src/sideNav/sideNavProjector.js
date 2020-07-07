@@ -1,5 +1,7 @@
 import {appendFirst} from "../util/appendFirst.js";
 
+export {sideNavProjector}
+
 const sideNavProjector = ({rootElement}) => {
 
     const renderSideNav = () => {
@@ -10,4 +12,3 @@ const sideNavProjector = ({rootElement}) => {
     renderSideNav();
 };
 
-export {sideNavProjector}
