@@ -25,6 +25,7 @@ const layoutProjector = ({rootElement}) => {
     <DIV id="mainnav-section"></DIV>
     <DIV id="content-section">
         <DIV id="main-content" class="main-content">
+            I'm in the main content
         </DIV>
         <!-- <NAV id="side-nav"></NAV> -->
     </DIV>`);
