@@ -1,4 +1,5 @@
 import {MainNavView} from "../mainNav/mainNav.js";
+import {mainNavController} from "../mainNav/mainNav.js";
 import {appendFirst} from "../util/appendFirst.js";
 import {dom} from "../util/dom.js";
 
@@ -31,8 +32,10 @@ const layoutProjector = ({rootElement}) => {
     </DIV>`);
 
     const mainNav = layoutElement.querySelector('#mainnav-section');
+    const mainContent = layoutElement.querySelector('#main-content');
     //const sideNav = template.querySelector('#side-nav');
 
+    mainNavController.onMainContentChange( value => console.info(value));
     MainNavView({rootElement: mainNav});
     //SideNavView({rootElement: sideNav});
     appendFirst(rootElement)(layoutElement)

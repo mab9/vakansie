@@ -1,6 +1,9 @@
 import {mainNavProjector} from "./mainNavProjector.js";
+import {Observable} from "../assets/observable/observable.js";
 
 export {mainNavController, MainNavView};
+
+const menuEntries = ['Vakansie', 'Planner', 'About']
 
 /**
  * @return Readonly {MainNavController}
@@ -8,23 +11,31 @@ export {mainNavController, MainNavView};
  */
 const MainNavController = () => {
 
+    const visibleMainContent = Observable('default-page');
+
     /**
      * @typedef MainNavController
-     * @type {object}
+     * @property {function} setMainContentValue
+     * @property {function} getMainContentValue
+     * @property {function} onMainContentChange
      */
-    return Object.freeze({});
+    return Object.freeze({
+        onMainContentChange: visibleMainContent.onChange,
+        getMainContentValue: visibleMainContent.getValue,
+        setMainContentValue: visibleMainContent.setValue,
+    });
 };
+const mainNavController = MainNavController();
 
 /**
  * @param rootElement
+ * @param mainNavController
  * @constructor
  */
 const MainNavView = ({rootElement}) => {
     const render = () => {
-        mainNavProjector({rootElement});
+        mainNavProjector({rootElement, mainNavController, menuEntries});
     };
 
     render();
 };
-
-const mainNavController = MainNavController();

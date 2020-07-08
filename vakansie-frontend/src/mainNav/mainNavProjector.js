@@ -5,38 +5,43 @@ export {mainNavProjector}
 
 /**
  * @param rootElement
+ * @param mainNavController
+ * @param menuEntries
  */
-const mainNavProjector = ({rootElement}) => {
+const mainNavProjector = ({rootElement, mainNavController, menuEntries}) => {
 
     const navBarElement = dom(`
-        <NAV class="mainnav">
-          <a href="#home" class="active">Vakansie</a>
-          <a href="#planner">Planner</a>
-          <a href="#about">About</a>
-          <a href="#avatar" class="mainnav-avatar">
+        <NAV class="mainnav"> <div class="menu-entries">` +
+
+        menuEntries.map(entry => '<a>' + entry + '</a>').join('')
+
+        + `</div>
+          <a class="mainnav-avatar">
             <img alt="Avatar" class="avatar">
           </a>
-          <a href="#user" class="mainnav-user">mab9.test@gmail.com</a>
-          <a href="javascript:void(0);" class="icon">
+          <a class="mainnav-user">mab9.test@gmail.com</a>
+          <a href="javascript:void(0);" class="hamburger">
             <i class="fa fa-bars"></i>
           </a>
         </NAV>`);
 
-    const topNav = navBarElement.querySelector('.mainnav');
-    const menuIcon = navBarElement.querySelector('.icon');
-    const avatarIcon = navBarElement.querySelector('.avatar');
+    const entries = navBarElement.querySelector('.menu-entries');
+    const avatar = navBarElement.querySelector('.avatar');
+    const hamburger = navBarElement.querySelector('.hamburger');
 
-    avatarIcon.src = './src/assets/img/avatars/svg/035-man-4.svg';
+    const [home] = entries.children;
+    home.classList.add('home');
 
-    const toggleResponsivenes = () => {
-        if (topNav.className === "mainnav") {
-            topNav.className += " responsive";
-        } else {
-            topNav.className = "mainnav";
-        }
+    for (let entry of entries.children) {
+        entry.onclick = () => mainNavController.setMainContentValue(entry.innerText)
     }
 
-    menuIcon.onclick = () => toggleResponsivenes();
+    avatar.src = './src/assets/img/avatars/svg/035-man-4.svg';
+
+    hamburger.onclick = () => topNav.className === "mainnav"
+        ? topNav.className += " responsive"
+        : topNav.className = "mainnav";
+
     appendFirst(rootElement)(navBarElement);
 };
 
