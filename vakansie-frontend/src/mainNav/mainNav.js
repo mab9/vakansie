@@ -1,5 +1,6 @@
 import {mainNavProjector} from "./mainNavProjector.js";
 import {Observable} from "../assets/observable/observable.js";
+import {menu} from "./menu.js";
 
 export {mainNavController, MainNavView};
 
@@ -34,7 +35,7 @@ const mainNavController = MainNavController();
  */
 const MainNavView = ({rootElement}) => {
     const render = () => {
-        mainNavProjector({rootElement, mainNavController, menuEntries});
+        mainNavProjector({rootElement, mainNavController, menu});
     };
 
     render();

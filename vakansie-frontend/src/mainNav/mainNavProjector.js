@@ -1,5 +1,6 @@
 import {dom} from "../util/dom.js";
 import {appendFirst} from "../util/appendFirst.js";
+import {fst} from "../assets/church/rock.js";
 
 export {mainNavProjector}
 
@@ -8,12 +9,12 @@ export {mainNavProjector}
  * @param mainNavController
  * @param menuEntries
  */
-const mainNavProjector = ({rootElement, mainNavController, menuEntries}) => {
+const mainNavProjector = ({rootElement, mainNavController, menu}) => {
 
     const navBarElement = dom(`
         <NAV class="mainnav"> <div class="menu-entries">` +
 
-        menuEntries.map(entry => '<a>' + entry + '</a>').join('')
+        menu.getEntries().map(entry => '<a>' + entry(fst) + '</a>').join('')
 
         + `</div>
           <a class="mainnav-avatar">
@@ -33,7 +34,7 @@ const mainNavProjector = ({rootElement, mainNavController, menuEntries}) => {
     home.classList.add('home');
 
     for (let entry of entries.children) {
-        entry.onclick = () => mainNavController.setMainContentValue(entry.innerText)
+        entry.onclick = () => menu.setSelectedEntry(entry.innerText)
     }
 
     avatar.src = './src/assets/img/avatars/svg/035-man-4.svg';

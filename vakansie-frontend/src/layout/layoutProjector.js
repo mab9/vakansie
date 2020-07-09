@@ -2,21 +2,10 @@ import {MainNavView} from "../mainNav/mainNav.js";
 import {mainNavController} from "../mainNav/mainNav.js";
 import {appendFirst} from "../util/appendFirst.js";
 import {dom} from "../util/dom.js";
+import {menu} from "../mainNav/menu.js";
+import {fst, snd} from "../assets/church/rock.js";
 
 export {layoutProjector};
-
-/**
- * @param {SideNavController} sideNavController
- * @param rootElement
- */
-const bindSideNav = ({sideNavController, rootElement}) => {
-    /*  sideNavController.onVisibilityChange((newVal, oldVal) => {
-          if (newVal !== oldVal) {
-              if (sideNavController.getVisibility()) rootElement.classList.remove("main-content-margin-right");
-              else rootElement.classList.add("main-content-margin-right");
-          }
-      }) */
-};
 
 /**
  * @param rootElement
@@ -35,7 +24,7 @@ const layoutProjector = ({rootElement}) => {
     const mainContent = layoutElement.querySelector('#main-content');
     //const sideNav = template.querySelector('#side-nav');
 
-    mainNavController.onMainContentChange( value => console.info(value));
+    menu.onSelectedEntryChange(value => console.info('render view: ' + value(snd)))
     MainNavView({rootElement: mainNav});
     //SideNavView({rootElement: sideNav});
     appendFirst(rootElement)(layoutElement)
