@@ -1,10 +1,7 @@
 import {mainNavProjector} from "./mainNavProjector.js";
-import {Observable} from "../assets/observable/observable.js";
 import {menu} from "./menu.js";
 
 export {mainNavController, MainNavView};
-
-const menuEntries = ['Vakansie', 'Planner', 'About']
 
 /**
  * @return Readonly {MainNavController}
@@ -12,19 +9,10 @@ const menuEntries = ['Vakansie', 'Planner', 'About']
  */
 const MainNavController = () => {
 
-    const visibleMainContent = Observable('default-page');
-
     /**
      * @typedef MainNavController
-     * @property {function} setMainContentValue
-     * @property {function} getMainContentValue
-     * @property {function} onMainContentChange
      */
-    return Object.freeze({
-        onMainContentChange: visibleMainContent.onChange,
-        getMainContentValue: visibleMainContent.getValue,
-        setMainContentValue: visibleMainContent.setValue,
-    });
+    return Object.freeze({});
 };
 const mainNavController = MainNavController();
 

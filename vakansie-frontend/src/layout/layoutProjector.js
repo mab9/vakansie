@@ -1,9 +1,12 @@
 import {MainNavView} from "../mainNav/mainNav.js";
-import {mainNavController} from "../mainNav/mainNav.js";
 import {appendFirst} from "../util/appendFirst.js";
 import {dom} from "../util/dom.js";
 import {menu} from "../mainNav/menu.js";
 import {fst, snd} from "../assets/church/rock.js";
+
+// views are used by the eval function
+import {HomeView} from "../home/home.js";
+import {UserView} from "../user/user.js";
 
 export {layoutProjector};
 
@@ -15,16 +18,21 @@ const layoutProjector = ({rootElement}) => {
     <DIV id="mainnav-section"></DIV>
     <DIV id="content-section">
         <DIV id="main-content" class="main-content">
-            I'm in the main content
+            I'm in the main content (overwritten by the default menu selection)
         </DIV>
         <!-- <NAV id="side-nav"></NAV> -->
     </DIV>`);
 
     const mainNav = layoutElement.querySelector('#mainnav-section');
+    // is used by the eval function
     const mainContent = layoutElement.querySelector('#main-content');
-    //const sideNav = template.querySelector('#side-nav');
 
-    menu.onSelectedEntryChange(value => console.info('render view: ' + value(snd)))
+    menu.onSelectedEntryChange(value => {
+        //console.info('render view: ' + value(snd))
+        //HomeView({rootElement: mainContent})
+        eval(`${value(snd)}({rootElement: mainContent})`);
+    })
+
     MainNavView({rootElement: mainNav});
     //SideNavView({rootElement: sideNav});
     appendFirst(rootElement)(layoutElement)
