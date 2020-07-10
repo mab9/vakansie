@@ -8,6 +8,11 @@ import {fst, snd} from "../assets/church/rock.js";
 import {HomeView} from "../home/home.js";
 import {UserView} from "../user/user.js";
 
+// use of import to avoid import removal on "ctrl alt o" shortcut
+const homeView = HomeView(null)
+const userView = UserView(null)
+
+
 export {layoutProjector};
 
 /**
