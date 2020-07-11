@@ -7,9 +7,9 @@ export {mainNavProjector}
 /**
  * @param rootElement
  * @param mainNavController
- * @param menuEntries
+ * @param menu
  */
-const mainNavProjector = ({rootElement, mainNavController, menu}) => {
+const mainNavProjector = (rootElement, mainNavController, menu) => {
 
     const navBarElement = dom(`
         <NAV class="mainnav"> <div class="menu-entries">` +

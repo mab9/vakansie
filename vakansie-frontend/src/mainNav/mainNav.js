@@ -1,5 +1,4 @@
 import {mainNavProjector} from "./mainNavProjector.js";
-import {menu} from "./menu.js";
 
 export {mainNavController, MainNavView};
 
@@ -18,12 +17,12 @@ const mainNavController = MainNavController();
 
 /**
  * @param rootElement
- * @param mainNavController
+ * @param menu
  * @constructor
  */
-const MainNavView = ({rootElement}) => {
+const MainNavView = (rootElement, menu) => {
     const render = () => {
-        mainNavProjector({rootElement, mainNavController, menu});
+        mainNavProjector(rootElement, mainNavController, menu);
     };
 
     render();

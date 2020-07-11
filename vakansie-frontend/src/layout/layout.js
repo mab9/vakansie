@@ -1,5 +1,5 @@
 import {dom} from "../util/dom.js";
-import {menu} from "../mainNav/menu.js";
+import {Menu} from "../mainNav/menu.js";
 import {MainNavView} from "../mainNav/mainNav.js";
 import {appendFirst} from "../util/appendFirst.js";
 import {fst, snd} from "../assets/church/rock.js";
@@ -11,7 +11,7 @@ import {PersonView} from "../modules/person/person.js";
 const homeView = HomeView;
 const personView = PersonView;
 
-export {layoutController, LayoutView};
+export {LayoutController, LayoutView};
 
 /**
  * @return LayoutController
@@ -23,8 +23,7 @@ const LayoutController = () => {
      * @typedef {Readonly<object>} LayoutController
      */
     return Object.freeze({})
-};
-const layoutController = LayoutController();
+}
 
 /**
  * @param rootElement
@@ -45,6 +44,8 @@ const LayoutView = ({rootElement}) => {
         // is used by the eval function
         const mainContent = layoutElement.querySelector('#main-content');
 
+        const menu = Menu();
+
         // todo clean up listener when the view changes
         menu.onSelectedEntryChange(value => {
             //console.info('render view: ' + value(snd))
@@ -53,8 +54,7 @@ const LayoutView = ({rootElement}) => {
             eval(`${value(snd)}({rootElement: mainContent})`);
         })
 
-        MainNavView({rootElement: mainNav});
-        //SideNavView({rootElement: sideNav});
+        MainNavView(mainNav, menu);
         appendFirst(rootElement)(layoutElement)
     };
 

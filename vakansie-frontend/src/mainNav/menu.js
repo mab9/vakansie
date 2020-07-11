@@ -1,7 +1,7 @@
 import {Observable} from "../assets/observable/observable.js";
 import {fst, Pair, snd, Tuple} from "../assets/church/rock.js";
 
-export {menu, MENU_HOME_VIEW, MENU_PLANNING_VIEW, MENU_USER_VIEW, MENU_ABOUT_VIEW}
+export {Menu, MENU_HOME_VIEW, MENU_PLANNING_VIEW, MENU_USER_VIEW, MENU_ABOUT_VIEW}
 
 const MENU_HOME_VIEW = 'HomeView'
 const MENU_PLANNING_VIEW = 'PlanningView'
@@ -20,6 +20,7 @@ const Menu = () => {
         Pair('Persons')(MENU_USER_VIEW),
         Pair('About')(MENU_ABOUT_VIEW)];
 
+    // initial entry
     let selectedEntry = Observable(entries[0]);
 
     const setSelectedEntry = label => {
@@ -43,7 +44,5 @@ const Menu = () => {
         setSelectedEntry: setSelectedEntry,
         onSelectedEntryChange: selectedEntry.onChange
     }
-
 }
 
-const menu = Menu();

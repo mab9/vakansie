@@ -4,7 +4,7 @@ import {listItemProjector, formProjector, pageCss} from "./instantUpdateProjecto
 import {Attribute, LABEL} from "../../presentationModel/presentationModel.js";
 import {ListController, SelectionController} from "./controller.js";
 
-export {personController, PersonView};
+export {PersonController, PersonView};
 
 
 // page-style change, only executed once
@@ -23,7 +23,6 @@ const PersonController = () => {
      */
     return Object.freeze({});
 };
-const personController = PersonController();
 
 /**
  * @param rootElement
