@@ -6,11 +6,11 @@ import {fst, snd} from "../assets/church/rock.js";
 
 // views are used by the eval function
 import {HomeView} from "../home/home.js";
-import {UserView} from "../user/user.js";
+import {PersonView} from "../person/person.js";
 
 // use of import to avoid import removal on "ctrl alt o" shortcut
 const homeView = HomeView;
-const userView = UserView;
+const personView = PersonView;
 
 
 export {layoutProjector};
@@ -32,9 +32,11 @@ const layoutProjector = ({rootElement}) => {
     // is used by the eval function
     const mainContent = layoutElement.querySelector('#main-content');
 
+    // todo clean up listener when the view changes
     menu.onSelectedEntryChange(value => {
         //console.info('render view: ' + value(snd))
         //HomeView({rootElement: mainContent})
+        //mainContent.textContent = '';
         eval(`${value(snd)}({rootElement: mainContent})`);
     })
 

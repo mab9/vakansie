@@ -24,7 +24,11 @@ const homeController = HomeController();
 const HomeView = ({rootElement}) => {
     const render = () => {
         const home = dom(`home content`)
-        appendFirst(rootElement)(home)
+
+        rootElement.textContent = '';
+        rootElement.appendChild(home);
+
+        //appendFirst(rootElement)(home)
     };
 
     render();

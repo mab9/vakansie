@@ -5,7 +5,7 @@ export {menu, MENU_HOME_VIEW, MENU_PLANNING_VIEW, MENU_USER_VIEW, MENU_ABOUT_VIE
 
 const MENU_HOME_VIEW = 'HomeView'
 const MENU_PLANNING_VIEW = 'PlanningView'
-const MENU_USER_VIEW = 'UserView'
+const MENU_USER_VIEW = 'PersonView'
 const MENU_ABOUT_VIEW = 'AboutView'
 
 /**
@@ -17,7 +17,7 @@ const Menu = () => {
     const entries = [
         Pair('Vakansie')(MENU_HOME_VIEW),
         Pair('Planner')(MENU_PLANNING_VIEW),
-        Pair('User')(MENU_USER_VIEW),
+        Pair('Persons')(MENU_USER_VIEW),
         Pair('About')(MENU_ABOUT_VIEW)];
 
     let selectedEntry = Observable(entries[0]);
