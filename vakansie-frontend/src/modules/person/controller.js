@@ -1,7 +1,7 @@
 /**
  * @module Controllers as shallow wrappers around observables
  */
-import { ObservableList, Observable }                       from "../assets/observable/observable.js";
+import { ObservableList, Observable }                       from "../../assets/observable/observable.js";
 
 export { ListController, SelectionController }
 

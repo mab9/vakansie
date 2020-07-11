@@ -1,5 +1,5 @@
-import {appendFirst} from "../util/appendFirst.js";
-import {dom} from "../util/dom.js";
+import {appendFirst} from "../../util/appendFirst.js";
+import {dom} from "../../util/dom.js";
 
 export {homeController, HomeView};
 

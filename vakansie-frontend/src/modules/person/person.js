@@ -1,7 +1,7 @@
-import {appendFirst} from "../util/appendFirst.js";
-import {dom} from "../util/dom.js";
+import {appendFirst} from "../../util/appendFirst.js";
+import {dom} from "../../util/dom.js";
 import {listItemProjector, formProjector, pageCss} from "./instantUpdateProjector.js";
-import {Attribute, LABEL} from "../presentationModel/presentationModel.js";
+import {Attribute, LABEL} from "../../presentationModel/presentationModel.js";
 import {ListController, SelectionController} from "./controller.js";
 
 export {personController, PersonView};

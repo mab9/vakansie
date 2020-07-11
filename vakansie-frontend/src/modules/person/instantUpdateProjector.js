@@ -1,5 +1,5 @@
-import {EDITABLE, LABEL, VALID, VALUE} from "../presentationModel/presentationModel.js";
-import {appendFirst} from "../util/appendFirst.js";
+import {EDITABLE, LABEL, VALID, VALUE} from "../../presentationModel/presentationModel.js";
+import {appendFirst} from "../../util/appendFirst.js";
 
 export { listItemProjector, formProjector, pageCss }
 

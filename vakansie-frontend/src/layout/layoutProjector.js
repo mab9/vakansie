@@ -5,8 +5,8 @@ import {menu} from "../mainNav/menu.js";
 import {fst, snd} from "../assets/church/rock.js";
 
 // views are used by the eval function
-import {HomeView} from "../home/home.js";
-import {PersonView} from "../person/person.js";
+import {HomeView} from "../modules/home/home.js";
+import {PersonView} from "../modules/person/person.js";
 
 // use of import to avoid import removal on "ctrl alt o" shortcut
 const homeView = HomeView;
