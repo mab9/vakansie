@@ -1,10 +1,16 @@
 import {appendFirst} from "../util/appendFirst.js";
 import {dom} from "../util/dom.js";
-import {listItemProjector, formProjector} from "./instantUpdateProjector.js";
+import {listItemProjector, formProjector, pageCss} from "./instantUpdateProjector.js";
 import {Attribute, LABEL} from "../presentationModel/presentationModel.js";
 import {ListController, SelectionController} from "./controller.js";
 
 export {personController, PersonView};
+
+
+// page-style change, only executed once
+const style = document.createElement("STYLE");
+style.innerHTML = pageCss;
+document.head.appendChild(style);
 
 /**
  * @return Readonly {PersonController}

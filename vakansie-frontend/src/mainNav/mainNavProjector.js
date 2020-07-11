@@ -26,6 +26,7 @@ const mainNavProjector = ({rootElement, mainNavController, menu}) => {
           </a>
         </NAV>`);
 
+    const mainnav = navBarElement.querySelector('.mainnav');
     const entries = navBarElement.querySelector('.menu-entries');
     const avatar = navBarElement.querySelector('.avatar');
     const hamburger = navBarElement.querySelector('.hamburger');
@@ -39,9 +40,9 @@ const mainNavProjector = ({rootElement, mainNavController, menu}) => {
 
     avatar.src = './src/assets/img/avatars/svg/035-man-4.svg';
 
-    hamburger.onclick = () => topNav.className === "mainnav"
-        ? topNav.className += " responsive"
-        : topNav.className = "mainnav";
+    hamburger.onclick = () => mainnav.className === "mainnav"
+        ? mainnav.className += " responsive"
+        : mainnav.className = "mainnav";
 
     appendFirst(rootElement)(navBarElement);
 };
