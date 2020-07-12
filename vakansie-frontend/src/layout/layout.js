@@ -2,14 +2,16 @@ import {dom} from "../util/dom.js";
 import {Menu} from "../mainNav/menu.js";
 import {MainNavView} from "../mainNav/mainNav.js";
 import {appendFirst} from "../util/appendFirst.js";
-import {fst, snd} from "../assets/church/rock.js";
+import {label, view, controller} from "../mainNav/menu.js";
 
-import {HomeView} from "../modules/home/home.js";
-import {PersonView} from "../modules/person/person.js";
+import {HomeController, HomeView} from "../modules/home/home.js";
+import {PersonController, PersonView} from "../modules/person/person.js";
 
 // use of import to avoid import removal on "ctrl alt o" shortcut
 const homeView = HomeView;
+const homeController = HomeController;
 const personView = PersonView;
+const personController = PersonController;
 
 export {LayoutController, LayoutView};
 
@@ -45,13 +47,14 @@ const LayoutView = ({rootElement}) => {
         const mainContent = layoutElement.querySelector('#main-content');
 
         const menu = Menu();
+        const first = 0;
 
         // todo clean up listener when the view changes
-        menu.onSelectedEntryChange(value => {
-            //console.info('render view: ' + value(snd))
-            //HomeView({rootElement: mainContent})
+        menu.onSelectedEntryChange(entry => {
             //mainContent.textContent = '';
-            eval(`${value(snd)}({rootElement: mainContent})`);
+            const gotoView = entry(view);
+            const gotoController = entry(controller);
+            eval(`${gotoView}(mainContent, ${gotoController})`);
         })
 
         MainNavView(mainNav, menu);

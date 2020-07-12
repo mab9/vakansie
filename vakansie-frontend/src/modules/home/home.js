@@ -1,7 +1,6 @@
-import {appendFirst} from "../../util/appendFirst.js";
 import {dom} from "../../util/dom.js";
 
-export {homeController, HomeView};
+export {HomeController, HomeView};
 
 /**
  * @return Readonly {HomeController}
@@ -14,14 +13,13 @@ const HomeController = () => {
      */
     return Object.freeze({});
 };
-const homeController = HomeController();
 
 /**
  * @param rootElement
  * @param mainNavController
  * @constructor
  */
-const HomeView = ({rootElement}) => {
+const HomeView = (rootElement, homeController) => {
     const render = () => {
         const home = dom(`home content`)
 
