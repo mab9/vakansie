@@ -7,7 +7,7 @@ import {label, view, controller} from "../mainNav/menu.js";
 import {HomeController, HomeView} from "../modules/home/home.js";
 import {PersonController, PersonView} from "../modules/person/person.js";
 
-// use of import to avoid import removal on "ctrl alt o" shortcut
+// use of imports to avoid import removal on "ctrl alt o" shortcut
 const homeView = HomeView;
 const homeController = HomeController;
 const personView = PersonView;
@@ -43,7 +43,6 @@ const LayoutView = ({rootElement}) => {
         </DIV>`);
 
         const mainNav = layoutElement.querySelector('#mainnav-section');
-        // is used by the eval function
         const mainContent = layoutElement.querySelector('#main-content');
 
         const menu = Menu();
@@ -54,7 +53,7 @@ const LayoutView = ({rootElement}) => {
             //mainContent.textContent = '';
             const gotoView = entry(view);
             const gotoController = entry(controller);
-            eval(`${gotoView}(mainContent, ${gotoController})`);
+            eval(`${gotoView}(${mainContent}, ${gotoController})`);
         })
 
         MainNavView(mainNav, menu);
