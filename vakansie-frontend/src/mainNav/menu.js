@@ -1,11 +1,11 @@
 import {Observable} from "../assets/observable/observable.js";
 import {fst, Pair, snd, Tuple} from "../assets/church/rock.js";
 
-export {Menu, MENU_HOME_VIEW, MENU_PLANNING_VIEW, MENU_USER_VIEW, MENU_ABOUT_VIEW, label, view, controller}
+export {Menu, MENU_HOME_VIEW, MENU_PLANNING_VIEW, MENU_PERSON_VIEW, MENU_ABOUT_VIEW, label, view, controller}
 
 const MENU_HOME_VIEW = 'HomeView'
 const MENU_PLANNING_VIEW = 'PlanningView'
-const MENU_USER_VIEW = 'PersonView'
+const MENU_PERSON_VIEW = 'PersonView'
 const MENU_ABOUT_VIEW = 'AboutView'
 
 
@@ -30,7 +30,7 @@ const Menu = () => {
     const entries = [
         Entry('Vakansie')(MENU_HOME_VIEW)("HomeController"),
         Entry('Planner')(MENU_PLANNING_VIEW)("not implemented"),
-        Entry('Persons')(MENU_USER_VIEW)("PersonController"),
+        Entry('Persons')(MENU_PERSON_VIEW)("PersonController"),
         Entry('About')(MENU_ABOUT_VIEW)("not implemented")];
 
     // initial entry

@@ -24,7 +24,7 @@ const Person = () => {                               // facade
     jobAttr.getObs(LABEL).setValue("My crazy job");
 
     jobAttr.setConverter(input => input.toUpperCase());
-    jobAttr.setValidator(input => input.length >= 3);
+    jobAttr.setValidator(input => input.length >= 5);
 
     return {
         firstname: firstnameAttr,
@@ -97,8 +97,8 @@ const PersonView = (rootElement, personController) => {
         appendFirst(rootElement)(person)
     };
 
-    const listController      = personController().getListController();
-    const selectionController = personController().getSelectionController();
+    const listController      = personController.getListController();
+    const selectionController = personController.getSelectionController();
 
     render();
 };

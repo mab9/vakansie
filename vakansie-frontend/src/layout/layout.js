@@ -1,5 +1,5 @@
 import {dom} from "../util/dom.js";
-import {Menu} from "../mainNav/menu.js";
+import {Menu, MENU_PERSON_VIEW} from "../mainNav/menu.js";
 import {MainNavView} from "../mainNav/mainNav.js";
 import {appendFirst} from "../util/appendFirst.js";
 import {label, view, controller} from "../mainNav/menu.js";
@@ -21,17 +21,25 @@ export {LayoutController, LayoutView};
  */
 const LayoutController = () => {
 
+    const controllers = new Map();
+
+    const getController = controller => controllers.has(controller)
+        ? controllers.get(controller)
+        : controllers.set(controller, eval(`${controller}()`)).get(controller); // lazy init
+
     /**
      * @typedef {Readonly<object>} LayoutController
      */
-    return Object.freeze({})
+    return Object.freeze({
+        getController : getController,
+    })
 }
 
 /**
  * @param rootElement
  * @constructor
  */
-const LayoutView = ({rootElement}) => {
+const LayoutView = (rootElement, layoutController) => {
     const render = () => {
         const layoutElement = dom(`
         <DIV id="mainnav-section"></DIV>
@@ -43,17 +51,19 @@ const LayoutView = ({rootElement}) => {
         </DIV>`);
 
         const mainNav = layoutElement.querySelector('#mainnav-section');
+        // is used by the eval function
         const mainContent = layoutElement.querySelector('#main-content');
 
         const menu = Menu();
-        const first = 0;
 
-        // todo clean up listener when the view changes
+        // todo handle listener clean up when the view changes
         menu.onSelectedEntryChange(entry => {
-            //mainContent.textContent = '';
             const gotoView = entry(view);
             const gotoController = entry(controller);
-            eval(`${gotoView}(${mainContent}, ${gotoController})`);
+            // is used by the eval function
+            const viewController = layoutController.getController(gotoController);
+            // todo replace eval with instances that are managed dynamically
+            eval(`${gotoView}(mainContent, viewController)`);
         })
 
         MainNavView(mainNav, menu);
@@ -62,4 +72,3 @@ const LayoutView = ({rootElement}) => {
 
     render();
 };
-
