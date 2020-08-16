@@ -20,22 +20,15 @@ export {LayoutController, LayoutView};
  */
 const LayoutController = () => {
 
-    const controllers = new Map();
-
-    const getController = controller => controllers.has(controller)
-        ? controllers.get(controller)
-        : controllers.set(controller, eval(`${controller}()`)).get(controller); // lazy init
-
     /**
      * @typedef {Readonly<object>} LayoutController
      */
-    return Object.freeze({
-        getController : getController,
-    })
+    return Object.freeze({})
 }
 
 /**
  * @param rootElement
+ * @param layoutController
  * @constructor
  */
 const LayoutView = (rootElement, layoutController) => {
@@ -56,13 +49,10 @@ const LayoutView = (rootElement, layoutController) => {
         const menu = Menu();
 
         // todo handle listener clean up when the view changes
+        // Update the main content view
         menu.onSelectedEntryChange(entry => {
-            const gotoView = entry.view;
-            const gotoController = entry.ctrl;
-            // is used by the eval function
-            const viewController = layoutController.getController(gotoController);
             // todo replace eval with instances that are managed dynamically
-            eval(`${gotoView}(mainContent, viewController)`);
+            eval(`${entry.view}(mainContent, ${entry.ctrl}())`);
         })
 
         MainNavView(mainNav, menu);

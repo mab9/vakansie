@@ -34,6 +34,7 @@ const mainNavProjector = (rootElement, mainNavController, menu) => {
     home.classList.add('home');
 
     for (let entry of entries.children) {
+        // innerText is the title of the menu entry
         entry.onclick = () => menu.setSelectedEntry(entry.innerText)
     }
 
