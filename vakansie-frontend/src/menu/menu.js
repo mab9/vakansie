@@ -30,7 +30,7 @@ const Menu = () => {
     const entries2 = JSON.parse(`{ "data" : [
                             {
                               "id":     "0",
-                              "title":  "Home",
+                              "title":  "Vakansie",
                               "ctrl" :  "HomeController",
                               "view" :  "HomeView",
                               "roles":  [],
