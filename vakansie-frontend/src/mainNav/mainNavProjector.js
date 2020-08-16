@@ -1,6 +1,5 @@
 import {dom} from "../util/dom.js";
 import {appendFirst} from "../util/appendFirst.js";
-import {label} from "../menu/menu.js";
 
 export {mainNavProjector}
 
@@ -14,7 +13,7 @@ const mainNavProjector = (rootElement, mainNavController, menu) => {
     const navBarElement = dom(`
         <NAV class="mainnav"> <div class="menu-entries">` +
 
-        menu.getEntries().map(entry => '<a>' + entry(label) + '</a>').join('')
+        menu.getEntries().map(entry => '<a>' + entry.title + '</a>').join('')
 
         + `</div>
           <a class="mainnav-avatar">

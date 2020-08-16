@@ -1,8 +1,7 @@
 import {dom} from "../util/dom.js";
-import {Menu, MENU_PERSON_VIEW} from "../menu/menu.js";
+import {Menu} from "../menu/menu.js";
 import {MainNavView} from "../mainNav/mainNav.js";
 import {appendFirst} from "../util/appendFirst.js";
-import {label, view, controller} from "../menu/menu.js";
 
 import {HomeController, HomeView} from "../modules/home/home.js";
 import {PersonController, PersonView} from "../modules/person/person.js";
@@ -58,8 +57,8 @@ const LayoutView = (rootElement, layoutController) => {
 
         // todo handle listener clean up when the view changes
         menu.onSelectedEntryChange(entry => {
-            const gotoView = entry(view);
-            const gotoController = entry(controller);
+            const gotoView = entry.view;
+            const gotoController = entry.ctrl;
             // is used by the eval function
             const viewController = layoutController.getController(gotoController);
             // todo replace eval with instances that are managed dynamically
