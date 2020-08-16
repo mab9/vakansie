@@ -100,6 +100,9 @@ const PersonView = (rootElement, personController) => {
     const listController      = personController.getListController();
     const selectionController = personController.getSelectionController();
 
+
+    // todo if list controller list size > 0 add models ...
+
     render();
 };
 
@@ -110,6 +113,10 @@ const MasterView = (listController, selectionController, rootElement) => {
 
     // binding
     listController.onModelAdd(render);
+
+    // init list
+    // todo if list controller list size > 0 add models ...
+
 };
 
 const DetailView = (selectionController, rootElement) => {
