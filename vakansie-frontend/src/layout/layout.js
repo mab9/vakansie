@@ -1,8 +1,8 @@
 import {dom} from "../util/dom.js";
-import {Menu, MENU_PERSON_VIEW} from "../mainNav/menu.js";
+import {Menu, MENU_PERSON_VIEW} from "../menu/menu.js";
 import {MainNavView} from "../mainNav/mainNav.js";
 import {appendFirst} from "../util/appendFirst.js";
-import {label, view, controller} from "../mainNav/menu.js";
+import {label, view, controller} from "../menu/menu.js";
 
 import {HomeController, HomeView} from "../modules/home/home.js";
 import {PersonController, PersonView} from "../modules/person/person.js";

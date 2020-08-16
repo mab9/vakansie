@@ -1,6 +1,6 @@
 import {dom} from "../util/dom.js";
 import {appendFirst} from "../util/appendFirst.js";
-import {label} from "./menu.js";
+import {label} from "../menu/menu.js";
 
 export {mainNavProjector}
 
