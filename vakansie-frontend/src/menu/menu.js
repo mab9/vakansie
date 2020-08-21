@@ -1,13 +1,21 @@
 import {Observable} from "../assets/observable/observable.js";
+import {HomeController, HomeView} from "../modules/home/home.js";
+import {PersonController, PersonView} from "../modules/person/person.js";
 
+// use of imports to avoid import removal on "ctrl alt o" shortcut
+const homeView = HomeView;
+const homeController = HomeController;
+const personView = PersonView;
+const personController = PersonController;
 
-export { Menu }
+export {Menu}
 
 /**
  * @return {Menu}
  * @constructor
+ * @param {Element} rootElement  is used by the eval function
  */
-const Menu = () => {
+const Menu = (rootElement) => {
 
     const entries = JSON.parse(`{ "data" : [
                             {
@@ -39,8 +47,6 @@ const Menu = () => {
                             }
                            ]}`);
 
-
-
     // initial entry
     let selectedEntry = Observable(entries.data[0])
 
@@ -48,6 +54,12 @@ const Menu = () => {
         const newEntry = entries.data.find(entry => entry.id === value)
         selectedEntry.setValue(newEntry);
     }
+
+    // todo handle listener clean up when the view changes
+    // Update the main content view
+    selectedEntry.onChange(entry => {
+        eval(`${entry.view}(rootElement, ${entry.ctrl}())`);
+    })
 
     /**
      * @typedef Menu
