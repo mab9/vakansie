@@ -3,9 +3,9 @@
 
 import '../menu/menu.test.js'
 
-import '../util/timesTest.js'
-import '../util/stringsTest.js'
-import '../assets/observable/observableTest.js'
-import '../assets/church/churchTest.js'
-import '../assets/church/rockTest.js'
+import '../util/times.test.js'
+import '../util/strings.test.js'
+import '../assets/observable/observable.test.js'
+import '../assets/church/church.test.js'
+import '../assets/church/rock.test.js'
 
