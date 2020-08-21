@@ -45,8 +45,7 @@ const Menu = () => {
     let selectedEntry = Observable(entries.data[0])
 
     const setSelectedEntry = value => {
-        // todo change it to use id instead of the title
-        const newEntry = entries.data.find(entry => entry.title === value)
+        const newEntry = entries.data.find(entry => entry.id === value)
         selectedEntry.setValue(newEntry);
     }
 

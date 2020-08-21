@@ -13,7 +13,8 @@ const mainNavProjector = (rootElement, mainNavController, menu) => {
     const navBarElement = dom(`
         <NAV class="mainnav"> <div class="menu-entries">` +
 
-        menu.getEntries().map(entry => '<a>' + entry.title + '</a>').join('')
+        // use of the html5 data attribute to associate the unique menu id to an element
+        menu.getEntries().map(entry => '<a data-menu-id="' + entry.id + '">' + entry.title + '</a>').join('')
 
         + `</div>
           <a class="mainnav-avatar">
@@ -34,8 +35,9 @@ const mainNavProjector = (rootElement, mainNavController, menu) => {
     home.classList.add('home');
 
     for (let entry of entries.children) {
-        // innerText is the title of the menu entry
-        entry.onclick = () => menu.setSelectedEntry(entry.innerText)
+        entry.onclick = () => {
+            menu.setSelectedEntry(entry.dataset.menuId)
+        }
     }
 
     avatar.src = './src/assets/img/avatars/svg/035-man-4.svg';
