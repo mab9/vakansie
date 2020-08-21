@@ -1,4 +1,4 @@
-import {Observable} from "../assets/observable/observable.js";
+import {Observable} from "../base/observable/observable.js";
 import {HomeController, HomeView} from "../modules/home/home.js";
 import {PersonController, PersonView} from "../modules/person/person.js";
 

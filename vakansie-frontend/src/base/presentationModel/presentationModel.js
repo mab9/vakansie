@@ -1,5 +1,5 @@
 import { Observable } from "../observable/observable.js";
-import { id }         from "../church/church.js";
+import { id }         from "../../assets/church/church.js";
 
 export { Attribute,
          VALID, VALUE, EDITABLE, LABEL }
