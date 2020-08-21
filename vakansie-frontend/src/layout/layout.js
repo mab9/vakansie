@@ -1,7 +1,7 @@
-import {dom} from "../util/dom.js";
+import {dom} from "../assets/util/dom.js";
 import {Menu} from "../menu/menu.js";
 import {MainNavView} from "../mainNav/mainNav.js";
-import {appendFirst} from "../util/appendFirst.js";
+import {appendFirst} from "../assets/util/appendFirst.js";
 
 export {LayoutController, LayoutView};
 

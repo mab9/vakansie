@@ -1,5 +1,5 @@
 import {padLeft, padRight}  from "./strings.js";
-import { Suite }            from "../test/test.js"
+import { Suite }            from "../../test/test.js"
 
 const util = Suite("util-strings");
 

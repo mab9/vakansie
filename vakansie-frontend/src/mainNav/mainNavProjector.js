@@ -1,5 +1,5 @@
-import {dom} from "../util/dom.js";
-import {appendFirst} from "../util/appendFirst.js";
+import {dom} from "../assets/util/dom.js";
+import {appendFirst} from "../assets/util/appendFirst.js";
 
 export {mainNavProjector}
 

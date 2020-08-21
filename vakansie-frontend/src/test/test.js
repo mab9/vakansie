@@ -2,7 +2,7 @@
 
 export { Suite, total }
 
-import { padLeft, padRight}   from "../util/strings.js"; // for formatting the report
+import { padLeft, padRight}   from "../assets/util/strings.js"; // for formatting the report
 import { Tuple }              from "../assets/church/rock.js";
 import { id }                 from "../assets/church/church.js";
 

@@ -1,5 +1,5 @@
 import "./times.js" // we import no symbols as they are set on the respective prototypes
-import { Suite } from "../test/test.js"
+import { Suite } from "../../test/test.js"
 
 const util = Suite("util-times");
 

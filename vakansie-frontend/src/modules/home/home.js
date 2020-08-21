@@ -1,4 +1,4 @@
-import {dom} from "../../util/dom.js";
+import {dom} from "../../assets/util/dom.js";
 
 export {HomeController, HomeView};
 

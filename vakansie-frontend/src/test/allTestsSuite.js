@@ -3,8 +3,8 @@
 
 import '../menu/menu.test.js'
 
-import '../util/times.test.js'
-import '../util/strings.test.js'
+import '../assets/util/times.test.js'
+import '../assets/util/strings.test.js'
 import '../assets/observable/observable.test.js'
 import '../assets/church/church.test.js'
 import '../assets/church/rock.test.js'
