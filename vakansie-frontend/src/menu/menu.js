@@ -1,6 +1,7 @@
 import {Observable} from "../base/observable/observable.js";
 import {HomeController, HomeView} from "../modules/home/home.js";
-import {PersonController, PersonView} from "../modules/person/person.js";
+import {PersonController} from "../modules/person/personController.js"
+import {PersonView} from "../modules/person/personView.js"
 
 // use of imports to avoid import removal on "ctrl alt o" shortcut
 const homeView = HomeView;

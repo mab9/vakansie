@@ -1,10 +1,9 @@
 import {appendFirst} from "../../assets/util/appendFirst.js";
 import {dom} from "../../assets/util/dom.js";
 import {listItemProjector, formProjector, pageCss} from "./instantUpdateProjector.js";
-import {ListController, SelectionController} from "./controller.js";
-import {ALL_PERSON_ATTRIBUTE_NAMES, Person } from "./personModel.js";
+import {ALL_PERSON_ATTRIBUTE_NAMES } from "./personModel.js";
 
-export {PersonController, PersonView};
+export {PersonView};
 
 // page-style change, only executed once
 const style = document.createElement("STYLE");
@@ -12,41 +11,12 @@ style.innerHTML = pageCss;
 document.head.appendChild(style);
 
 
-const NoPerson = (() => { // one time creation, singleton
-    const johnDoe = Person();
-    ALL_PERSON_ATTRIBUTE_NAMES.forEach(name => johnDoe[name].setConvertedValue(""));
-    return johnDoe;
-})();
-
-
-/**
- * @return Readonly {PersonController}
- * @constructor
- */
-const PersonController = () => {
-    const listController = ListController(Person);
-    const selectionController = SelectionController(NoPerson);
-
-    const getListController      = () => listController;
-    const getSelectionController = () => selectionController;
-
-    /**
-     * @typedef PersonController
-     */
-    return Object.freeze({
-        getListController : getListController,
-        getSelectionController : getSelectionController,
-    });
-};
-
 /**
  * @param rootElement
  * @param personController PersonController
  * @constructor
  */
 const PersonView = (rootElement, personController) => {
-
-
     const render = () => {
         const person = dom(`
             <div class="card">
