@@ -1,8 +1,8 @@
 import { Observable } from "../observable/observable.js";
 import { id }         from "../../assets/church/church.js";
 
-export { Attribute,
-         VALID, VALUE, EDITABLE, LABEL }
+export { Attribute, presentationModelFromAttributeNames,
+         VALID, VALUE, EDITABLE, LABEL, valueOf }
 
 const VALUE    = "value";
 const VALID    = "valid";
@@ -25,7 +25,7 @@ const Attribute = value => {
     let   convert           = id ;
     const setConverter      = converter => {
         convert = converter;
-        setConvertedValue(value);
+        setConvertedValue(getObs(VALUE).getValue());
     };
     const setConvertedValue = val => getObs(VALUE).setValue(convert(val));
 
@@ -33,4 +33,20 @@ const Attribute = value => {
     const setValidator = validate => getObs(VALUE).onChange( val => getObs(VALID).setValue(validate(val)));
 
     return { getObs, hasObs, setValidator, setConverter, setConvertedValue }
+};
+
+
+
+/** Convenience function to read the current state of the attribute's VALUE observable for the given attribute. */
+const valueOf = attribute => attribute.getObs(VALUE).getValue();
+
+/** Creates Presentation Model with Attributes for each attribute name with VALUE and LABEL observables. */
+const presentationModelFromAttributeNames = attributeNames => {
+    const result = Object.create(null);
+    attributeNames.forEach ( attributeName => {
+        const attribute = Attribute(undefined);
+        attribute.getObs(LABEL).setValue(attributeName); // default: use the attribute name as the label
+        result[attributeName] = attribute;
+    });
+    return result;
 };

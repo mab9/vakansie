@@ -1,8 +1,8 @@
 import {appendFirst} from "../../assets/util/appendFirst.js";
 import {dom} from "../../assets/util/dom.js";
 import {listItemProjector, formProjector, pageCss} from "./instantUpdateProjector.js";
-import {Attribute, LABEL} from "../../base/presentationModel/presentationModel.js";
 import {ListController, SelectionController} from "./controller.js";
+import {ALL_PERSON_ATTRIBUTE_NAMES, Person } from "./personModel.js";
 
 export {PersonController, PersonView};
 
@@ -11,31 +11,10 @@ const style = document.createElement("STYLE");
 style.innerHTML = pageCss;
 document.head.appendChild(style);
 
-const ALL_ATTRIBUTE_NAMES = ['firstname', 'lastname', 'job'];
-
-const Person = () => {                               // facade
-    const firstnameAttr = Attribute("Silvestre");
-    firstnameAttr.getObs(LABEL).setValue("First Name");
-
-    const lastnameAttr = Attribute("Brue");
-    lastnameAttr.getObs(LABEL).setValue("Last Name");
-
-    const jobAttr = Attribute("boss");
-    jobAttr.getObs(LABEL).setValue("My crazy job");
-
-    jobAttr.setConverter(input => input.toUpperCase());
-    jobAttr.setValidator(input => input.length >= 5);
-
-    return {
-        firstname: firstnameAttr,
-        lastname: lastnameAttr,
-        job: jobAttr,
-    }
-};
 
 const NoPerson = (() => { // one time creation, singleton
     const johnDoe = Person();
-    ALL_ATTRIBUTE_NAMES.forEach(name => johnDoe[name].setConvertedValue(""));
+    ALL_PERSON_ATTRIBUTE_NAMES.forEach(name => johnDoe[name].setConvertedValue(""));
     return johnDoe;
 })();
 
@@ -45,7 +24,6 @@ const NoPerson = (() => { // one time creation, singleton
  * @constructor
  */
 const PersonController = () => {
-
     const listController = ListController(Person);
     const selectionController = SelectionController(NoPerson);
 
@@ -120,6 +98,6 @@ const MasterView = (listController, selectionController, rootElement) => {
 };
 
 const DetailView = (selectionController, rootElement) => {
-    const render = person => formProjector(selectionController, rootElement, person, ALL_ATTRIBUTE_NAMES);
+    const render = person => formProjector(selectionController, rootElement, person, ALL_PERSON_ATTRIBUTE_NAMES);
     selectionController.onModelSelected(render);
 };
