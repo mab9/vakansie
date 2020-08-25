@@ -1,6 +1,6 @@
 import {dom} from "../assets/util/dom.js";
 import {appendFirst} from "../assets/util/appendFirst.js";
-import {translate, currentLanguage} from "../service/translationService.js";
+import {i18n, currentLanguage} from "../service/translationService.js";
 
 export {mainNavProjector}
 

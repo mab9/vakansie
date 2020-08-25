@@ -1,6 +1,9 @@
 import {config} from "../../config.js";
 import {Observable} from "../base/observable/observable.js";
 
+
+export {i18n, currentLanguage}
+
 const TRANSLATION_CURRENT_LANGUAGE = 'TRANSLATION_CURRENT_LANGUAGE';
 const currentLanguage = Observable(
     localStorage.getItem(TRANSLATION_CURRENT_LANGUAGE)
@@ -8,6 +11,8 @@ const currentLanguage = Observable(
         : config.lang
 );
 const languages = ['de', 'en'];
+
+
 
 const languageFiles = (() => {
     const languageFiles = {};
@@ -32,9 +37,6 @@ const languageFiles = (() => {
 
 const resolveTranslation = (language, key) => {
 
-    console.info("i18n1", language)
-    console.info("i18n2", key)
-
     const translation = language[key]
     if (!translation) {
         console.warn('No translation found ¯\\_(ツ)_/¯ for key: ', key);
@@ -43,30 +45,30 @@ const resolveTranslation = (language, key) => {
     return translation;
 };
 
-const translate = (key) => (callback) => {
-    if (!key) {
-        console.warn('No translation key provided ლ(ಠ_ಠლ)');
-        return;
+const i18n = (key) => (destination) => {
+    if (!key) { // guard
+        console.error('No translation key provided ლ(ಠ_ಠლ)');
+        return 'no.i18n.key.provided';
     }
 
+    const callback = (translation) => destination.innerHTML = translation;
+
     // execute translation when the language is defined.
-    const run = (newLang) => {
-        const lang = languageFiles.getLang(newLang)
-        console.info(lang)
+    const translate = (lang) => {
+        const data = languageFiles.getLang(lang)
 
         if (languageFiles.loaded.getValue()) {
-            callback(resolveTranslation(lang, key));
+            callback(resolveTranslation(data, key));
         } else {
             languageFiles.loaded.onChange((loaded) => {
-                if (loaded) callback(resolveTranslation(lang, key));
+                if (loaded) callback(resolveTranslation(data, key));
             })
         }
     };
 
     currentLanguage.onChange(newLang => {
         localStorage.setItem(TRANSLATION_CURRENT_LANGUAGE, newLang);
-        run(newLang);
+        translate(newLang);
     });
 };
 
-export {translate, currentLanguage}

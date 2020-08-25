@@ -1,7 +1,7 @@
 import {appendFirst} from "../../assets/util/appendFirst.js";
 import {dom} from "../../assets/util/dom.js";
 import {listItemProjector, formProjector, pageCss} from "../person/instantUpdateProjector.js";
-import {translate} from "../../service/translationService.js";
+import {i18n} from "../../service/translationService.js";
 
 export {PlanningView};
 
@@ -37,10 +37,10 @@ const PlanningView = (rootElement, planningController) => {
 
 
         const title = person.querySelector("h1"); // select first h1
-        translate('view.planning.title')((trans) => {
-                        title.innerHTML = trans;
-                    });
+        //translate('view.planning.title3')((trans) => title.innerHTML = trans);
+        i18n('view.planning.title')(title);
 
+        // i18n('key.id')(<h1>Person List</h1>)
         //MasterView(listController, selectionController, masterContainer);
         //DetailView(selectionController, detailContainer);
 
