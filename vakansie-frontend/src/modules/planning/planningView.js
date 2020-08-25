@@ -21,7 +21,7 @@ const PlanningView = (rootElement, planningController) => {
     const render = () => {
         const person = dom(`
             <div class="card">
-                <h1>Person List</h1>
+                <h1>this title will be changed by the translation service</h1>
                 <div class="holder">
                     <button id="plus" autofocus> + </button>
                     <div    id="masterContainer"></div>
@@ -29,7 +29,7 @@ const PlanningView = (rootElement, planningController) => {
             </div>
 
             <div class="card">
-                <h1>Person Detail</h1>
+                <h1 data-i18n="view.planning.title.details"></h1>
                 <div class="holder" id="detailContainer"></div>
             </div>
         `)
