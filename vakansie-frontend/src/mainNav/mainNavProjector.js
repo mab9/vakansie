@@ -1,6 +1,6 @@
 import {dom} from "../assets/util/dom.js";
 import {appendFirst} from "../assets/util/appendFirst.js";
-import {i18n, currentLanguage} from "../service/translationService.js";
+import {i18n, translationService} from "../service/translationService.js";
 
 export {mainNavProjector}
 
@@ -37,14 +37,14 @@ const mainNavProjector = (rootElement, mainNavController, menu) => {
 
     // todo make language management generic
     language.onclick = () => {
-        if (currentLanguage.getValue() === 'de') {
-            currentLanguage.setValue('en')
+        if (translationService.currentLanguage.getValue() === 'de') {
+            translationService.currentLanguage.setValue('en')
         } else {
-            currentLanguage.setValue('de')
+            translationService.currentLanguage.setValue('de')
         }
     }
 
-    currentLanguage.onChange(newLang => {
+    translationService.currentLanguage.onChange(newLang => {
         language.innerHTML = newLang;
     })
 
