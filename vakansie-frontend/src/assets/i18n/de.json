@@ -1,4 +1,9 @@
 {
     "view.planning.title": "Planungsansicht",
-    "view.planning.title.details": "Ferien Vergütung"
+    "view.planning.title.details": "Ferien Vergütung",
+    "view.person.card.master.title": "Personen Übersicht",
+    "view.person.card.details.title": "Personen Details",
+    "menu.main.entry.vakansie": "Vakansie",
+    "menu.main.entry.persons": "Personen",
+    "menu.main.entry.planning": "Planung"
 }

@@ -59,9 +59,9 @@ const TranslationService = () => {
         });
     }
 
-    const resolveTranslation = (language, key) => {
-
-        const translation = language[key]
+    const resolveTranslation = (lang, key) => {
+        const data = loadedLangs[lang]
+        const translation = data[key]
         if (!translation) {
             console.warn('No translation found ¯\\_(ツ)_/¯ for key: ', key);
             return key
@@ -71,15 +71,14 @@ const TranslationService = () => {
 
     // execute translation as soon as possible
     const translate = (lang, key, callback) => {
-        const data = loadedLangs[lang]
 
         if (isLangLoaded.getValue()) {
-            callback(resolveTranslation(data, key));
+            callback(resolveTranslation(lang, key));
         } else {
             // todo be sure to not miss the on change event!
             isLangLoaded.onChange((loaded) => {
                 if (loaded) {
-                    callback(resolveTranslation(data, key));
+                    callback(resolveTranslation(lang, key));
                 }
             })
         }

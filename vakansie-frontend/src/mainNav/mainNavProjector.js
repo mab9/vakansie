@@ -15,7 +15,7 @@ const mainNavProjector = (rootElement, mainNavController, menu) => {
         <NAV class="mainnav"> <div class="menu-entries">` +
 
         // use of the html5 data attribute to associate the unique menu id to an element
-        menu.getEntries().map(entry => '<a data-menu-id="' + entry.id + '">' + entry.title + '</a>').join('')
+        menu.getEntries().map(entry => '<a data-menu-id="' + entry.id + '" data-i18n="' + entry.title + '"></a>').join('')
 
         + `</div>
           <a class="mainnav-avatar">

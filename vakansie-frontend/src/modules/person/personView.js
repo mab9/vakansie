@@ -25,7 +25,7 @@ const PersonView = (rootElement, personController) => {
     const render = () => {
         const person = dom(`
             <div class="card">
-                <h1>Person List</h1>
+                <h1 data-i18n="view.person.card.master.title"></h1>
                 <div class="holder">
                     <button id="plus" autofocus> + </button>
                     <div    id="masterContainer"></div>
@@ -33,7 +33,7 @@ const PersonView = (rootElement, personController) => {
             </div>
 
             <div class="card">
-                <h1>Person Detail</h1>
+                <h1 data-i18n="view.person.card.details.title"></h1>
                 <div class="holder" id="detailContainer"></div>
             </div>
         `)

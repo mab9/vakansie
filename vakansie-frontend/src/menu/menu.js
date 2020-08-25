@@ -25,7 +25,7 @@ const Menu = (rootElement) => {
     const entries = JSON.parse(`{ "data" : [
                             {
                               "id":     "0",
-                              "title":  "Vakansie",
+                              "title":  "menu.main.entry.vakansie",
                               "ctrl" :  "HomeController",
                               "view" :  "HomeView",
                               "roles":  [],
@@ -34,7 +34,7 @@ const Menu = (rootElement) => {
                             },
                             {
                               "id":     "1",
-                              "title":  "Persons",
+                              "title":  "menu.main.entry.persons",
                               "ctrl" :  "PersonController",
                               "view" :  "PersonView",
                               "roles":  [],
@@ -43,7 +43,7 @@ const Menu = (rootElement) => {
                             },
                             {
                               "id":     "2" ,
-                              "title":  "Planning",
+                              "title":  "menu.main.entry.planning",
                               "ctrl" :  "PlanningController",
                               "view" :  "PlanningView",
                               "roles":  [],
