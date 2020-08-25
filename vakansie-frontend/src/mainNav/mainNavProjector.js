@@ -1,5 +1,6 @@
 import {dom} from "../assets/util/dom.js";
 import {appendFirst} from "../assets/util/appendFirst.js";
+import {translate, currentLanguage} from "../service/translationService.js";
 
 export {mainNavProjector}
 
@@ -21,15 +22,31 @@ const mainNavProjector = (rootElement, mainNavController, menu) => {
             <img alt="Avatar" class="avatar">
           </a>
           <a class="mainnav-user">mab9.test@gmail.com</a>
+          <a class="mainnav-language">DE</a>
           <a href="javascript:void(0);" class="hamburger">
             <i class="fa fa-bars"></i>
           </a>
         </NAV>`);
 
-    const mainnav = navBarElement.querySelector('.mainnav');
-    const entries = navBarElement.querySelector('.menu-entries');
-    const avatar = navBarElement.querySelector('.avatar');
+    const mainnav   = navBarElement.querySelector('.mainnav');
+    const entries   = navBarElement.querySelector('.menu-entries');
+    const avatar    = navBarElement.querySelector('.avatar');
     const hamburger = navBarElement.querySelector('.hamburger');
+    const language  = navBarElement.querySelector('.mainnav-language');
+
+
+    // todo make language management generic
+    language.onclick = () => {
+        if (currentLanguage.getValue() === 'de') {
+            currentLanguage.setValue('en')
+        } else {
+            currentLanguage.setValue('de')
+        }
+    }
+
+    currentLanguage.onChange(newLang => {
+        language.innerHTML = newLang;
+    })
 
     const [home] = entries.children;
     home.classList.add('home');
