@@ -2,6 +2,7 @@ import {appendFirst} from "../../assets/util/appendFirst.js";
 import {dom} from "../../assets/util/dom.js";
 import {listItemProjector, formProjector, pageCss} from "./instantUpdateProjector.js";
 import {ALL_PERSON_ATTRIBUTE_NAMES } from "./personModel.js";
+import {Person} from "./personModel.js";
 
 export {PersonView};
 
@@ -13,10 +14,14 @@ document.head.appendChild(style);
 
 /**
  * @param rootElement
- * @param personController PersonController
+ * @param  personController {PersonController}
  * @constructor
  */
 const PersonView = (rootElement, personController) => {
+
+    const listController      = personController.getListController();
+    const selectionController = personController.getSelectionController();
+
     const render = () => {
         const person = dom(`
             <div class="card">
@@ -36,7 +41,7 @@ const PersonView = (rootElement, personController) => {
         const masterContainer = person.querySelector("#masterContainer");
         const detailContainer = person.querySelector("#detailContainer");
         const plus = person.querySelector("#plus");
-        plus.onclick = _ => listController.addModel();
+        plus.onclick = _ => listController.addModel(Person());
 
         MasterView(listController, selectionController, masterContainer);
         DetailView(selectionController, detailContainer);
@@ -45,13 +50,8 @@ const PersonView = (rootElement, personController) => {
         appendFirst(rootElement)(person)
     };
 
-    const listController      = personController.getListController();
-    const selectionController = personController.getSelectionController();
-
-
-    // todo if list controller list size > 0 add models ...
-
     render();
+    personController.initPersons();
 };
 
 const MasterView = (listController, selectionController, rootElement) => {

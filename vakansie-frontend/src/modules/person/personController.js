@@ -1,45 +1,38 @@
-/**
- * @module Controllers as shallow wrappers around observables
- */
-import { ObservableList, Observable }                       from "../../base/observable/observable.js";
+
+import { SelectionController, ListController } from "../../base/controller/controller.js";
 import {ALL_PERSON_ATTRIBUTE_NAMES, Person} from "./personModel.js";
+import {vakansieService} from "../../service/localService.js";
+import {id} from "../../assets/church/church.js";
+import {VALUE} from "../../base/presentationModel/presentationModel.js";
 
-export { ListController, SelectionController, PersonController }
+export { PersonController }
 
-const ListController = modelConstructor => {
-
-    const listModel = ObservableList([]); // observable array of models, this state is private
-
-    return {
-        addModel:            () => listModel.add(modelConstructor()),
-        removeModel:         listModel.del,
-        onModelAdd:          listModel.onAdd,
-        onModelRemove:       listModel.onDel,
-    }
-};
-
-const SelectionController = noSelection => {
-
-    const selectedModelObs = Observable(noSelection);
-
-    return {
-        setSelectedModel : selectedModelObs.setValue,
-        getSelectedModel : selectedModelObs.getValue,
-        onModelSelected:   selectedModelObs.onChange,
-        clearSelection:     () => selectedModelObs.setValue(noSelection),
-    }
-};
 
 /**
  * @return Readonly {PersonController}
  * @constructor
  */
 const PersonController = () => {
-    const listController = ListController(Person);
+    const listController = ListController();
     const selectionController = SelectionController(NoPerson);
 
     const getListController      = () => listController;
     const getSelectionController = () => selectionController;
+
+    /** @param {Person} personData */
+    const addPerson = personData => {
+        const person = Person();
+
+        ALL_PERSON_ATTRIBUTE_NAMES.forEach(attribute => {
+            person[attribute].getObs(VALUE).setValue(personData[attribute]);
+        })
+
+        listController.addModel(person);
+    };
+
+    const initPersons = () => vakansieService().loadPersons(id).forEach(person => addPerson(person))
+
+
 
     /**
      * @typedef PersonController
@@ -47,6 +40,8 @@ const PersonController = () => {
     return Object.freeze({
         getListController : getListController,
         getSelectionController : getSelectionController,
+        addPerson: addPerson,
+        initPersons: initPersons,
     });
 };
 
