@@ -9,8 +9,16 @@
 </head>
 <body>
 
-<div id="content-wrapper"></div>
+<div id="root"></div>
 
-<script src="./starter.js" type="module"></script>
+
+<script>
+    window.springServerName = "localhost";
+    window.springServerPort = "8080";
+    window.restPath         = '/api';
+    window.appRootId        = 'vakansie';       // keep page specifics in the page
+</script>
+<script src="./src/vakansieLocalStarter.js" type="module"></script>
+
 </body>
 </html>
