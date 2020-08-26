@@ -1,6 +1,6 @@
 import {appendFirst} from "../../assets/util/appendFirst.js";
 import {dom} from "../../assets/util/dom.js";
-import {listItemProjector, formProjector, pageCss} from "../person/instantUpdateProjector.js";
+import {planningProjector, pageCss} from "./planningProjector.js";
 import {i18n} from "../../service/translationService.js";
 
 export {PlanningView};
@@ -19,7 +19,7 @@ document.head.appendChild(style);
 const PlanningView = (rootElement, planningController) => {
 
     const render = () => {
-        const person = dom(`
+        const planning = dom(`
             <div class="card">
                 <h1>this title will be changed by the translation service</h1>
                 <div class="holder">
@@ -36,31 +36,27 @@ const PlanningView = (rootElement, planningController) => {
 
 
 
-        const title = person.querySelector("h1"); // select first h1
+        const title = planning.querySelector("h1"); // select first h1
+        const masterContainer = planning.querySelector("#masterContainer");
         //translate('view.planning.title3')((trans) => title.innerHTML = trans);
         i18n('view.planning.title')(title);
 
         // i18n('key.id')(<h1>Person List</h1>)
-        //MasterView(listController, selectionController, masterContainer);
+        MasterView(masterContainer);
         //DetailView(selectionController, detailContainer);
 
         rootElement.textContent = '';
-        appendFirst(rootElement)(person)
+        appendFirst(rootElement)(planning)
     };
 
     render();
 };
 
-const MasterView = (listController, selectionController, rootElement) => {
+const MasterView = (rootElement) => {
 
-    const render = person => listItemProjector(listController, selectionController, rootElement,
-            person, ['firstname', 'lastname']);
+    const render = () => planningProjector(rootElement);
 
-    // binding
-    listController.onModelAdd(render);
-
-    // init list
-    // todo if list controller list size > 0 add models ...
+    render();
 
 };
 
