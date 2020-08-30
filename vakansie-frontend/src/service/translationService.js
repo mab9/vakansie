@@ -19,11 +19,11 @@ const i18n = (key) => (destination) => {
 
     const callback = (translation) => destination.innerHTML = translation;
 
-    const lang = translationService.currentLang.getValue();
-    translationService.translate(lang, key, callback);
+    translationService.translate(key, callback);
 
-    translationService.currentLang.onChange(newLang => {
-        translationService.translate(newLang, key, callback);
+    // translate without page refresh
+    translationService.currentLang.onChange( _ => {
+        translationService.translate(key, callback);
     });
 };
 
@@ -59,7 +59,7 @@ const TranslationService = () => {
         loadCurrentLang();
     });
 
-    const resolveTranslation = (lang, key) => {
+    const resolveKey = (key) => {
         const translation = langTranslations[key]
         if (!translation) {
             console.warn('No translation found ¯\\_(ツ)_/¯ for key: ', key);
@@ -69,8 +69,7 @@ const TranslationService = () => {
     };
 
     // execute translation as soon as possible
-    const translate = (lang, key, callback) => runAsap(
-        () => callback(resolveTranslation(lang, key)))
+    const translate = (key, callback) => runAsap(() => callback(resolveKey(key)))
 
     const runAsap = exec => {
         if (isLangLoaded.getValue()) {
