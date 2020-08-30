@@ -6,7 +6,7 @@ const dom = innerString => {
     let frag = document.createDocumentFragment();
 
     const elem = document.createElement('div');
-    elem.innerHTML = innerString;
+    elem.innerHTML = innerString.trim();
 
     while (elem.childNodes[0]) {
         frag.appendChild(elem.childNodes[0]);

@@ -40,7 +40,7 @@ util.add("Convert to html and do i18n", assert => {
     const element = dom(`<div><h1 data-i18n="${key}">yeah</h1></div>`);
 
     // At this moment the i18n should already have changed the inner text.
-    // The translation service was not initalized and therefore the default (i18n key)
+    // The translation service was not initialized and therefore the default (i18n key)
     // will be displayed!
 
     const div = document.createElement("div")
@@ -54,6 +54,28 @@ util.add("Convert to html and do i18n", assert => {
     assert.is(child.childElementCount, 1);
     assert.is(child.childNodes[0].nodeName, h1.nodeName);
     assert.is(child.childNodes[0].innerHTML, key);
+});
+
+util.add("Convert to html table", assert => {
+    const key = "test.dom.title";
+    const element = dom(`
+        <table>
+            <thead><tr><th data-i18n="${key}">1</th></tr></thead>
+            <tbody><tr><td>2</td></tr></tbody>
+        </table>
+    `);
+
+    const table = document.createElement("table")
+    assert.is(element.childElementCount, 1);
+    assert.is(element.childNodes[0].nodeName, table.nodeName);
+
+    const thead = element.querySelector("thead")
+
+    // dom can't parse table elements!
+    thead.firstChild.appendChild(dom('<th>Empty</th>'))
+
+    assert.is(thead.innerText, key + "Empty")
+
 });
 
 util.run();
