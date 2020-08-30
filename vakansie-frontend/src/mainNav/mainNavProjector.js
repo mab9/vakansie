@@ -37,14 +37,14 @@ const mainNavProjector = (rootElement, mainNavController, menu) => {
 
     // todo make language management generic
     language.onclick = () => {
-        if (translationService.currentLanguage.getValue() === 'de') {
-            translationService.currentLanguage.setValue('en')
+        if (translationService.currentLang.getValue() === 'de') {
+            translationService.currentLang.setValue('en')
         } else {
-            translationService.currentLanguage.setValue('de')
+            translationService.currentLang.setValue('de')
         }
     }
 
-    translationService.currentLanguage.onChange(newLang => {
+    translationService.currentLang.onChange(newLang => {
         language.innerHTML = newLang;
     })
 

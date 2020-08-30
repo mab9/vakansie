@@ -1,7 +1,7 @@
 import {config} from "../../config.js";
 import {Observable} from "../base/observable/observable.js";
 
-export {i18n} // See export at the bottom of the file!
+export {i18n, I18N_CURRENT_LANG} // See export at the bottom of the file!
 
 const I18N_CURRENT_LANG = 'TRANSLATION_CURRENT_LANGUAGE';
 
@@ -21,11 +21,10 @@ const i18n = (key) => (destination) => {
 
     const callback = (translation) => destination.innerHTML = translation;
 
-    const lang = translationService.currentLanguage.getValue();
+    const lang = translationService.currentLang.getValue();
     translationService.translate(lang, key, callback);
 
-    translationService.currentLanguage.onChange(newLang => {
-        localStorage.setItem(I18N_CURRENT_LANG, newLang);
+    translationService.currentLang.onChange(newLang => {
         translationService.translate(newLang, key, callback);
     });
 };
@@ -39,11 +38,15 @@ const TranslationService = () => {
     const isLangLoaded = Observable(false);
 
     // load language from storage or set default from config
-    const currentLanguage = Observable(
+    const currentLang = Observable(
         localStorage.getItem(I18N_CURRENT_LANG)
             ? localStorage.getItem(I18N_CURRENT_LANG)
             : config.lang
     );
+
+    currentLang.onChange(lang => {
+        localStorage.setItem(I18N_CURRENT_LANG, lang);
+    });
 
     const init = () => {
         let loadedLangCounter = 0;
@@ -92,7 +95,7 @@ const TranslationService = () => {
         translate: translate,
         init: init,
         isLangLoaded: isLangLoaded,
-        currentLanguage: currentLanguage,
+        currentLang: currentLang,
     })
 }
 

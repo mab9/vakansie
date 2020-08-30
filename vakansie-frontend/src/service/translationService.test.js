@@ -1,21 +1,31 @@
-import {translationService} from "./translationService.js";
+import {I18N_CURRENT_LANG, translationService} from "./translationService.js";
+import {Suite} from "../test/test.js";
+import {config} from "../../config.js";
 
 const util = Suite("translation-service");
-
-
 
 // i18n
 // translate? // dom translation?
 
-util.add("Convert to HTML element", assert => {
+util.add("service initialization", assert => {
+    // reset cache and pre initialized observable
+    localStorage.setItem(I18N_CURRENT_LANG, config.lang);
+    translationService.currentLang.setValue(config.lang)
 
-    const element = dom(`<h1>yeah</h1>`);
-    const h1 = document.createElement("h1")
+    assert.true(!translationService.isLangLoaded.getValue());
+    assert.is(translationService.currentLang.getValue(), config.lang);
+});
 
-    assert.is(element.childElementCount, 1);
-    assert.is(element.childNodes[0].nodeName, h1.nodeName);
-    assert.is(element.childNodes[0].innerHTML, "yeah");
+util.add("language change", assert => {
+    // reset cache and pre initialized observable
+    localStorage.setItem(I18N_CURRENT_LANG, config.lang);
+    translationService.currentLang.setValue(config.lang)
 
+    assert.true(!translationService.isLangLoaded.getValue());
+    assert.is(translationService.currentLang.getValue(), config.lang);
+
+    translationService.currentLang.setValue('en')
+    assert.is(localStorage.getItem(I18N_CURRENT_LANG), 'en');
 });
 
 util.run();
