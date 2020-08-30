@@ -5,8 +5,6 @@ export {i18n, I18N_CURRENT_LANG} // See export at the bottom of the file!
 
 const I18N_CURRENT_LANG = 'TRANSLATION_CURRENT_LANGUAGE';
 
-
-
 /**
  * @typedef i18n
  * @type     {function}              - function to provide a small api for translations
@@ -34,7 +32,7 @@ const i18n = (key) => (destination) => {
  * @returns {TranslationService}
  */
 const TranslationService = () => {
-    const loadedLangs = {};
+    let langTranslations;
     const isLangLoaded = Observable(false);
 
     // load language from storage or set default from config
@@ -44,30 +42,25 @@ const TranslationService = () => {
             : config.lang
     );
 
-    currentLang.onChange(lang => {
-        localStorage.setItem(I18N_CURRENT_LANG, lang);
-    });
+    const loadCurrentLang = () => {
+        const lang = currentLang.getValue();
+        isLangLoaded.setValue(false);
 
-    const init = () => {
-        let loadedLangCounter = 0;
-        const langs = config.langTranslations;
-
-        langs.forEach(lang => {
-            fetch("src/assets/i18n/" + lang + ".json")
-            .then(response => response.json())
-            .then(json => {
-                loadedLangs[lang] = json;
-                loadedLangCounter++;
-                if (langs.length === loadedLangCounter) {
-                    isLangLoaded.setValue(true);
-                }
-            })
-        });
+        fetch("src/assets/i18n/" + lang + ".json")
+        .then(response => response.json())
+        .then(json => {
+            langTranslations = json;
+            isLangLoaded.setValue(true);
+        })
     }
 
+    currentLang.onChange(lang => {
+        localStorage.setItem(I18N_CURRENT_LANG, lang);
+        loadCurrentLang();
+    });
+
     const resolveTranslation = (lang, key) => {
-        const data = loadedLangs[lang]
-        const translation = data[key]
+        const translation = langTranslations[key]
         if (!translation) {
             console.warn('No translation found ¯\\_(ツ)_/¯ for key: ', key);
             return key
@@ -76,7 +69,8 @@ const TranslationService = () => {
     };
 
     // execute translation as soon as possible
-    const translate = (lang, key, callback) => runAsap(() => callback(resolveTranslation(lang, key)))
+    const translate = (lang, key, callback) => runAsap(
+        () => callback(resolveTranslation(lang, key)))
 
     const runAsap = exec => {
         if (isLangLoaded.getValue()) {
@@ -93,7 +87,7 @@ const TranslationService = () => {
 
     return Object.freeze({
         translate: translate,
-        init: init,
+        init: loadCurrentLang,
         isLangLoaded: isLangLoaded,
         currentLang: currentLang,
     })
