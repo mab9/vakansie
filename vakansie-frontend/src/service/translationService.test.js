@@ -1,4 +1,4 @@
-import {I18N_CURRENT_LANG, translationService} from "./translationService.js";
+import {I18N_CURRENT_LANG, translationService, i18n} from "./translationService.js";
 import {Suite} from "../test/test.js";
 import {config} from "../../config.js";
 
@@ -14,6 +14,16 @@ util.add("service initialization", assert => {
 
     assert.true(!translationService.isLangLoaded.getValue());
     assert.is(translationService.currentLang.getValue(), config.lang);
+
+    const destination = document.createElement("div")
+    const key = "test.dom.title";
+    i18n(key)(destination);
+
+    assert.is(destination.innerText, key);
+
+    translationService.init();
+
+    // todo add async assert to check if the key was translated.
 });
 
 util.add("language change", assert => {
