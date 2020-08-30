@@ -1,6 +1,5 @@
 import {Suite} from "../../test/test.js"
 import {dom} from "./dom.js";
-import {translationService} from "../../service/translationService.js";
 
 const util = Suite("util-dom");
 

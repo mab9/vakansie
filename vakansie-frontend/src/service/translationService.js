@@ -21,6 +21,9 @@ const i18n = (key) => (destination) => {
 
     const callback = (translation) => destination.innerHTML = translation;
 
+    const lang = translationService.currentLanguage.getValue();
+    translationService.translate(lang, key, callback);
+
     translationService.currentLanguage.onChange(newLang => {
         localStorage.setItem(I18N_CURRENT_LANG, newLang);
         translationService.translate(newLang, key, callback);
@@ -70,19 +73,20 @@ const TranslationService = () => {
     };
 
     // execute translation as soon as possible
-    const translate = (lang, key, callback) => {
+    const translate = (lang, key, callback) => runAsap(() => callback(resolveTranslation(lang, key)))
 
+    const runAsap = exec => {
         if (isLangLoaded.getValue()) {
-            callback(resolveTranslation(lang, key));
+            exec();
         } else {
             // todo be sure to not miss the on change event!
             isLangLoaded.onChange((loaded) => {
                 if (loaded) {
-                    callback(resolveTranslation(lang, key));
+                    exec();
                 }
             })
         }
-    };
+    }
 
     return Object.freeze({
         translate: translate,

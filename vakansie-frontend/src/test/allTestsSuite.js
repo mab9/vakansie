@@ -5,6 +5,7 @@
 
 import '../assets/util/times.test.js'
 import '../assets/util/strings.test.js'
+import '../assets/util/dom.test.js'
 
 import '../assets/church/church.test.js'
 import '../assets/church/rock.test.js'
@@ -13,3 +14,4 @@ import '../base/observable/observable.test.js'
 
 import '../menu/menu.test.js'
 import '../service/localService.test.js';
+import '../service/translationService.test.js'
