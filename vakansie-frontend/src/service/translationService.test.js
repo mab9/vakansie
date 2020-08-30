@@ -4,9 +4,6 @@ import {config} from "../../config.js";
 
 const util = Suite("translation-service");
 
-// i18n
-// translate? // dom translation?
-
 util.add("service initialization", assert => {
     // reset cache and pre initialized observable
     localStorage.setItem(I18N_CURRENT_LANG, config.lang);

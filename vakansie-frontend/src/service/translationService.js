@@ -30,12 +30,10 @@ const TranslationService = () => {
     let langTranslations = {};
     const isLangLoaded = Observable(false);
 
-    // load language from storage or set default from config
     const currentLang = Observable(
         localStorage.getItem(I18N_CURRENT_LANG)
             ? localStorage.getItem(I18N_CURRENT_LANG)
-            : config.lang
-    );
+            : config.lang);
 
     const loadCurrentLang = () => {
         const lang = currentLang.getValue();
