@@ -1,9 +1,11 @@
 {
+    "test.dom.title": "Donatello",
     "view.planning.title": "Planning view",
     "view.planning.title.details": "Your Allowance",
     "view.person.card.master.title": "Person List",
     "view.person.card.details.title": "Person Detail",
     "menu.main.entry.vakansie": "Vakansie",
     "menu.main.entry.persons": "Persons",
-    "menu.main.entry.planning": "Planning"
+    "menu.main.entry.planning": "Planning",
+    "planning.view.calendar.header.month": "Month"
 }
