@@ -18,13 +18,7 @@ const i18n = (key) => (destination) => {
     }
 
     const callback = (translation) => destination.innerHTML = translation;
-
     translationService.translate(key, callback);
-
-    // translate without page refresh
-    translationService.currentLang.onChange( _ => {
-        translationService.translate(key, callback);
-    });
 };
 
 /**
@@ -71,16 +65,18 @@ const TranslationService = () => {
     // execute translation as soon as possible
     const translate = (key, callback) => runAsap(() => callback(resolveKey(key)))
 
-    const runAsap = exec => {
+    const runAsap = execute => {
+        // Translate languages without page refresh
+        // will be executed only once per loaded language!
+        // be sure to not miss any translations!
+        isLangLoaded.onChange((loaded) => {
+            if (loaded) {
+                execute();
+            }
+        })
+
         if (isLangLoaded.getValue()) {
-            exec();
-        } else {
-            // todo be sure to not miss the on change event!
-            isLangLoaded.onChange((loaded) => {
-                if (loaded) {
-                    exec();
-                }
-            })
+            execute();
         }
     }
 
