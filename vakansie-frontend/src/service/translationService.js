@@ -26,7 +26,8 @@ const i18n = (key) => (destination) => {
  * @returns {TranslationService}
  */
 const TranslationService = () => {
-    let langTranslations;
+    let isInitialized = false;
+    let langTranslations = {};
     const isLangLoaded = Observable(false);
 
     // load language from storage or set default from config
@@ -50,10 +51,17 @@ const TranslationService = () => {
 
     currentLang.onChange(lang => {
         localStorage.setItem(I18N_CURRENT_LANG, lang);
-        loadCurrentLang();
+        if (isInitialized) {
+            loadCurrentLang();
+        }
     });
 
     const resolveKey = (key) => {
+        // default if no lang is loaded
+        if (!Object.keys(langTranslations).length) {
+            return key;
+        }
+
         const translation = langTranslations[key]
         if (!translation) {
             console.warn('No translation found ¯\\_(ツ)_/¯ for key: ', key);
@@ -62,27 +70,20 @@ const TranslationService = () => {
         return translation;
     };
 
-    // execute translation as soon as possible
-    const translate = (key, callback) => runAsap(() => callback(resolveKey(key)))
+    // Translate languages without page refresh
+    const translate = (key, callback) => isLangLoaded.onChange( _ => callback(resolveKey(key)))
 
-    const runAsap = execute => {
-        // Translate languages without page refresh
-        // will be executed only once per loaded language!
-        // be sure to not miss any translations!
-        isLangLoaded.onChange((loaded) => {
-            if (loaded) {
-                execute();
-            }
-        })
 
-        if (isLangLoaded.getValue()) {
-            execute();
-        }
+    // is used to prevent to load the current lang
+    // via the currentLang.onChange definition
+    const init = () => {
+        isInitialized = true;
+        loadCurrentLang();
     }
 
     return Object.freeze({
         translate: translate,
-        init: loadCurrentLang,
+        init: init,
         isLangLoaded: isLangLoaded,
         currentLang: currentLang,
     })
@@ -90,5 +91,3 @@ const TranslationService = () => {
 
 const translationService = TranslationService(); // singleton, init in module to avoid two instances. See export at the top of the file
 export {translationService}
-
-
