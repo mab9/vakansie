@@ -15,3 +15,4 @@ import '../base/observable/observable.test.js'
 import '../menu/menu.test.js'
 import '../service/localService.test.js';
 import '../service/translationService.test.js'
+import '../service/tableService.test.js'

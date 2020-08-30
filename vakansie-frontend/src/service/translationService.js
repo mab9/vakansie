@@ -17,7 +17,7 @@ const i18n = (key) => (destination) => {
         return 'no.i18n.key.provided';
     }
 
-    const callback = (translation) => destination.innerHTML = translation;
+    const callback = (translation) => destination.innerText = translation;
     translationService.translate(key, callback);
 };
 
