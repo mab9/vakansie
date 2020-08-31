@@ -43,7 +43,7 @@ const PlanningView = (rootElement, planningController) => {
         i18n('view.planning.title')(title);
 
         // i18n('key.id')(<h1>Person List</h1>)
-        MasterView(masterContainer);
+        MasterView(masterContainer, planningController);
         //DetailView(selectionController, detailContainer);
 
         rootElement.textContent = '';
@@ -53,9 +53,9 @@ const PlanningView = (rootElement, planningController) => {
     render();
 };
 
-const MasterView = (rootElement) => {
+const MasterView = (rootElement, planningController) => {
 
-    const render = () => planningProjector(rootElement);
+    const render = () => planningProjector(rootElement, planningController);
 
     render();
 

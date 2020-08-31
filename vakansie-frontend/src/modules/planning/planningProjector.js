@@ -1,21 +1,23 @@
 import {appendFirst} from "../../assets/util/appendFirst.js";
 import {dom} from "../../assets/util/dom.js";
 import "../../assets/util/times.js"
+import {months} from "./planningController.js";
+import {Day} from "./planningModel.js";
+import {id} from "../../assets/church/church.js";
 
 export {planningProjector, pageCss}
 
 const masterClassName = 'planning-master'; // should be unique for this projector
 const detailClassName = 'planning-detail';
 
-const months2 = ["month.jan", "month.feb", "month.mar", "month.apr",
-    "month.mai", "month.jul",
-    "month.jun", "month.aug", "month.sep", "month.oct", "month.nov",
-    "month.dez"];
+const isWeekendDay = day => day.getDay() === 0 || day.getDay() === 6;
 
-const months = ["month.jan", "month.feb", "month.mar", "month.apr", "month.mai",
-    "month.jul"];
+const isNotInMonth = year => month => day => {
+    const value = new Date(year, month, day).getMonth();
+    return month !== value;
+}
 
-const planningProjector = (rootElement) => {
+const planningProjector = (rootElement, planningController) => {
 
     // 12 X 31 tabelle + headers  zeichnen
     // befüllen mit kalender taben, festtage, sa,so, etc
@@ -39,18 +41,6 @@ HEX: #618685
         </div>
     `)
 
-    const today = new Date();
-
-    const isDayOff = year => month => day => {
-        const value = new Date(year, month, day).getDay();
-        return value === 0 || value === 6;
-    }
-
-    const isNotInMonth = year => month => day => {
-        const value = new Date(year, month, day).getMonth();
-        return month !== value;
-    }
-
     const calendar = planning.querySelector("#calendar");
 
     const myFunction = action => console.info("mouse was ", action)
@@ -66,27 +56,32 @@ HEX: #618685
     (31).times((idx) => calendar.appendChild(dom(`<div>${idx + 1}</div>`)))
 
     // per month
-    months.forEach(month => {
-        const yyyy = today.getFullYear();
-        const mm = months.indexOf(month);
+    const data = planningController.getCalendarData();
 
-        calendar.appendChild(
-            dom(`<div class="cal-first" data-i18n="${month}">d</div>`));
-        (31).times((idx) => {
-            const dayOff = isDayOff(yyyy)(mm)(idx + 1) ? " cal-day-off" : "";
-            const notInMonth = isNotInMonth(yyyy)(mm)(idx + 1)
-                ? " cal-not-in-month" : "";
-            const day = dom(`<div class="${dayOff}${notInMonth}"></div>`)
+    data.forEach((month, idx) => {
+        const yyyy = new Date().getFullYear();
+        const mm = idx;
 
-            day.onMouseDown = _ => myFunction('down')
-            day.onMouseUp = _ => myFunction('up')
-            day.onclick = _ => myFunction('click')
-            calendar.appendChild(day)
+        calendar.appendChild(dom(`<div class="cal-first" data-i18n="${months[idx]}"></div>`));
+        month.forEach((day, idx) => {
+            dayProjector(calendar, yyyy, mm, day, idx)
+
         })
     })
 
     appendFirst(rootElement)(planning)
 };
+
+const dayProjector = (rootElement, yyyy, mm, day, idx) => {
+    const dayOff = isWeekendDay(day.date) ? " cal-weekend-day" : "";
+    const notInMonth = isNotInMonth(yyyy)(mm)(idx + 1) ? " cal-not-in-month": "";
+    const element = dom(`<div class="${dayOff}${notInMonth}"></div>`)
+
+    element.onMouseDown = _ => myFunction('down')
+    element.onMouseUp = _ => myFunction('up')
+    element.onclick = _ => myFunction('click')
+    rootElement.appendChild(element)
+}
 
 const createColumnAmountString = () => {
     let col = "auto";
@@ -117,7 +112,7 @@ const pageCss = `
     .cal-header, .cal-first {
         font-weight: bold;
     }
-    .cal-day-off {
+    .cal-weekend-day {
         background-color: #80ced6 !important;
     }
     .cal-not-in-month {
