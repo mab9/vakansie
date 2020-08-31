@@ -1,5 +1,6 @@
 export {generateTable}
 
+// todo add i18n
 const generateTableHead = (table, data) => {
     const keys = Object.keys(data)
     let thead = table.createTHead();

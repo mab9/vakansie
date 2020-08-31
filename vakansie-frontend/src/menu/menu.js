@@ -53,7 +53,7 @@ const Menu = (rootElement) => {
                            ]}`);
 
     // initial entry
-    let selectedEntry = Observable(entries.data[0])
+    let selectedEntry = Observable(entries.data[2])
 
     const setSelectedEntry = value => {
         const newEntry = entries.data.find(entry => entry.id === value)
