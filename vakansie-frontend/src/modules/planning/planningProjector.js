@@ -14,7 +14,7 @@ const masterClassName = 'planning-master'; // should be unique for this projecto
 const detailClassName = 'planning-detail';
 
 /** @param day {Day} */
-const isWeekendDay = day => valueOf(day.date) === 0 || valueOf(day.date) === 6;
+const isWeekendDay = day => valueOf(day.date).getDay() === 0 || valueOf(day.date).getDay() === 6;
 
 /** @param day {Day} */
 const isNotInMonth = day => valueOf(day.date).getDate() !== valueOf(day.day);
@@ -75,9 +75,7 @@ HEX: #618685
 };
 
 
-const maybe = cond => func => {
-    if (cond) { func() }
-}
+const maybe = cond => func => cond ? func() : () => {}
 
 /** @param {Day} day */
 const dayProjector = (rootElement, yyyy, mm, day, idx) => {
