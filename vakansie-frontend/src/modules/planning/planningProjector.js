@@ -52,7 +52,7 @@ const addDragged = element => isDragged => {
     isDragged
         ? element.classList.add("cal-day-dragged")
         : element.classList.contains("cal-day-dragged")
-            ? element.classList.remove("cal-day-dragged") : "";
+        ? element.classList.remove("cal-day-dragged") : "";
 }
 
 /**
@@ -69,38 +69,34 @@ const dayProjector = (rootElement, day, planningController) => {
     const dragStart = planningController.getDragStart();
     const dragEnd = planningController.getDragEnd();
 
-
     dragEnd.onChange(dragEndDay => {
-        if (dragEndDay) {
-            const startValue = dragStart.getValue().id.getObs(VALUE).getValue()
-            const currentValue = valueOf(dragEndDay.id)
-            if (startValue < currentValue) {
-                const val = valueOf(day.id);
-                if (val >= startValue && val <= currentValue) {
+        maybe(dragEndDay)(() => {
+            const startValue = valueOf(dragStart.getValue().id);
+            const endValue = valueOf(dragEndDay.id);
+            const dayValue = valueOf(day.id);
+            //Math.abs(x)
+            // wenn current < start val den oberhalb
+            //      current > start val den unterhalb
+
+            if (startValue < endValue) {
+                if (dayValue >= startValue && dayValue <= endValue) {
                     addDragged(element)(true)
                 } else {
                     addDragged(element)(false)
                 }
             } else {
-                const val = valueOf(day.id);
-                if (val <= startValue && val >= currentValue) {
+                if (dayValue <= startValue && dayValue >= endValue) {
                     addDragged(element)(true)
                 } else {
                     addDragged(element)(false)
                 }
             }
-        }
+        })
     })
 
-    element.onmouseover = _ => {
-        // calc only when start day was set (mouse down)
-        if (isMouseDown.getValue()) {
-            const startValue = dragStart.getValue().id.getObs(VALUE).getValue()
-            const currentValue = valueOf(day.id)
-            dragEnd.setValue(day);
-            console.info("from: " + startValue + " until " + currentValue);
-        }
-    }
+    // calc only when start day was set (mouse down)
+    element.onmouseover = _ => maybe(isMouseDown.getValue())(() => dragEnd.setValue(day))
+
     element.onmousedown = _ => {
         isMouseDown.setValue(true);
         dragStart.setValue(day);
