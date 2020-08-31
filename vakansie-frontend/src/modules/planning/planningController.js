@@ -22,6 +22,10 @@ const PlanningController = () => {
 
     // total available holydays
     const holydays = Observable(20);
+    const isMouseDown = Observable(false);
+    /** @type dragStart {Day} */
+    const dragStart = Observable(undefined);
+    const dragEnd = Observable(undefined);
 
     // only used to generate uuid
     let idCounter = 0;
@@ -49,10 +53,17 @@ const PlanningController = () => {
 
     /**
      * @typedef PlanningController
+     * @param getCalenderData {[]}
+     * @param getHolydays {Observable}
+     * @param getDragStart {Observable}
+     * @param getMouseDown {Observable}
      */
     return Object.freeze({
         getCalendarData : getCalendarData,
         getHolydays : getHolydays,
+        getDragStart : () => dragStart,
+        getDragEnd : () => dragEnd,
+        getMouseDown : () => isMouseDown,
     });
 };
 
