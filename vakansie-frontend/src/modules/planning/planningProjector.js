@@ -3,6 +3,10 @@ import {dom} from "../../assets/util/dom.js";
 import "../../assets/util/times.js"
 import {months} from "./planningController.js";
 import {Day} from "./planningModel.js";
+import {
+    VALUE,
+    valueOf
+} from "../../base/presentationModel/presentationModel.js";
 
 export {planningProjector, pageCss}
 
@@ -10,10 +14,10 @@ const masterClassName = 'planning-master'; // should be unique for this projecto
 const detailClassName = 'planning-detail';
 
 /** @param day {Day} */
-const isWeekendDay = day => day.date.getDay() === 0 || day.date.getDay() === 6;
+const isWeekendDay = day => valueOf(day.date) === 0 || valueOf(day.date) === 6;
 
 /** @param day {Day} */
-const isNotInMonth = day => day.date.getDate() !== day.day
+const isNotInMonth = day => valueOf(day.date).getDate() !== valueOf(day.day);
 
 const planningProjector = (rootElement, planningController) => {
 
@@ -83,12 +87,20 @@ const dayProjector = (rootElement, yyyy, mm, day, idx) => {
 
     element.onMouseDown = _ => myFunction('down')
     element.onMouseUp = _ => myFunction('up')
-    element.onclick = _ => day.dayoff.setValue(!day.dayoff.getValue());
+    element.onclick = _ => day.dayoff.getObs(VALUE).setValue(!day.dayoff.getObs(VALUE).getValue());
+
+    day.dayoff.getObs(VALUE).onChange(isOff => {
+        if (isOff) {
+            element.classList.add("cal-day-requested-1")
+        } else {
+            if (element.classList.contains("cal-day-requested-1")) {
+                element.classList.remove("cal-day-requested-1")
+            }
+        }
+    })
 
     maybe(isWeekendDay(day))(() => element.classList.add("cal-weekend-day"))
     maybe(isNotInMonth(day))(() => element.classList.add("cal-not-in-month"))
-
-
 
     rootElement.appendChild(html)
 }
@@ -123,11 +135,14 @@ const pageCss = `
         font-weight: bold;
     }
     .cal-weekend-day {
-        background-color: #80ced6 !important;
+        background-color: rgb(128,206,214,1) !important;
     }
     .cal-not-in-month {
-        background-color: #d5f4e6 !important;
-     }
+        background-color: rgb(192,209,244,1) !important;
+    }
+    .cal-day-requested-1 {
+        background-color: rgb(192,209,244,0.8) !important;
+    }
     .${detailClassName} {
         display:        grid;
         grid-column-gap: 0.5em;

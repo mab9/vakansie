@@ -1,4 +1,7 @@
-import {presentationModelFromAttributeNames} from "../../base/presentationModel/presentationModel.js";
+import {
+    presentationModelFromAttributeNames,
+    VALUE
+} from "../../base/presentationModel/presentationModel.js";
 
 export { Day, ALL_DAY_ATTRIBUTE_NAMES}
 

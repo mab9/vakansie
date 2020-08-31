@@ -1,4 +1,5 @@
 import {Day} from "./planningModel.js";
+import {VALUE} from "../../base/presentationModel/presentationModel.js";
 
 export {PlanningController, months}
 
@@ -29,11 +30,11 @@ const PlanningController = () => {
         (31).times((idx) => {
             /** @type {Day} day */
             const day = Day();
-            day.id = idCounter++
-            day.day = idx + 1;
-            day.date = new Date(yyyy, mm, idx + 1);
-            day.dayoff = false;
-            day.approved = 1;
+            day.id.getObs(VALUE).setValue(idCounter++);
+            day.day.getObs(VALUE).setValue(idx + 1);
+            day.date.getObs(VALUE).setValue(new Date(yyyy, mm, idx + 1))
+            day.dayoff.getObs(VALUE).setValue(false);
+            day.approved.getObs(VALUE).setValue(0);
             days.push(day);
         })
         calendarData.push(days)
