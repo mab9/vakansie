@@ -61,14 +61,8 @@ HEX: #618685
     const data = planningController.getCalendarData();
 
     data.forEach((month, idx) => {
-        const yyyy = new Date().getFullYear();
-        const mm = idx;
-
         calendar.appendChild(dom(`<div class="cal-first" data-i18n="${months[idx]}"></div>`));
-        month.forEach((day, idx) => {
-            dayProjector(calendar, yyyy, mm, day, idx)
-
-        })
+        month.forEach(day => dayProjector(calendar, day))
     })
 
     appendFirst(rootElement)(planning)
@@ -78,7 +72,7 @@ HEX: #618685
 const maybe = cond => func => cond ? func() : () => {}
 
 /** @param {Day} day */
-const dayProjector = (rootElement, yyyy, mm, day, idx) => {
+const dayProjector = (rootElement, day) => {
 
     const html = dom(`<div class="empty"></div>`)
     const element = html.querySelector("div");
