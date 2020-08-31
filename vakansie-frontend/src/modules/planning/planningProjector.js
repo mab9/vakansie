@@ -100,6 +100,7 @@ const pageCss = `
     .${masterClassName}-grid-container > div {
         background-color: #fefbd8;
         text-align: center;
+        min-width: 28px;
         padding: 3px 0;
         font-size: 15px;
     }
