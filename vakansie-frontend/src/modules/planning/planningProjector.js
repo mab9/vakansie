@@ -10,8 +10,10 @@ export {planningProjector, pageCss}
 const masterClassName = 'planning-master'; // should be unique for this projector
 const detailClassName = 'planning-detail';
 
-const months = ["month.jan","month.feb","month.mar","month.apr","month.mai","month.jul",
+const months2 = ["month.jan","month.feb","month.mar","month.apr","month.mai","month.jul",
 "month.jun","month.aug","month.sep","month.oct","month.nov","month.dez"];
+
+const months = ["month.jan","month.feb","month.mar","month.apr","month.mai","month.jul"];
 
 const planningProjector = (rootElement) => {
 
@@ -20,90 +22,77 @@ const planningProjector = (rootElement) => {
 
     //https://dev.to/knheidorn/making-a-calendar-in-vanilla-javascript-48j8
 
-    const calendar = dom(`
+    /*
+
+
+HEX: #d5f4e6
+
+HEX: #80ced6
+
+HEX: #fefbd8
+
+HEX: #618685
+const header = planning.querySelector(".cal-header");
+    header.insertAdjacentHTML("afterend", "<div>1</div>");
+    header.insertAdjacentHTML("afterend", "<div>2</div>");
+     */
+
+    const planning = dom(`
         <h2> Planning Calendar </h2>
-        <div class="${masterClassName}-table">
-            <div class="${masterClassName}-head">
-                <div class="${masterClassName}-cell">
-                    <p>Month</p>
-                </div>
-                <div class="${masterClassName}-cell">
-                    <p>1</p>
-                </div>
-                <div class="${masterClassName}-cell">
-                    <p>2</p>
-                </div>
-            </div>
-            <div class="${masterClassName}-row">
-                <div class="${masterClassName}-cell">
-                    <p>Januar</p>
-                </div>
-                <div class="${masterClassName}-cell">
-                    <p>1</p>
-                </div>
-                <div class="${masterClassName}-cell">
-                    <p>2</p>
-                </div>
-            </div>
-            <div class="${masterClassName}-row">
-                <div class="${masterClassName}-cell">
-                    <p>Februar</p>
-                </div>
-                <div class="${masterClassName}-cell">
-                    <p>1</p>
-                </div>
-                <div class="${masterClassName}-cell">
-                    <p>2</p>
-                </div>
-            </div>
+        <div id="calendar" class="${masterClassName}-grid-container">
         </div>
     `)
 
     var d = new Date();
     var n = d.getFullYear();
 
-    // const table = calendar.querySelector("#calendar");
-    // const header = dom(`<div></div>`)
-    // header.appendChild(dom(`<div>Month</div>`))
-//
-    // // stays here only that .times( ) is interpreted as function. Strange behaviour!!
-    // const obsolete = 0;
-    // (30).times((idx) => header.appendChild(dom(`<div>${idx + 1}</div>`)))
-//
-    // table.appendChild(header)
 
-    appendFirst(rootElement)(calendar)
+    const calendar = planning.querySelector("#calendar");
+
+    // header
+    calendar.appendChild(dom(`<div class="cal-header">Month</div>`));
+    (31).times((idx) => calendar.appendChild(dom(`<div class="cal-header">${idx + 1}</div>`)))
+
+
+    // per month
+    months.forEach(month => {
+        calendar.appendChild(dom(`<div class="cal-first" data-i18n="${month}">d</div>`));
+        (31).times((idx) => calendar.appendChild(dom(`<div>${idx + 1}</div>`)))
+    })
+
+    appendFirst(rootElement)(planning)
 };
 
+const createColumnAmountString = () => {
+    let col = "auto";
+    (31).times((idx) => {col += " auto"})
+    return col;
+}
+
+createColumnAmountString()
+
 const pageCss = `
-    .${masterClassName} {
-        display:        grid;
-        grid-column-gap: 0.5em;
-        grid-template-columns: 1.7em auto auto; /* default: to be overridden dynamically */
-        margin-bottom:  0.5em ;
+    .${masterClassName}-grid-container {
+        display: grid;
+        grid-gap: 0.2em;
+        grid-template-columns: ${createColumnAmountString()};
+        background-color: #618685;
+        padding: 5px;
+        margin-bottom:  0.5em;
+    }
+    .${masterClassName}-grid-container > div {
+        background-color: #fefbd8;
+        text-align: center;
+        padding: 3px 0;
+        font-size: 15px;
+    }
+    .cal-header, .cal-first {
+        font-weight: bold;
     }
     .${detailClassName} {
         display:        grid;
         grid-column-gap: 0.5em;
         grid-template-columns: 1fr 3fr;
         margin-bottom:  0.5em ;
-    }
-    .${masterClassName}-table {
-        display: table;
-    }
-    .${masterClassName}-head {
-        display: table-row;
-        font-weight: bold;
-        text-align: center;
-    }
-    .${masterClassName}-row {
-        display: table-row;
-    }
-    .${masterClassName}-cell {
-        display: table-cell;
-        border: solid;
-        border-width: thin;
-        padding-left: 5px;
-        padding-right: 5px;
     }
 `;

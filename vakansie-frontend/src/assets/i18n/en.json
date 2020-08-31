@@ -7,5 +7,18 @@
     "menu.main.entry.vakansie": "Vakansie",
     "menu.main.entry.persons": "Persons",
     "menu.main.entry.planning": "Planning",
-    "planning.view.calendar.header.month": "Month"
+    "planning.view.calendar.header.month": "Month",
+
+    "month.jan":  "January",
+    "month.feb":  "February",
+    "month.mar":  "March",
+    "month.apr":  "April",
+    "month.mai":  "Mai",
+    "month.jul":  "June",
+    "month.jun":  "July",
+    "month.aug":  "August",
+    "month.sep":  "September",
+    "month.oct":  "October",
+    "month.nov":  "November",
+    "month.dez":  "December"
 }

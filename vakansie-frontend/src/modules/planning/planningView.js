@@ -18,9 +18,10 @@ document.head.appendChild(style);
  */
 const PlanningView = (rootElement, planningController) => {
 
+    // todo style cards / card different than instant update projector!
     const render = () => {
         const planning = dom(`
-            <div class="card">
+            <div class="cards">
                 <h1>this title will be changed by the translation service</h1>
                 <div class="holder">
                     <button id="plus" autofocus> + </button>
