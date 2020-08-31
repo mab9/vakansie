@@ -1,5 +1,6 @@
 import {Day} from "./planningModel.js";
 import {VALUE} from "../../base/presentationModel/presentationModel.js";
+import {Observable} from "../../base/observable/observable.js";
 
 export {PlanningController, months}
 
@@ -18,6 +19,9 @@ const months = ["month.jan", "month.feb", "month.mar", "month.apr", "month.mai",
 const PlanningController = () => {
     let calendarData = []
     const today = new Date();
+
+    // total available holydays
+    const holydays = Observable(20);
 
     // only used to generate uuid
     let idCounter = 0;
@@ -41,12 +45,14 @@ const PlanningController = () => {
     })
 
     const getCalendarData = () => calendarData;
+    const getHolydays = () => holydays;
 
     /**
      * @typedef PlanningController
      */
     return Object.freeze({
         getCalendarData : getCalendarData,
+        getHolydays : getHolydays,
     });
 };
 

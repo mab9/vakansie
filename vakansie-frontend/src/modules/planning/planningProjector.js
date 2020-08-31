@@ -7,6 +7,7 @@ import {
     VALUE,
     valueOf
 } from "../../base/presentationModel/presentationModel.js";
+import {Observable} from "../../base/observable/observable.js";
 
 export {planningProjector, pageCss}
 
@@ -37,6 +38,7 @@ HEX: #fefbd8
 
 HEX: #618685
 */
+
     const planning = dom(`
         <h2> Planning Calendar </h2>
         <div id="calendar" class="${masterClassName}-grid-container">

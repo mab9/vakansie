@@ -29,7 +29,7 @@ const PlanningView = (rootElement, planningController) => {
                 </div>
             </div>
 
-            <div class="card">
+            <div class="cards">
                 <h1 data-i18n="view.planning.title.details"></h1>
                 <div class="holder" id="detailContainer"></div>
             </div>
@@ -39,12 +39,13 @@ const PlanningView = (rootElement, planningController) => {
 
         const title = planning.querySelector("h1"); // select first h1
         const masterContainer = planning.querySelector("#masterContainer");
+        const detailContainer = planning.querySelector("#detailContainer");
         //translate('view.planning.title3')((trans) => title.innerHTML = trans);
         i18n('view.planning.title')(title);
 
         // i18n('key.id')(<h1>Person List</h1>)
         MasterView(masterContainer, planningController);
-        //DetailView(selectionController, detailContainer);
+        DetailView(detailContainer, planningController);
 
         rootElement.textContent = '';
         appendFirst(rootElement)(planning)
@@ -53,6 +54,11 @@ const PlanningView = (rootElement, planningController) => {
     render();
 };
 
+/**
+ * @param rootElement
+ * @param  planningController {PlanningController}
+ * @constructor
+ */
 const MasterView = (rootElement, planningController) => {
 
     const render = () => planningProjector(rootElement, planningController);
@@ -61,7 +67,21 @@ const MasterView = (rootElement, planningController) => {
 
 };
 
-const DetailView = (selectionController, rootElement) => {
-    const render = person => formProjector(selectionController, rootElement, person, ALL_PERSON_ATTRIBUTE_NAMES);
-    selectionController.onModelSelected(render);
+/**
+ * @param rootElement
+ * @param  planningController {PlanningController}
+ * @constructor
+ */
+const DetailView = (rootElement, planningController) => {
+    //const render = person => formProjector(selectionController, rootElement, person, ALL_PERSON_ATTRIBUTE_NAMES);
+    //selectionController.onModelSelected(render);
+    const holydays = planningController.getHolydays()
+
+    const planning = dom(`<h2> Anzahl verbleibende Ferientage: <span>5</span></h2>`)
+
+    const element = planning.querySelector("span")
+    holydays.onChange(value => element.innerText = value)
+
+    appendFirst(rootElement)(planning);
+
 };
