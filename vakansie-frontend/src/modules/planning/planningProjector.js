@@ -3,19 +3,17 @@ import {dom} from "../../assets/util/dom.js";
 import "../../assets/util/times.js"
 import {months} from "./planningController.js";
 import {Day} from "./planningModel.js";
-import {id} from "../../assets/church/church.js";
 
 export {planningProjector, pageCss}
 
 const masterClassName = 'planning-master'; // should be unique for this projector
 const detailClassName = 'planning-detail';
 
-const isWeekendDay = day => day.getDay() === 0 || day.getDay() === 6;
+/** @param day {Day} */
+const isWeekendDay = day => day.date.getDay() === 0 || day.date.getDay() === 6;
 
-const isNotInMonth = year => month => day => {
-    const value = new Date(year, month, day).getMonth();
-    return month !== value;
-}
+/** @param day {Day} */
+const isNotInMonth = day => day.date.getDate() !== day.day
 
 const planningProjector = (rootElement, planningController) => {
 
@@ -72,15 +70,27 @@ HEX: #618685
     appendFirst(rootElement)(planning)
 };
 
+
+const maybe = cond => func => {
+    if (cond) { func() }
+}
+
+/** @param {Day} day */
 const dayProjector = (rootElement, yyyy, mm, day, idx) => {
-    const dayOff = isWeekendDay(day.date) ? " cal-weekend-day" : "";
-    const notInMonth = isNotInMonth(yyyy)(mm)(idx + 1) ? " cal-not-in-month": "";
-    const element = dom(`<div class="${dayOff}${notInMonth}"></div>`)
+
+    const html = dom(`<div class="empty"></div>`)
+    const element = html.querySelector("div");
 
     element.onMouseDown = _ => myFunction('down')
     element.onMouseUp = _ => myFunction('up')
-    element.onclick = _ => myFunction('click')
-    rootElement.appendChild(element)
+    element.onclick = _ => day.dayoff.setValue(!day.dayoff.getValue());
+
+    maybe(isWeekendDay(day))(() => element.classList.add("cal-weekend-day"))
+    maybe(isNotInMonth(day))(() => element.classList.add("cal-not-in-month"))
+
+
+
+    rootElement.appendChild(html)
 }
 
 const createColumnAmountString = () => {
