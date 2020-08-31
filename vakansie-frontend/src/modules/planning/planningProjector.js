@@ -70,28 +70,20 @@ const dayProjector = (rootElement, day, planningController) => {
     const dragEnd = planningController.getDragEnd();
 
     dragEnd.onChange(dragEndDay => {
-        maybe(dragEndDay)(() => {
-            const startValue = valueOf(dragStart.getValue().id);
-            const endValue = valueOf(dragEndDay.id);
-            const dayValue = valueOf(day.id);
-            //Math.abs(x)
-            // wenn current < start val den oberhalb
-            //      current > start val den unterhalb
+        if (dragEndDay) {
+            const start = valueOf(dragStart.getValue().id);
+            const end = valueOf(dragEndDay.id);
+            const current = valueOf(day.id);
 
-            if (startValue < endValue) {
-                if (dayValue >= startValue && dayValue <= endValue) {
-                    addDragged(element)(true)
-                } else {
-                    addDragged(element)(false)
-                }
-            } else {
-                if (dayValue <= startValue && dayValue >= endValue) {
-                    addDragged(element)(true)
-                } else {
-                    addDragged(element)(false)
-                }
-            }
-        })
+            start < end
+                ? addDragged(element)(current >= start && current <= end)
+                : addDragged(element)(current <= start && current >= end)
+
+        } else {
+            // observable guard will prevent loops
+            dragEnd.setValue(undefined)
+            addDragged(element)(false)
+        }
     })
 
     // calc only when start day was set (mouse down)
@@ -106,6 +98,7 @@ const dayProjector = (rootElement, day, planningController) => {
         isMouseDown.setValue(false);
         dragStart.setValue(undefined);
         dragEnd.setValue(undefined);
+        addDragged(element)(false);
     }
     element.onclick = _ => day.dayoff.getObs(VALUE).setValue(!day.dayoff.getObs(VALUE).getValue());
 
