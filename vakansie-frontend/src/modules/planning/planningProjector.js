@@ -43,21 +43,38 @@ const header = planning.querySelector(".cal-header");
         </div>
     `)
 
-    var d = new Date();
-    var n = d.getFullYear();
+    const today = new Date();
 
+
+    const isDayOff = year => month => day => {
+        const value = new Date(year, month, day).getDay();
+        return value === 0 || value === 6;
+    }
+
+    const isNotInMonth = year => month => day => {
+        const value = new Date(year, month, day).getMonth();
+        return month !== value;
+    }
 
     const calendar = planning.querySelector("#calendar");
 
     // header
     calendar.appendChild(dom(`<div class="cal-header">Month</div>`));
-    (31).times((idx) => calendar.appendChild(dom(`<div class="cal-header">${idx + 1}</div>`)))
+    (31).times((idx) => calendar.appendChild(dom(`<div>${idx + 1}</div>`)))
 
 
     // per month
     months.forEach(month => {
+        const yyyy = today.getFullYear();
+        const mm = months.indexOf(month);
+
         calendar.appendChild(dom(`<div class="cal-first" data-i18n="${month}">d</div>`));
-        (31).times((idx) => calendar.appendChild(dom(`<div>${idx + 1}</div>`)))
+        (31).times((idx) => {
+            const dayOff = isDayOff(yyyy)(mm)(idx + 1) ? " cal-day-off" : "";
+            const notInMonth = isNotInMonth(yyyy)(mm)(idx + 1) ? " cal-not-in-month" : "";
+            const day = dom(`<div class="${dayOff}${notInMonth}"></div>`)
+            calendar.appendChild(day)
+        })
     })
 
     appendFirst(rootElement)(planning)
@@ -89,6 +106,12 @@ const pageCss = `
     .cal-header, .cal-first {
         font-weight: bold;
     }
+    .cal-day-off {
+        background-color: #80ced6 !important;
+    }
+    .cal-not-in-month {
+        background-color: #d5f4e6 !important;
+     }
     .${detailClassName} {
         display:        grid;
         grid-column-gap: 0.5em;
