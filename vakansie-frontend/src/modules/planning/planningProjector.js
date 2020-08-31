@@ -1,19 +1,19 @@
 import {appendFirst} from "../../assets/util/appendFirst.js";
 import {dom} from "../../assets/util/dom.js";
 import "../../assets/util/times.js"
-import {i18n} from "../../service/translationService.js";
-import {id} from "../../assets/church/church.js";
-import {generateTable} from "../../service/tableService.js";
 
 export {planningProjector, pageCss}
 
 const masterClassName = 'planning-master'; // should be unique for this projector
 const detailClassName = 'planning-detail';
 
-const months2 = ["month.jan","month.feb","month.mar","month.apr","month.mai","month.jul",
-"month.jun","month.aug","month.sep","month.oct","month.nov","month.dez"];
+const months2 = ["month.jan", "month.feb", "month.mar", "month.apr",
+    "month.mai", "month.jul",
+    "month.jun", "month.aug", "month.sep", "month.oct", "month.nov",
+    "month.dez"];
 
-const months = ["month.jan","month.feb","month.mar","month.apr","month.mai","month.jul"];
+const months = ["month.jan", "month.feb", "month.mar", "month.apr", "month.mai",
+    "month.jul"];
 
 const planningProjector = (rootElement) => {
 
@@ -32,11 +32,7 @@ HEX: #80ced6
 HEX: #fefbd8
 
 HEX: #618685
-const header = planning.querySelector(".cal-header");
-    header.insertAdjacentHTML("afterend", "<div>1</div>");
-    header.insertAdjacentHTML("afterend", "<div>2</div>");
-     */
-
+*/
     const planning = dom(`
         <h2> Planning Calendar </h2>
         <div id="calendar" class="${masterClassName}-grid-container">
@@ -44,7 +40,6 @@ const header = planning.querySelector(".cal-header");
     `)
 
     const today = new Date();
-
 
     const isDayOff = year => month => day => {
         const value = new Date(year, month, day).getDay();
@@ -58,21 +53,34 @@ const header = planning.querySelector(".cal-header");
 
     const calendar = planning.querySelector("#calendar");
 
+    const myFunction = action => console.info("mouse was ", action)
+
+    const isMouseDown = true;
+    calendar.onmousedown = _ => myFunction('cdown')
+    calendar.onmouseup = _ => myFunction('cup')
+    calendar.onclick = _ => myFunction('cclick')
+    calendar.onmouseover = _ => myFunction('cover')
+
     // header
     calendar.appendChild(dom(`<div class="cal-header">Month</div>`));
     (31).times((idx) => calendar.appendChild(dom(`<div>${idx + 1}</div>`)))
-
 
     // per month
     months.forEach(month => {
         const yyyy = today.getFullYear();
         const mm = months.indexOf(month);
 
-        calendar.appendChild(dom(`<div class="cal-first" data-i18n="${month}">d</div>`));
+        calendar.appendChild(
+            dom(`<div class="cal-first" data-i18n="${month}">d</div>`));
         (31).times((idx) => {
             const dayOff = isDayOff(yyyy)(mm)(idx + 1) ? " cal-day-off" : "";
-            const notInMonth = isNotInMonth(yyyy)(mm)(idx + 1) ? " cal-not-in-month" : "";
+            const notInMonth = isNotInMonth(yyyy)(mm)(idx + 1)
+                ? " cal-not-in-month" : "";
             const day = dom(`<div class="${dayOff}${notInMonth}"></div>`)
+
+            day.onMouseDown = _ => myFunction('down')
+            day.onMouseUp = _ => myFunction('up')
+            day.onclick = _ => myFunction('click')
             calendar.appendChild(day)
         })
     })
@@ -82,7 +90,9 @@ const header = planning.querySelector(".cal-header");
 
 const createColumnAmountString = () => {
     let col = "auto";
-    (31).times((idx) => {col += " auto"})
+    (31).times((idx) => {
+        col += " auto"
+    })
     return col;
 }
 
