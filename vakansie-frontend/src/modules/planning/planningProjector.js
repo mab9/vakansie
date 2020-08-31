@@ -48,12 +48,17 @@ const planningProjector = (rootElement, planningController) => {
 
 const maybe = cond => func => cond ? func() : ""
 
-const addDragged = element => isDragged => {
-    isDragged
-        ? element.classList.add("cal-day-dragged")
-        : element.classList.contains("cal-day-dragged")
-        ? element.classList.remove("cal-day-dragged") : "";
+const addDragged = day => element => isDragged => {
+    if (isDragged) {
+        element.classList.add("cal-day-dragged")
+        setDayOff(day)(true)
+    } else {
+        element.classList.contains("cal-day-dragged")
+            ? element.classList.remove("cal-day-dragged") : "";
+    }
 }
+
+const setDayOff = day => off => day.dayoff.getObs(VALUE).setValue(off);
 
 /**
  * @param rootElement
@@ -76,13 +81,13 @@ const dayProjector = (rootElement, day, planningController) => {
             const current = valueOf(day.id);
 
             start < end
-                ? addDragged(element)(current >= start && current <= end)
-                : addDragged(element)(current <= start && current >= end)
+                ? addDragged(day)(element)(current >= start && current <= end)
+                : addDragged(day)(element)(current <= start && current >= end)
 
         } else {
             // observable guard will prevent loops
             dragEnd.setValue(undefined)
-            addDragged(element)(false)
+            addDragged(day)(element)(false)
         }
     })
 
@@ -94,13 +99,15 @@ const dayProjector = (rootElement, day, planningController) => {
         dragStart.setValue(day);
         dragEnd.setValue(day);
     }
+
     element.onmouseup = _ => {
         isMouseDown.setValue(false);
         dragStart.setValue(undefined);
         dragEnd.setValue(undefined);
         addDragged(element)(false);
     }
-    element.onclick = _ => day.dayoff.getObs(VALUE).setValue(!day.dayoff.getObs(VALUE).getValue());
+
+    //element.onclick = _ => setDayOff(day)(!day.dayoff.getObs(VALUE).getValue())
 
     const holydays = planningController.getHolydays();
 
