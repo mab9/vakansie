@@ -60,15 +60,8 @@ const addDragged = day => element => isDragged => {
 
 const setDayOff = day => off => day.dayoff.getObs(VALUE).setValue(off);
 
-/**
- * @param rootElement
- * @param  day {Day}
- * @param  planningController {PlanningController}
- */
-const dayProjector = (rootElement, day, planningController) => {
 
-    const html = dom(`<div class="empty"></div>`)
-    const element = html.querySelector("div");
+const setEventListener = element => day => planningController => {
 
     const isMouseDown = planningController.getMouseDown();
     const dragStart = planningController.getDragStart();
@@ -91,7 +84,7 @@ const dayProjector = (rootElement, day, planningController) => {
         }
     })
 
-    // calc only when start day was set (mouse down)
+        // calc only when start day was set (mouse down)
     element.onmouseover = _ => maybe(isMouseDown.getValue())(() => dragEnd.setValue(day))
 
     element.onmousedown = _ => {
@@ -108,7 +101,6 @@ const dayProjector = (rootElement, day, planningController) => {
     }
 
     //element.onclick = _ => setDayOff(day)(!day.dayoff.getObs(VALUE).getValue())
-
     const holydays = planningController.getHolydays();
 
     day.dayoff.getObs(VALUE).onChange(isOff => {
@@ -122,7 +114,19 @@ const dayProjector = (rootElement, day, planningController) => {
             }
         }
     })
+}
 
+/**
+ * @param rootElement
+ * @param  day {Day}
+ * @param  planningController {PlanningController}
+ */
+const dayProjector = (rootElement, day, planningController) => {
+
+    const html = dom(`<div class="empty"></div>`)
+    const element = html.querySelector("div");
+
+    setEventListener(element)(day)(planningController);
     maybe(isWeekendDay(day))(() => element.classList.add("cal-weekend-day"))
     maybe(isNotInMonth(day))(() => element.classList.add("cal-not-in-month"))
 
