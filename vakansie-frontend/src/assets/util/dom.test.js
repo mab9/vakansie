@@ -78,4 +78,14 @@ util.add("Convert to html table", assert => {
 
 });
 
+util.add("Convert to html class test", assert => {
+    const html = dom(`<div class="fancy"></div>`);
+    const element = html.querySelector("div");
+    element.className = "fancy";
+
+    const classes = element.classList;
+    assert.is(classes.length, 1)
+    assert.is(classes[0], "fancy")
+});
+
 util.run();
