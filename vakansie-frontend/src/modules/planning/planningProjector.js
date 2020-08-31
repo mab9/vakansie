@@ -47,14 +47,14 @@ const planningProjector = (rootElement, planningController) => {
 };
 
 const maybe = cond => func => cond ? func() : ""
+const saveClassRemoval = element => clazz => maybe(element.classList.contains(clazz))(() => element.classList.remove(clazz));
 
 const addDragged = day => element => isDragged => {
     if (isDragged) {
         element.classList.add("cal-day-dragged")
         setDayOff(day)(true)
     } else {
-        element.classList.contains("cal-day-dragged")
-            ? element.classList.remove("cal-day-dragged") : "";
+        saveClassRemoval(element)("cal-day-dragged");
     }
 }
 
