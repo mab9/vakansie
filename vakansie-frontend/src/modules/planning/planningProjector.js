@@ -64,7 +64,7 @@ HEX: #618685
 
     data.forEach((month, idx) => {
         calendar.appendChild(dom(`<div class="cal-first" data-i18n="${months[idx]}"></div>`));
-        month.forEach(day => dayProjector(calendar, day))
+        month.forEach(day => dayProjector(calendar, day, planningController))
     })
 
     appendFirst(rootElement)(planning)
@@ -73,8 +73,12 @@ HEX: #618685
 
 const maybe = cond => func => cond ? func() : () => {}
 
-/** @param {Day} day */
-const dayProjector = (rootElement, day) => {
+/**
+ * @param rootElement
+ * @param  day {Day}
+ * @param  planningController {PlanningController}
+ */
+const dayProjector = (rootElement, day, planningController) => {
 
     const html = dom(`<div class="empty"></div>`)
     const element = html.querySelector("div");
@@ -83,15 +87,20 @@ const dayProjector = (rootElement, day) => {
     element.onMouseUp = _ => myFunction('up')
     element.onclick = _ => day.dayoff.getObs(VALUE).setValue(!day.dayoff.getObs(VALUE).getValue());
 
+    const holydays = planningController.getHolydays();
+
     day.dayoff.getObs(VALUE).onChange(isOff => {
         if (isOff) {
             element.classList.add("cal-day-requested-1")
+            holydays.setValue(holydays.getValue() -1);
         } else {
             if (element.classList.contains("cal-day-requested-1")) {
                 element.classList.remove("cal-day-requested-1")
+                holydays.setValue(holydays.getValue() +1);
             }
         }
     })
+
 
     maybe(isWeekendDay(day))(() => element.classList.add("cal-weekend-day"))
     maybe(isNotInMonth(day))(() => element.classList.add("cal-not-in-month"))
