@@ -10,12 +10,11 @@ export {planningProjector, pageCss}
 const masterClassName = 'planning-master'; // should be unique for this projector
 const detailClassName = 'planning-detail';
 
-/** @param day {Day} */
-const isWeekendDay = day => valueOf(day.date).getDay() === 0 || valueOf(day.date).getDay() === 6;
 
-/** @param day {Day} */
-const isNotInMonth = day => valueOf(day.date).getDate() !== valueOf(day.day);
-
+/**
+ * @param  rootElement        {HTMLElement}
+ * @param  planningController {PlanningController}
+ */
 const planningProjector = (rootElement, planningController) => {
 
     // 12 X 31 tabelle + headers  zeichnen
@@ -25,11 +24,17 @@ const planningProjector = (rootElement, planningController) => {
 
     const planning = dom(`
         <h2> Planning Calendar </h2>
-        <div id="calendar" class="${masterClassName}-grid-container">
-        </div>
+        <button autofocus> + </button>
+        <button autofocus> - </button>
+        <div id="calendar" class="${masterClassName}-grid-container"></div>
     `)
 
-    const calendar = planning.querySelector("#calendar");
+    const [title, add, remove, calendar] = planning.children;
+    //const calendar = planning.querySelector("#calendar");
+
+    const statusAdd = planningController.getStatusAdd();
+    add.onclick = () => statusAdd.getObs(VALUE).setValue(true)
+    remove.onclick = () => statusAdd.getObs(VALUE).setValue(false)
 
     // header
     calendar.appendChild(dom(`<div class="cal-header">Month</div>`));
@@ -62,6 +67,8 @@ const setDayOff = day => off => day.dayoff.getObs(VALUE).setValue(off);
 
 
 const setEventListener = element => day => planningController => {
+
+    const statusAdd = planningController.getStatusAdd();
 
     const isMouseDown = planningController.getMouseDown();
     const dragStart = planningController.getDragStart();
@@ -127,8 +134,8 @@ const dayProjector = (rootElement, day, planningController) => {
     const element = html.querySelector("div");
 
     setEventListener(element)(day)(planningController);
-    maybe(isWeekendDay(day))(() => element.classList.add("cal-weekend-day"))
-    maybe(isNotInMonth(day))(() => element.classList.add("cal-not-in-month"))
+    maybe(day.isWeekendDay())(() => element.classList.add("cal-weekend-day"))
+    maybe(day.isNotInMonth())(() => element.classList.add("cal-not-in-month"))
 
     rootElement.appendChild(html)
 }
@@ -144,16 +151,21 @@ const createColumnAmountString = () => {
 createColumnAmountString()
 
 const pageCss = `
+    button {
+         margin-bottom:  0.5em ;
+    }
+
     .${masterClassName}-grid-container {
         display: grid;
-        grid-gap: 0.2em;
+        /*grid-gap: 0.2em;*/
         grid-template-columns: ${createColumnAmountString()};
         background-color: #618685;
-        padding: 5px;
+        padding: 2px;
         margin-bottom:  0.5em;
     }
     .${masterClassName}-grid-container > div {
         background-color: #fefbd8;
+        border: 2px solid #618685;
         text-align: center;
         min-width: 28px;
         padding: 3px 0;

@@ -24,7 +24,6 @@ const PlanningView = (rootElement, planningController) => {
             <div class="cards">
                 <h1>this title will be changed by the translation service</h1>
                 <div class="holder">
-                    <button id="plus" autofocus> + </button>
                     <div    id="masterContainer"></div>
                 </div>
             </div>

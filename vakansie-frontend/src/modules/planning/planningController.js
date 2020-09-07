@@ -1,6 +1,7 @@
 import {Day} from "./planningModel.js";
-import {VALUE} from "../../base/presentationModel/presentationModel.js";
+import {Attribute, VALUE} from "../../base/presentationModel/presentationModel.js";
 import {Observable} from "../../base/observable/observable.js";
+import {ListController, SelectionController} from "../../base/controller/controller.js";
 
 export {PlanningController, months}
 
@@ -17,6 +18,10 @@ const months = ["month.jan", "month.feb", "month.mar", "month.apr", "month.mai",
  * @constructor
  */
 const PlanningController = () => {
+
+    const listController = ListController();
+    const selectionController = SelectionController("");
+
     let calendarData = []
     const today = new Date();
 
@@ -25,7 +30,11 @@ const PlanningController = () => {
     const isMouseDown = Observable(false);
     /** @type dragStart {Day} */
     const dragStart = Observable(undefined);
+    /** @type dragStart {Day} */
     const dragEnd = Observable(undefined);
+
+    /** @type statusAdd {Attribute} */
+    const statusAdd = Attribute(true);
 
     // only used to generate uuid
     let idCounter = 0;
@@ -53,10 +62,6 @@ const PlanningController = () => {
 
     /**
      * @typedef PlanningController
-     * @param getCalenderData {[]}
-     * @param getHolydays {Observable}
-     * @param getDragStart {Observable}
-     * @param getMouseDown {Observable}
      */
     return Object.freeze({
         getCalendarData : getCalendarData,
@@ -64,6 +69,7 @@ const PlanningController = () => {
         getDragStart : () => dragStart,
         getDragEnd : () => dragEnd,
         getMouseDown : () => isMouseDown,
+        getStatusAdd : () => statusAdd,
     });
 };
 

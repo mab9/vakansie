@@ -2,13 +2,20 @@ import { Observable } from "../observable/observable.js";
 import { id }         from "../../assets/church/church.js";
 
 export { Attribute, presentationModelFromAttributeNames,
-         VALID, VALUE, EDITABLE, LABEL, valueOf }
+         VALID, VALUE, EDITABLE, LABEL, SELECTED, valueOf }
 
 const VALUE    = "value";
 const VALID    = "valid";
 const EDITABLE = "editable";
 const LABEL    = "label";
+const SELECTED = "selected"
 
+
+/**
+ * @return Readonly {Attribute}
+ * @constructor
+ * @param value {String}
+ */
 const Attribute = value => {
 
     const observables = {};
@@ -32,7 +39,10 @@ const Attribute = value => {
     // todo: this might set many validators without discharging old ones
     const setValidator = validate => getObs(VALUE).onChange( val => getObs(VALID).setValue(validate(val)));
 
-    return { getObs, hasObs, setValidator, setConverter, setConvertedValue }
+    /**
+     * @typedef Attribute
+     */
+    return Object.freeze( { getObs, hasObs, setValidator, setConverter, setConvertedValue })
 };
 
 
