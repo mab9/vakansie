@@ -2,6 +2,7 @@ import {appendFirst} from "../../assets/util/appendFirst.js";
 import {dom} from "../../assets/util/dom.js";
 import {planningProjector, pageCss} from "./planningProjector.js";
 import {i18n} from "../../service/translationService.js";
+import {VALUE} from "../../base/presentationModel/presentationModel.js";
 
 export {PlanningView};
 
@@ -79,7 +80,7 @@ const DetailView = (rootElement, planningController) => {
     const planning = dom(`<h2> Anzahl verbleibende Ferientage: <span>5</span></h2>`)
 
     const element = planning.querySelector("span")
-    holydays.onChange(value => element.innerText = value)
+    holydays.getObs(VALUE).onChange(value => element.innerText = value)
 
     appendFirst(rootElement)(planning);
 

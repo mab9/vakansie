@@ -71,9 +71,9 @@ const setEventListener = element => day => planningController => {
     const holydays    = planningController.getHolydays();
 
 
-    dragCurrent.onChange(currentDay => {
+    dragCurrent.getObs(VALUE).onChange(currentDay => {
         if (currentDay) {
-            const start = valueOf(dragStart.getValue().id);
+            const start = valueOf(dragStart.getObs(VALUE).getValue().id);
             const end = valueOf(currentDay.id);
             const dayValue = valueOf(day.id);
 
@@ -83,7 +83,7 @@ const setEventListener = element => day => planningController => {
 
         } else {
             // observable guard will prevent loops
-            dragCurrent.setValue(undefined)
+            dragCurrent.getObs(VALUE).setValue(undefined)
             addSelected(day)(false)
         }
     })
@@ -96,33 +96,33 @@ const setEventListener = element => day => planningController => {
             }
         } else {
             saveClassRemoval(element)("cal-day-dragged");
-            if (isMouseDown.getValue()) setDayOff(day)(false)
+            if (isMouseDown.getObs(VALUE).getValue()) setDayOff(day)(false)
         }
     })
 
     day.dayoff.getObs(VALUE).onChange(isOff => {
         if (isOff) {
             element.classList.add("cal-day-requested-1")
-            holydays.setValue(holydays.getValue() - 1);
+            holydays.getObs(VALUE).setValue(holydays.getObs(VALUE).getValue() - 1);
         } else {
             saveClassRemoval(element)("cal-day-requested-1");
-            holydays.setValue(holydays.getValue() + 1);
+            holydays.getObs(VALUE).setValue(holydays.getObs(VALUE).getValue() + 1);
         }
     })
 
     // calc only when start day was set (mouse down)
-    element.onmouseover = _ => maybe(isMouseDown.getValue())(() => dragCurrent.setValue(day))
+    element.onmouseover = _ => maybe(isMouseDown.getObs(VALUE).getValue())(() => dragCurrent.getObs(VALUE).setValue(day))
 
     element.onmousedown = _ => {
-        isMouseDown.setValue(true);
-        dragStart.setValue(day);
-        dragCurrent.setValue(day);
+        isMouseDown.getObs(VALUE).setValue(true);
+        dragStart.getObs(VALUE).setValue(day);
+        dragCurrent.getObs(VALUE).setValue(day);
     }
 
     element.onmouseup = _ => {
-        isMouseDown.setValue(false);
-        dragStart.setValue(undefined);
-        dragCurrent.setValue(undefined);
+        isMouseDown.getObs(VALUE).setValue(false);
+        dragStart.getObs(VALUE).setValue(undefined);
+        dragCurrent.getObs(VALUE).setValue(undefined);
     }
 }
 

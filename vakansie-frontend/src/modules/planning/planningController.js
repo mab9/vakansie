@@ -38,51 +38,18 @@ const PlanningController = () => {
     const listController = ListController();
     const selectionController = SelectionController("");
 
-    let calendarData = []
-    const today = new Date();
-
     // total available holydays
-    const holydays = Observable(20);
-    const isMouseDown = Observable(false);
-    /** @type dragStart {Day} */
-    const dragStart = Observable(undefined);
-    /** @type dragCurrent {Day} */
-    const dragCurrent = Observable(undefined);
+    const holydays = Attribute(20);
+    const isMouseDown = Attribute(false);
+    /** @type dragStart {Attribute} */
+    const dragStart = Attribute(undefined);
+    /** @type dragCurrent {Attribute} */
+    const dragCurrent = Attribute(undefined);
 
     /** @type statusAdd {Attribute} */
     const statusAdd = Attribute(true);
 
-    // only used to generate uuid
-    let idCounter = 0;
-    months.forEach(month => {
-        let days = []
-
-        const yyyy = today.getFullYear();
-        const mm = months.indexOf(month);
-
-        (31).times((idx) => {
-            /** @type {Day} day */
-            const day = Day();
-            day.id.getObs(VALUE).setValue(idCounter++);
-            day.day.getObs(VALUE).setValue(idx + 1);
-
-            const date = new Date(yyyy, mm, idx + 1)
-            day.date.getObs(VALUE).setValue(new Date(date))
-            const holyday = findHolyday(date)
-
-            if (holyday) {
-                console.info(holyday)
-            }
-
-            day.holyday.getObs(VALUE).setValue(!!holyday)
-            day.holyday.getObs(LABEL).setValue(holyday ? holyday.label : "")
-
-            day.dayoff.getObs(VALUE).setValue(false);
-            day.approved.getObs(VALUE).setValue(0);
-            days.push(day);
-        })
-        calendarData.push(days)
-    })
+    const calendarData = initializeCalendar();
 
     const getCalendarData = () => calendarData;
     const getHolydays = () => holydays;
@@ -99,4 +66,38 @@ const PlanningController = () => {
         getStatusAdd: () => statusAdd,
     });
 };
+
+const initializeCalendar = () => {
+    // only used to generate uuid
+    let data = []
+    let idCounter = 0;
+    const today = new Date();
+
+    months.forEach(month => {
+        let days = []
+
+        const yyyy = today.getFullYear();
+        const mm = months.indexOf(month);
+
+        (31).times((idx) => {
+            /** @type {Day} day */
+            const day = Day();
+            day.id.getObs(VALUE).setValue(idCounter++);
+            day.day.getObs(VALUE).setValue(idx + 1);
+
+            const date = new Date(yyyy, mm, idx + 1)
+            day.date.getObs(VALUE).setValue(new Date(date))
+            const holyday = findHolyday(date)
+
+            day.holyday.getObs(VALUE).setValue(!!holyday)
+            day.holyday.getObs(LABEL).setValue(holyday ? holyday.label : "")
+
+            day.dayoff.getObs(VALUE).setValue(false);
+            day.approved.getObs(VALUE).setValue(0);
+            days.push(day);
+        })
+        data.push(days)
+    })
+    return data;
+}
 
