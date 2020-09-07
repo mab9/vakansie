@@ -3,7 +3,6 @@ import { Suite } from "../../test/test.js"
 
 const util = Suite("util-dates");
 
-// extending the prototype of Date objects
 util.add("equals", assert => {
 
     const today = new Date();
@@ -16,7 +15,6 @@ util.add("equals", assert => {
     assert.true(!yesterday.sameDay(today));
 });
 
-// extending the prototype of Date objects
 util.add("guard check", assert => {
 
     const today = new Date();
@@ -27,6 +25,31 @@ util.add("guard check", assert => {
     } catch (exception) {
         assert.true(exception);
     }
+
+    try {
+        today.between("null", new Date());
+        assert.true(0) // should never arrive to this code!
+    } catch (exception) {
+        assert.true(exception);
+    }
+
+    try {
+        today.between(new Date(), false);
+        assert.true(0) // should never arrive to this code!
+    } catch (exception) {
+        assert.true(exception);
+    }
+});
+
+util.add("between", assert => {
+
+    const today = new Date();
+    const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() -1);
+    const nextWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+
+    assert.true(today.between(yesterday, nextWeek));
+    assert.true(!yesterday.between(today, nextWeek));
+    assert.true(!nextWeek.between(today, yesterday));
 });
 
 util.run();
