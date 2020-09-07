@@ -3,13 +3,12 @@ import {dom} from "../../assets/util/dom.js";
 import "../../assets/util/times.js"
 import {months} from "./planningController.js";
 import {Day} from "./planningModel.js";
-import {VALUE, valueOf} from "../../base/presentationModel/presentationModel.js";
+import {VALUE, SELECTED, valueOf} from "../../base/presentationModel/presentationModel.js";
 
 export {planningProjector, pageCss}
 
 const masterClassName = 'planning-master'; // should be unique for this projector
 const detailClassName = 'planning-detail';
-
 
 /**
  * @param  rootElement        {HTMLElement}
@@ -54,73 +53,78 @@ const planningProjector = (rootElement, planningController) => {
 const maybe = cond => func => cond ? func() : ""
 const saveClassRemoval = element => clazz => maybe(element.classList.contains(clazz))(() => element.classList.remove(clazz));
 
-const addDragged = day => element => isDragged => {
-    if (isDragged) {
-        element.classList.add("cal-day-dragged")
-        setDayOff(day)(true)
-    } else {
-        saveClassRemoval(element)("cal-day-dragged");
-    }
+const addSelected = day => isDragged => {
+    isDragged
+        ? day.date.getObs(SELECTED).setValue(true)
+        : day.date.getObs(SELECTED).setValue(false)
 }
 
 const setDayOff = day => off => day.dayoff.getObs(VALUE).setValue(off);
-
 
 const setEventListener = element => day => planningController => {
 
     const statusAdd = planningController.getStatusAdd();
 
     const isMouseDown = planningController.getMouseDown();
-    const dragStart = planningController.getDragStart();
-    const dragEnd = planningController.getDragEnd();
+    const dragStart   = planningController.getDragStart();
+    const dragCurrent = planningController.getDragCurrent();
+    const holydays    = planningController.getHolydays();
 
-    dragEnd.onChange(dragEndDay => {
-        if (dragEndDay) {
+
+    dragCurrent.onChange(currentDay => {
+        if (currentDay) {
             const start = valueOf(dragStart.getValue().id);
-            const end = valueOf(dragEndDay.id);
-            const current = valueOf(day.id);
+            const end = valueOf(currentDay.id);
+            const dayValue = valueOf(day.id);
 
             start < end
-                ? addDragged(day)(element)(current >= start && current <= end)
-                : addDragged(day)(element)(current <= start && current >= end)
+                ? addSelected(day)(dayValue >= start && dayValue <= end)
+                : addSelected(day)(dayValue <= start && dayValue >= end)
 
         } else {
             // observable guard will prevent loops
-            dragEnd.setValue(undefined)
-            addDragged(day)(element)(false)
+            dragCurrent.setValue(undefined)
+            addSelected(day)(false)
         }
     })
 
-        // calc only when start day was set (mouse down)
-    element.onmouseover = _ => maybe(isMouseDown.getValue())(() => dragEnd.setValue(day))
 
-    element.onmousedown = _ => {
-        isMouseDown.setValue(true);
-        dragStart.setValue(day);
-        dragEnd.setValue(day);
-    }
-
-    element.onmouseup = _ => {
-        isMouseDown.setValue(false);
-        dragStart.setValue(undefined);
-        dragEnd.setValue(undefined);
-        addDragged(element)(false);
-    }
-
-    //element.onclick = _ => setDayOff(day)(!day.dayoff.getObs(VALUE).getValue())
-    const holydays = planningController.getHolydays();
+    day.date.getObs(SELECTED).onChange(isSelected => {
+        if (isSelected) {
+            if (day.isBookable()) {
+                element.classList.add("cal-day-dragged")
+                setDayOff(day)(true)
+            }
+        } else {
+            saveClassRemoval(element)("cal-day-dragged");
+            if (isMouseDown.getValue()) setDayOff(day)(false)
+        }
+    })
 
     day.dayoff.getObs(VALUE).onChange(isOff => {
         if (isOff) {
             element.classList.add("cal-day-requested-1")
             holydays.setValue(holydays.getValue() - 1);
         } else {
-            if (element.classList.contains("cal-day-requested-1")) {
-                element.classList.remove("cal-day-requested-1")
-                holydays.setValue(holydays.getValue() + 1);
-            }
+            saveClassRemoval(element)("cal-day-requested-1");
+            holydays.setValue(holydays.getValue() + 1);
         }
     })
+
+    // calc only when start day was set (mouse down)
+    element.onmouseover = _ => maybe(isMouseDown.getValue())(() => dragCurrent.setValue(day))
+
+    element.onmousedown = _ => {
+        isMouseDown.setValue(true);
+        dragStart.setValue(day);
+        dragCurrent.setValue(day);
+    }
+
+    element.onmouseup = _ => {
+        isMouseDown.setValue(false);
+        dragStart.setValue(undefined);
+        dragCurrent.setValue(undefined);
+    }
 }
 
 /**

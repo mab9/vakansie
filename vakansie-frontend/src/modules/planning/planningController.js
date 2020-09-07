@@ -30,8 +30,8 @@ const PlanningController = () => {
     const isMouseDown = Observable(false);
     /** @type dragStart {Day} */
     const dragStart = Observable(undefined);
-    /** @type dragStart {Day} */
-    const dragEnd = Observable(undefined);
+    /** @type dragCurrent {Day} */
+    const dragCurrent = Observable(undefined);
 
     /** @type statusAdd {Attribute} */
     const statusAdd = Attribute(true);
@@ -67,7 +67,7 @@ const PlanningController = () => {
         getCalendarData : getCalendarData,
         getHolydays : getHolydays,
         getDragStart : () => dragStart,
-        getDragEnd : () => dragEnd,
+        getDragCurrent : () => dragCurrent,
         getMouseDown : () => isMouseDown,
         getStatusAdd : () => statusAdd,
     });
