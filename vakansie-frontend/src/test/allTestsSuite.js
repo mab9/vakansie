@@ -6,6 +6,7 @@
 import '../assets/util/times.test.js'
 import '../assets/util/strings.test.js'
 import '../assets/util/dom.test.js'
+import '../assets/util/dates.test.js'
 
 import '../assets/church/church.test.js'
 import '../assets/church/rock.test.js'
