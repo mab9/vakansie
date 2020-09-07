@@ -3,7 +3,7 @@ import {dom} from "../../assets/util/dom.js";
 import "../../assets/util/times.js"
 import {months} from "./planningController.js";
 import {Day} from "./planningModel.js";
-import {VALUE, SELECTED, valueOf} from "../../base/presentationModel/presentationModel.js";
+import {VALUE, LABEL, SELECTED, valueOf} from "../../base/presentationModel/presentationModel.js";
 
 export {planningProjector, pageCss}
 
@@ -88,7 +88,6 @@ const setEventListener = element => day => planningController => {
         }
     })
 
-
     day.date.getObs(SELECTED).onChange(isSelected => {
         if (isSelected) {
             if (day.isBookable()) {
@@ -127,6 +126,8 @@ const setEventListener = element => day => planningController => {
     }
 }
 
+const setTooltip = element => text => element.setAttribute("title", text);
+
 /**
  * @param rootElement
  * @param  day {Day}
@@ -140,6 +141,8 @@ const dayProjector = (rootElement, day, planningController) => {
     setEventListener(element)(day)(planningController);
     maybe(day.isWeekendDay())(() => element.classList.add("cal-weekend-day"))
     maybe(day.isNotInMonth())(() => element.classList.add("cal-not-in-month"))
+    maybe(day.holyday.getObs(VALUE).getValue())(() => element.classList.add("cal-holyday"))
+    maybe(day.holyday.getObs(VALUE).getValue())(() => setTooltip(element)(day.holyday.getObs(LABEL).getValue()))
 
     rootElement.appendChild(html)
 }
@@ -183,6 +186,9 @@ const pageCss = `
     }
     .cal-not-in-month {
         background-color: rgb(192,209,244,1) !important;
+    }
+    .cal-holyday {
+        background-color: rgb(128,175,214,1) !important;
     }
     .cal-day-requested-1 {
         background-color: rgb(192,209,244,0.8) !important;
