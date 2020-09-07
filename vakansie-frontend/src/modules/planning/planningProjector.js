@@ -3,7 +3,8 @@ import {dom} from "../../assets/util/dom.js";
 import "../../assets/util/times.js"
 import {months} from "./planningController.js";
 import {Day} from "./planningModel.js";
-import {VALUE, LABEL, SELECTED, valueOf} from "../../base/presentationModel/presentationModel.js";
+import {VALUE, LABEL, SELECTED, valueOf, Attribute} from "../../base/presentationModel/presentationModel.js";
+import "../../assets/util/dates.js"
 
 export {planningProjector, pageCss}
 
@@ -16,24 +17,39 @@ const detailClassName = 'planning-detail';
  */
 const planningProjector = (rootElement, planningController) => {
 
-    // 12 X 31 tabelle + headers  zeichnen
-    // befüllen mit kalender taben, festtage, sa,so, etc
-
     //https://dev.to/knheidorn/making-a-calendar-in-vanilla-javascript-48j8
 
     const planning = dom(`
         <h2> Planning Calendar </h2>
         <button autofocus> + </button>
-        <button autofocus> - </button>
+        <input type="date" min="2020-01-01" max="2020-12-31">from </input>
+        <input type="date" min="2020-01-01" max="2020-12-31">to   </input>
+
         <div id="calendar" class="${masterClassName}-grid-container"></div>
     `)
 
-    const [title, add, remove, calendar] = planning.children;
+    const [title, add, from, to, calendar] = planning.children;
     //const calendar = planning.querySelector("#calendar");
 
     const statusAdd = planningController.getStatusAdd();
-    add.onclick = () => statusAdd.getObs(VALUE).setValue(true)
-    remove.onclick = () => statusAdd.getObs(VALUE).setValue(false)
+
+    add.onclick = () => {
+        statusAdd.getObs(VALUE).setValue(!statusAdd.getObs(VALUE).getValue())
+        statusAdd.getObs(VALUE).getValue() ? add.innerText = "+" : add.innerText = "-";
+    }
+
+    const fromDay     = planningController.getFromDay();
+    const toDay       = planningController.getToDay();
+
+    from.onchange = _ => {
+        const val = from.value.split('-');
+        fromDay.getObs(VALUE).setValue(new Date(val[0], val[1] -1, val[2]));
+    }
+
+    to.onchange = _ => {
+        const val = to.value.split('-');
+        toDay.getObs(VALUE).setValue(new Date(val[0], val[1] -1, val[2]));
+    }
 
     // header
     calendar.appendChild(dom(`<div class="cal-header">Month</div>`));
@@ -61,7 +77,13 @@ const addSelected = day => isDragged => {
 
 const setDayOff = day => off => day.dayoff.getObs(VALUE).setValue(off);
 
-const setEventListener = element => day => planningController => {
+
+/**
+ * @param element
+ * @param  day {Day}
+ * @param  planningController {PlanningController}
+ */
+const setEventListener = (element, day, planningController) => {
 
     const statusAdd = planningController.getStatusAdd();
 
@@ -70,8 +92,31 @@ const setEventListener = element => day => planningController => {
     const dragCurrent = planningController.getDragCurrent();
     const holydays    = planningController.getHolydays();
 
+    const fromDay     = planningController.getFromDay();
+    const toDay       = planningController.getToDay();
+
+
+    const addFromToSelection = day => {
+        const from = fromDay.getObs(VALUE).getValue();
+        const to = toDay.getObs(VALUE).getValue();
+       if (from && to && valueOf(day.date).between(from, to)) {
+           addSelected(day)(true);
+       }
+    }
+
+    fromDay.getObs(VALUE).onChange(date => {
+        // pay attention: is execute for each day!
+        addFromToSelection(day)
+    })
+
+    toDay.getObs(VALUE).onChange(date => {
+        // pay attention: is execute for each day!
+        addFromToSelection(day)
+    })
+
 
     dragCurrent.getObs(VALUE).onChange(currentDay => {
+        // pay attention: is execute for each day!
         if (currentDay) {
             const start = valueOf(dragStart.getObs(VALUE).getValue().id);
             const end = valueOf(currentDay.id);
@@ -114,12 +159,14 @@ const setEventListener = element => day => planningController => {
     element.onmouseover = _ => maybe(isMouseDown.getObs(VALUE).getValue())(() => dragCurrent.getObs(VALUE).setValue(day))
 
     element.onmousedown = _ => {
+        // pay attention: is execute for each day!
         isMouseDown.getObs(VALUE).setValue(true);
         dragStart.getObs(VALUE).setValue(day);
         dragCurrent.getObs(VALUE).setValue(day);
     }
 
     element.onmouseup = _ => {
+        // pay attention: is execute for each day!
         isMouseDown.getObs(VALUE).setValue(false);
         dragStart.getObs(VALUE).setValue(undefined);
         dragCurrent.getObs(VALUE).setValue(undefined);
@@ -138,7 +185,7 @@ const dayProjector = (rootElement, day, planningController) => {
     const html = dom(`<div class="empty"></div>`)
     const element = html.querySelector("div");
 
-    setEventListener(element)(day)(planningController);
+    setEventListener(element,day,planningController);
     maybe(day.isWeekendDay())(() => element.classList.add("cal-weekend-day"))
     maybe(day.isNotInMonth())(() => element.classList.add("cal-not-in-month"))
     maybe(day.holyday.getObs(VALUE).getValue())(() => element.classList.add("cal-holyday"))

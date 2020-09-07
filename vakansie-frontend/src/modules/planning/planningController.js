@@ -1,16 +1,16 @@
 import {Day} from "./planningModel.js";
 import {Attribute, LABEL, VALUE} from "../../base/presentationModel/presentationModel.js";
-import {Observable} from "../../base/observable/observable.js";
+import "../../assets/util/dates.js"
 import {ListController, SelectionController} from "../../base/controller/controller.js";
 
 export {PlanningController, months}
 
-const months2 = ["month.jan", "month.feb", "month.mar", "month.apr",
+const months = ["month.jan", "month.feb", "month.mar", "month.apr",
     "month.mai", "month.jul",
     "month.jun", "month.aug", "month.sep", "month.oct", "month.nov",
     "month.dez"];
 
-const months = ["month.jan", "month.feb", "month.mar", "month.apr", "month.mai",
+const months2 = ["month.jan", "month.feb", "month.mar", "month.apr", "month.mai",
     "month.jul"];
 
 const holydays = [
@@ -24,10 +24,6 @@ const holydays = [
     {day: new Date(2020, 11, 25), label: "Weihnachten"},
     {day: new Date(2020, 11, 26), label: "Stephanstag"},
 ]
-
-const findHolyday = date => holydays.find(holyday => {
-    return holyday.day.getFullYear() === date.getFullYear() && holyday.day.getMonth() === date.getMonth() && holyday.day.getDate() === date.getDate();
-})
 
 /**
  * @return Readonly {PlanningController}
@@ -51,19 +47,21 @@ const PlanningController = () => {
 
     const calendarData = initializeCalendar();
 
-    const getCalendarData = () => calendarData;
-    const getHolydays = () => holydays;
+    const fromDay = Attribute(undefined);
+    const toDay = Attribute(undefined);
 
     /**
      * @typedef PlanningController
      */
     return Object.freeze({
-        getCalendarData: getCalendarData,
-        getHolydays: getHolydays,
+        getCalendarData: () => calendarData,
+        getHolydays: () => holydays,
         getDragStart: () => dragStart,
         getDragCurrent: () => dragCurrent,
         getMouseDown: () => isMouseDown,
         getStatusAdd: () => statusAdd,
+        getFromDay: () => fromDay,
+        getToDay: () => toDay,
     });
 };
 
@@ -87,7 +85,7 @@ const initializeCalendar = () => {
 
             const date = new Date(yyyy, mm, idx + 1)
             day.date.getObs(VALUE).setValue(new Date(date))
-            const holyday = findHolyday(date)
+            const holyday = holydays.find(holyday => holyday.day.sameDay(date));
 
             day.holyday.getObs(VALUE).setValue(!!holyday)
             day.holyday.getObs(LABEL).setValue(holyday ? holyday.label : "")
