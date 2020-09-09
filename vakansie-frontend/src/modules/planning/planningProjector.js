@@ -1,4 +1,4 @@
-import {appendFirst} from "../../assets/util/appendFirst.js";
+import {appendFirst, appendReplacing} from "../../assets/util/appendFirst.js";
 import {dom} from "../../assets/util/dom.js";
 import "../../assets/util/times.js"
 import {months} from "./planningController.js";
@@ -6,7 +6,7 @@ import {Day} from "./planningModel.js";
 import {VALUE, LABEL, SELECTED, valueOf, Attribute} from "../../base/presentationModel/presentationModel.js";
 import "../../assets/util/dates.js"
 
-export {planningProjector, pageCss}
+export {planningProjector, allowanceProjector, pageCss}
 
 const masterClassName = 'planning-master'; // should be unique for this projector
 const detailClassName = 'planning-detail';
@@ -39,6 +39,29 @@ const planningProjector = (rootElement, planningController) => {
     appendFirst(rootElement)(planning)
 };
 
+/**
+ * @param  rootElement        {HTMLElement}
+ * @param  planningController {PlanningController}
+ */
+const allowanceProjector = (rootElement, planningController) => {
+    const isMouseDown = planningController.getMouseDown();
+    const dragStart = planningController.getDragStart();
+    const selectionCtrl = planningController.getSelectionController();
+    const holydays = planningController.getHolydays();
+
+    const planning = dom(`
+        <h2> Anzahl verbleibende Ferientage: <span>5</span></h2>
+        <div class="${detailClassName}-grid-container">
+            <div>start</div><div>stop</div>
+            <div>start</div><div>stop</div>
+        </div>
+    `)
+
+    const element = planning.querySelector("span")
+    holydays.getObs(VALUE).onChange(value => element.innerText = value)
+
+    appendReplacing(rootElement)(planning);
+}
 
 // todo add to utils
 const maybe = cond => func => cond ? func() : ""
@@ -52,7 +75,6 @@ const addSelected = day => isDragged => {
 
 const setDayOff = day => off => day.dayoff.getObs(VALUE).setValue(off);
 
-
 /**
  * @param element
  * @param  day {Day}
@@ -61,9 +83,9 @@ const setDayOff = day => off => day.dayoff.getObs(VALUE).setValue(off);
 const setEventListener = (element, day, planningController) => {
 
     const isMouseDown = planningController.getMouseDown();
-    const dragStart   = planningController.getDragStart();
+    const dragStart = planningController.getDragStart();
     const selectionCtrl = planningController.getSelectionController();
-    const holydays    = planningController.getHolydays();
+    const holydays = planningController.getHolydays();
 
     selectionCtrl.onModelSelected(selectedDay => {
         // pay attention: is execute for each day!
@@ -91,7 +113,9 @@ const setEventListener = (element, day, planningController) => {
             }
         } else {
             saveClassRemoval(element)("cal-day-dragged");
-            if (isMouseDown.getObs(VALUE).getValue()) setDayOff(day)(false)
+            if (isMouseDown.getObs(VALUE).getValue()) {
+                setDayOff(day)(false)
+            }
         }
     })
 
@@ -135,7 +159,7 @@ const dayProjector = (rootElement, day, planningController) => {
     const html = dom(`<div class="empty"></div>`)
     const element = html.querySelector("div");
 
-    setEventListener(element,day,planningController);
+    setEventListener(element, day, planningController);
     maybe(day.isWeekendDay())(() => element.classList.add("cal-weekend-day"))
     maybe(day.isNotInMonth())(() => element.classList.add("cal-not-in-month"))
     maybe(day.holyday.getObs(VALUE).getValue())(() => element.classList.add("cal-holyday"))
@@ -175,6 +199,25 @@ const pageCss = `
         padding: 3px 0;
         font-size: 15px;
     }
+
+    .${detailClassName}-grid-container {
+        width: 100px;
+        display: grid;
+        /*grid-gap: 0.2em;*/
+        grid-template-columns: auto auto;
+        background-color: #618685;
+        padding: 2px;
+        margin-bottom:  0.5em;
+    }
+    .${detailClassName}-grid-container > div {
+        background-color: #fefbd8;
+        border: 2px solid #618685;
+        text-align: center;
+        min-width: 28px;
+        padding: 3px 0;
+        font-size: 15px;
+    }
+
     .cal-header, .cal-first {
         font-weight: bold;
     }

@@ -1,6 +1,6 @@
 import {appendFirst} from "../../assets/util/appendFirst.js";
 import {dom} from "../../assets/util/dom.js";
-import {planningProjector, pageCss} from "./planningProjector.js";
+import {planningProjector, pageCss, allowanceProjector} from "./planningProjector.js";
 import {i18n} from "../../service/translationService.js";
 import {VALUE} from "../../base/presentationModel/presentationModel.js";
 
@@ -73,15 +73,9 @@ const MasterView = (rootElement, planningController) => {
  * @constructor
  */
 const DetailView = (rootElement, planningController) => {
-    //const render = person => formProjector(selectionController, rootElement, person, ALL_PERSON_ATTRIBUTE_NAMES);
-    //selectionController.onModelSelected(render);
-    const holydays = planningController.getHolydays()
+    const render = () => allowanceProjector(rootElement, planningController);
 
-    const planning = dom(`<h2> Anzahl verbleibende Ferientage: <span>5</span></h2>`)
+    planningController.getSelectionController().onModelSelected(render);
 
-    const element = planning.querySelector("span")
-    holydays.getObs(VALUE).onChange(value => element.innerText = value)
-
-    appendFirst(rootElement)(planning);
-
+    // we don't call render() because the onModelSelected event will invoke the function by it self
 };
