@@ -74,8 +74,5 @@ const MasterView = (rootElement, planningController) => {
  */
 const DetailView = (rootElement, planningController) => {
     const render = () => allowanceProjector(rootElement, planningController);
-
-    planningController.getSelectionController().onModelSelected(render);
-
-    // we don't call render() because the onModelSelected event will invoke the function by it self
+    render();
 };

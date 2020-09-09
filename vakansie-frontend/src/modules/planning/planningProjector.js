@@ -44,21 +44,54 @@ const planningProjector = (rootElement, planningController) => {
  * @param  planningController {PlanningController}
  */
 const allowanceProjector = (rootElement, planningController) => {
-    const isMouseDown = planningController.getMouseDown();
-    const dragStart = planningController.getDragStart();
+    const isMouseDown   = planningController.getMouseDown();
+    const dragStart     = planningController.getDragStart();
+    const dragEnd       = planningController.getDragEnd();
     const selectionCtrl = planningController.getSelectionController();
-    const holydays = planningController.getHolydays();
+    const holydays      = planningController.getHolydays();
 
     const planning = dom(`
         <h2> Anzahl verbleibende Ferientage: <span>5</span></h2>
         <div class="${detailClassName}-grid-container">
-            <div>start</div><div>stop</div>
-            <div>start</div><div>stop</div>
+            <div>from</div><div>to</div><div>days</div><div>remove</div>
         </div>
     `)
 
     const element = planning.querySelector("span")
+    const container = planning.querySelector("div")
     holydays.getObs(VALUE).onChange(value => element.innerText = value)
+
+    const createHolydayEntry = () => dom(`<div>start</div><div>stop</div><div>1</div><div><input type="button" value="X"> </div>`);
+
+    let start = undefined;
+    let end = undefined;
+    let days = undefined;
+    let remove = undefined;
+
+    // refactor stuff so that it uses a controller that holds entries as a model!
+
+    dragStart.getObs(VALUE).onChange(value => {
+        if (value) { // is start dragging
+            const entry = createHolydayEntry();
+            [start, end, days, remove] = entry.children;
+
+            start.innerText = valueOf(value.date).getFormated();
+            end.innerText = valueOf(value.date).getFormated();
+            container.appendChild(entry)
+        }
+    })
+
+    dragEnd.getObs(VALUE).onChange(value => {
+        if (value) console.info("drag end", valueOf(value.id));
+        // todo highlight new entry  and de highlihgt when new entry is set!
+    })
+
+    selectionCtrl.onModelSelected(value => {
+        if (valueOf(value.date) && end) {
+            end.innerText = valueOf(value.date).getFormated();
+            days.innerText = valueOf(value.date).daysBetween(valueOf(dragStart.getObs(VALUE).getValue().date)) + 1;
+        }
+    })
 
     appendReplacing(rootElement)(planning);
 }
@@ -82,10 +115,11 @@ const setDayOff = day => off => day.dayoff.getObs(VALUE).setValue(off);
  */
 const setEventListener = (element, day, planningController) => {
 
-    const isMouseDown = planningController.getMouseDown();
-    const dragStart = planningController.getDragStart();
+    const isMouseDown   = planningController.getMouseDown();
+    const dragStart     = planningController.getDragStart();
+    const dragEnd       = planningController.getDragEnd();
     const selectionCtrl = planningController.getSelectionController();
-    const holydays = planningController.getHolydays();
+    const holydays      = planningController.getHolydays();
 
     selectionCtrl.onModelSelected(selectedDay => {
         // pay attention: is execute for each day!
@@ -142,7 +176,8 @@ const setEventListener = (element, day, planningController) => {
     element.onmouseup = _ => {
         // pay attention: is execute for each day!
         isMouseDown.getObs(VALUE).setValue(false);
-        dragStart.getObs(VALUE).setValue(undefined);
+        dragStart.getObs(VALUE).setValue(undefined);  // todo check if we use noday or undefined
+        dragEnd.getObs(VALUE).setValue(selectionCtrl.getSelectedModel());
         selectionCtrl.setSelectedModel(planningController.getNoDay());
     }
 }
@@ -201,20 +236,16 @@ const pageCss = `
     }
 
     .${detailClassName}-grid-container {
-        width: 100px;
+        min-width: 120px;
         display: grid;
         /*grid-gap: 0.2em;*/
-        grid-template-columns: auto auto;
-        background-color: #618685;
+        grid-template-columns: auto auto 60px 60px;
         padding: 2px;
         margin-bottom:  0.5em;
     }
     .${detailClassName}-grid-container > div {
-        background-color: #fefbd8;
-        border: 2px solid #618685;
+        border-bottom: 2px solid #618685;
         text-align: center;
-        min-width: 28px;
-        padding: 3px 0;
         font-size: 15px;
     }
 

@@ -39,6 +39,7 @@ const PlanningController = () => {
     const isMouseDown = Attribute(false);
     /** @type dragStart {Attribute} */
     const dragStart = Attribute(undefined);
+    const dragEnd = Attribute(undefined);
 
     const calendarData = initializeCalendar();
 
@@ -46,12 +47,13 @@ const PlanningController = () => {
      * @typedef PlanningController
      */
     return Object.freeze({
-        getCalendarData: () => calendarData,
-        getHolydays: () => holydays,
-        getDragStart: () => dragStart,
-        getMouseDown: () => isMouseDown,
+        getCalendarData:         () => calendarData,
+        getHolydays:             () => holydays,
+        getDragStart:            () => dragStart,
+        getDragEnd:              () => dragEnd,
+        getMouseDown:            () => isMouseDown,
         getSelectionController : () => selectionController,
-        getNoDay: () => NoDay,
+        getNoDay:                () => NoDay,
     });
 };
 
