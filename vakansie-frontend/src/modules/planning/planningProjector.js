@@ -28,7 +28,7 @@ const planningProjector = (rootElement, planningController) => {
 
     // header
     calendar.appendChild(dom(`<div class="cal-header">Month</div>`));
-    (31).times((idx) => calendar.appendChild(dom(`<div>${idx + 1}</div>`)))
+    (31).times((idx) => calendar.appendChild(dom(`<div class="cal-header">${idx + 1}</div>`)))
 
     // per month
     planningController.getCalendarData().forEach((month, idx) => {
@@ -44,11 +44,11 @@ const planningProjector = (rootElement, planningController) => {
  * @param  planningController {PlanningController}
  */
 const allowanceProjector = (rootElement, planningController) => {
-    const isMouseDown   = planningController.getMouseDown();
-    const dragStart     = planningController.getDragStart();
-    const dragEnd       = planningController.getDragEnd();
+    const isMouseDown = planningController.getMouseDown();
+    const dragStart = planningController.getDragStart();
+    const dragEnd = planningController.getDragEnd();
     const selectionCtrl = planningController.getSelectionController();
-    const holydays      = planningController.getHolydays();
+    const holydays = planningController.getHolydays();
 
     const planning = dom(`
         <h2> Anzahl verbleibende Ferientage: <span>5</span></h2>
@@ -82,7 +82,9 @@ const allowanceProjector = (rootElement, planningController) => {
     })
 
     dragEnd.getObs(VALUE).onChange(value => {
-        if (value) console.info("drag end", valueOf(value.id));
+        if (value) {
+            console.info("drag end", valueOf(value.id));
+        }
         // todo highlight new entry  and de highlihgt when new entry is set!
     })
 
@@ -107,6 +109,17 @@ const allowanceProjector = (rootElement, planningController) => {
 // todo add to utils
 const maybe = cond => func => cond ? func() : ""
 const saveClassRemoval = element => clazz => maybe(element.classList.contains(clazz))(() => element.classList.remove(clazz));
+const saveClassRemoval2 = elements => clazz => {
+    for (let i = 0; i < elements.length; i++) {
+        saveClassRemoval(elements[i])(clazz)
+    }
+}
+const addClass = element => clazz => element.classList.add(clazz);
+const addClass2 = elements => clazz => {  // todo rewrite addClass so that it takes one or multiple elements
+    for (let i = 0; i < elements.length; i++) {
+        addClass(elements[i])(clazz)
+    }
+}
 
 const addSelected = day => isDragged => {
     isDragged
@@ -123,11 +136,11 @@ const setDayOff = day => off => day.dayoff.getObs(VALUE).setValue(off);
  */
 const setEventListener = (element, day, planningController) => {
 
-    const isMouseDown   = planningController.getMouseDown();
-    const dragStart     = planningController.getDragStart();
-    const dragEnd       = planningController.getDragEnd();
+    const isMouseDown = planningController.getMouseDown();
+    const dragStart = planningController.getDragStart();
+    const dragEnd = planningController.getDragEnd();
     const selectionCtrl = planningController.getSelectionController();
-    const holydays      = planningController.getHolydays();
+    const holydays = planningController.getHolydays();
 
     selectionCtrl.onModelSelected(selectedDay => {
         // pay attention: is execute for each day!
@@ -176,6 +189,12 @@ const setEventListener = (element, day, planningController) => {
 
     element.onmousedown = _ => {
         // pay attention: is execute for each day!
+        const headers = document.getElementsByClassName("cal-header");
+        const firsts = document.getElementsByClassName("cal-first");
+
+        // todo check if we add to each html a no selection
+        addClass2(headers)("no-selection")
+        addClass2(firsts)("no-selection")
         isMouseDown.getObs(VALUE).setValue(true);
         dragStart.getObs(VALUE).setValue(day);
         selectionCtrl.setSelectedModel(day);
@@ -183,6 +202,12 @@ const setEventListener = (element, day, planningController) => {
 
     element.onmouseup = _ => {
         // pay attention: is execute for each day!
+        const headers = document.getElementsByClassName("cal-header");
+        const firsts = document.getElementsByClassName("cal-first");
+
+        // todo check if we add to each html a no selection
+        saveClassRemoval2(headers)("no-selection")
+        saveClassRemoval2(firsts)("no-selection")
         isMouseDown.getObs(VALUE).setValue(false);
         dragStart.getObs(VALUE).setValue(undefined);  // todo check if we use noday or undefined
         dragEnd.getObs(VALUE).setValue(selectionCtrl.getSelectedModel());
@@ -212,9 +237,9 @@ const dayProjector = (rootElement, day, planningController) => {
 }
 
 const createColumnAmountString = () => {
-    let col = "auto";
+    let col = "120px";
     (31).times(_ => {
-        col += " auto"
+        col += " 27px"
     })
     return col;
 }
@@ -230,24 +255,28 @@ const pageCss = `
         display: grid;
         /*grid-gap: 0.2em;*/
         grid-template-columns: ${createColumnAmountString()};
-        background-color: #618685;
+        /*background-color: #618685;*/
         padding: 2px;
         margin-bottom:  0.5em;
     }
     .${masterClassName}-grid-container > div {
-        background-color: #fefbd8;
-        border: 2px solid #618685;
+        /*background-color: #fefbd8;*/
+        border: 1px solid #618685;
         text-align: center;
-        min-width: 28px;
+        min-width: 27px;
         padding: 3px 0;
         font-size: 15px;
+    }
+
+    .no-selection {
+        user-select: none;
     }
 
     .${detailClassName}-grid-container {
         min-width: 120px;
         display: grid;
         /*grid-gap: 0.2em;*/
-        grid-template-columns: auto auto 60px 60px;
+        grid-template-columns: 120px 120px 60px 60px;
         padding: 2px;
         margin-bottom:  0.5em;
     }
@@ -274,11 +303,5 @@ const pageCss = `
     }
     .cal-day-dragged {
         background-color: rgb(192,242,244,1) !important;
-    }
-    .${detailClassName} {
-        display:        grid;
-        grid-column-gap: 0.5em;
-        grid-template-columns: 1fr 3fr;
-        margin-bottom:  0.5em ;
     }
 `;
