@@ -15,9 +15,8 @@ const Observable = value => {
     return {
         onChange: callback => {
             listeners.push(callback);
-            if (listeners.length > 3) {
-                console.debug("log listener count suspicious: ",
-                    listeners.length);
+            if (listeners.length > 50) {
+                console.debug("log listener count suspicious: ",listeners.length);
             }
             callback(value, value);
         },

@@ -1,7 +1,8 @@
-import {Day} from "./planningModel.js";
+import {ALL_DAY_ATTRIBUTE_NAMES, Day} from "./planningModel.js";
 import {Attribute, LABEL, VALUE} from "../../base/presentationModel/presentationModel.js";
 import "../../assets/util/dates.js"
 import {ListController, SelectionController} from "../../base/controller/controller.js";
+import {ALL_PERSON_ATTRIBUTE_NAMES, Person} from "../person/personModel.js";
 
 export {PlanningController, months}
 
@@ -31,24 +32,15 @@ const holydays = [
  */
 const PlanningController = () => {
 
-    const listController = ListController();
-    const selectionController = SelectionController("");
+    const selectionController = SelectionController(NoDay);
 
     // total available holydays
     const holydays = Attribute(20);
     const isMouseDown = Attribute(false);
     /** @type dragStart {Attribute} */
     const dragStart = Attribute(undefined);
-    /** @type dragCurrent {Attribute} */
-    const dragCurrent = Attribute(undefined);
-
-    /** @type statusAdd {Attribute} */
-    const statusAdd = Attribute(true);
 
     const calendarData = initializeCalendar();
-
-    const fromDay = Attribute(undefined);
-    const toDay = Attribute(undefined);
 
     /**
      * @typedef PlanningController
@@ -57,13 +49,17 @@ const PlanningController = () => {
         getCalendarData: () => calendarData,
         getHolydays: () => holydays,
         getDragStart: () => dragStart,
-        getDragCurrent: () => dragCurrent,
         getMouseDown: () => isMouseDown,
-        getStatusAdd: () => statusAdd,
-        getFromDay: () => fromDay,
-        getToDay: () => toDay,
+        getSelectionController : () => selectionController,
+        getNoDay: () => NoDay,
     });
 };
+
+const NoDay = (() => { // one time creation, singleton
+    const feb30 = Day();
+    ALL_DAY_ATTRIBUTE_NAMES.forEach(name => feb30[name].setConvertedValue(""));
+    return feb30;
+})();
 
 const initializeCalendar = () => {
     // only used to generate uuid

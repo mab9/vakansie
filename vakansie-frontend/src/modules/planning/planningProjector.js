@@ -21,44 +21,17 @@ const planningProjector = (rootElement, planningController) => {
 
     const planning = dom(`
         <h2> Planning Calendar </h2>
-        <button autofocus> + </button>
-        <input type="date" min="2020-01-01" max="2020-12-31">from </input>
-        <input type="date" min="2020-01-01" max="2020-12-31">to   </input>
-
         <div id="calendar" class="${masterClassName}-grid-container"></div>
     `)
 
-    const [title, add, from, to, calendar] = planning.children;
-    //const calendar = planning.querySelector("#calendar");
-
-    const statusAdd = planningController.getStatusAdd();
-
-    add.onclick = () => {
-        statusAdd.getObs(VALUE).setValue(!statusAdd.getObs(VALUE).getValue())
-        statusAdd.getObs(VALUE).getValue() ? add.innerText = "+" : add.innerText = "-";
-    }
-
-    const fromDay     = planningController.getFromDay();
-    const toDay       = planningController.getToDay();
-
-    from.onchange = _ => {
-        const val = from.value.split('-');
-        fromDay.getObs(VALUE).setValue(new Date(val[0], val[1] -1, val[2]));
-    }
-
-    to.onchange = _ => {
-        const val = to.value.split('-');
-        toDay.getObs(VALUE).setValue(new Date(val[0], val[1] -1, val[2]));
-    }
+    const calendar = planning.querySelector("#calendar");
 
     // header
     calendar.appendChild(dom(`<div class="cal-header">Month</div>`));
     (31).times((idx) => calendar.appendChild(dom(`<div>${idx + 1}</div>`)))
 
     // per month
-    const data = planningController.getCalendarData();
-
-    data.forEach((month, idx) => {
+    planningController.getCalendarData().forEach((month, idx) => {
         calendar.appendChild(dom(`<div class="cal-first" data-i18n="${months[idx]}"></div>`));
         month.forEach(day => dayProjector(calendar, day, planningController))
     })
@@ -66,6 +39,8 @@ const planningProjector = (rootElement, planningController) => {
     appendFirst(rootElement)(planning)
 };
 
+
+// todo add to utils
 const maybe = cond => func => cond ? func() : ""
 const saveClassRemoval = element => clazz => maybe(element.classList.contains(clazz))(() => element.classList.remove(clazz));
 
@@ -85,41 +60,16 @@ const setDayOff = day => off => day.dayoff.getObs(VALUE).setValue(off);
  */
 const setEventListener = (element, day, planningController) => {
 
-    const statusAdd = planningController.getStatusAdd();
-
     const isMouseDown = planningController.getMouseDown();
     const dragStart   = planningController.getDragStart();
-    const dragCurrent = planningController.getDragCurrent();
+    const selectionCtrl = planningController.getSelectionController();
     const holydays    = planningController.getHolydays();
 
-    const fromDay     = planningController.getFromDay();
-    const toDay       = planningController.getToDay();
-
-
-    const addFromToSelection = day => {
-        const from = fromDay.getObs(VALUE).getValue();
-        const to = toDay.getObs(VALUE).getValue();
-       if (from && to && valueOf(day.date).between(from, to)) {
-           addSelected(day)(true);
-       }
-    }
-
-    fromDay.getObs(VALUE).onChange(date => {
+    selectionCtrl.onModelSelected(selectedDay => {
         // pay attention: is execute for each day!
-        addFromToSelection(day)
-    })
-
-    toDay.getObs(VALUE).onChange(date => {
-        // pay attention: is execute for each day!
-        addFromToSelection(day)
-    })
-
-
-    dragCurrent.getObs(VALUE).onChange(currentDay => {
-        // pay attention: is execute for each day!
-        if (currentDay) {
+        if (valueOf(selectedDay.date)) {
             const start = valueOf(dragStart.getObs(VALUE).getValue().id);
-            const end = valueOf(currentDay.id);
+            const end = valueOf(selectedDay.id);
             const dayValue = valueOf(day.id);
 
             start < end
@@ -128,7 +78,7 @@ const setEventListener = (element, day, planningController) => {
 
         } else {
             // observable guard will prevent loops
-            dragCurrent.getObs(VALUE).setValue(undefined)
+            //dragCurrent.getObs(VALUE).setValue(undefined)
             addSelected(day)(false)
         }
     })
@@ -156,20 +106,20 @@ const setEventListener = (element, day, planningController) => {
     })
 
     // calc only when start day was set (mouse down)
-    element.onmouseover = _ => maybe(isMouseDown.getObs(VALUE).getValue())(() => dragCurrent.getObs(VALUE).setValue(day))
+    element.onmouseover = _ => maybe(isMouseDown.getObs(VALUE).getValue())(() => selectionCtrl.setSelectedModel(day))
 
     element.onmousedown = _ => {
         // pay attention: is execute for each day!
         isMouseDown.getObs(VALUE).setValue(true);
         dragStart.getObs(VALUE).setValue(day);
-        dragCurrent.getObs(VALUE).setValue(day);
+        selectionCtrl.setSelectedModel(day);
     }
 
     element.onmouseup = _ => {
         // pay attention: is execute for each day!
         isMouseDown.getObs(VALUE).setValue(false);
         dragStart.getObs(VALUE).setValue(undefined);
-        dragCurrent.getObs(VALUE).setValue(undefined);
+        selectionCtrl.setSelectedModel(planningController.getNoDay());
     }
 }
 
