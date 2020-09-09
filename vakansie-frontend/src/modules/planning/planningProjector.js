@@ -88,7 +88,15 @@ const allowanceProjector = (rootElement, planningController) => {
 
     selectionCtrl.onModelSelected(value => {
         if (valueOf(value.date) && end) {
-            end.innerText = valueOf(value.date).getFormated();
+
+            if (valueOf(value.date) >= valueOf(dragStart.getObs(VALUE).getValue().date)) {
+                // going forward
+                start.innerText = valueOf(dragStart.getObs(VALUE).getValue().date).getFormated(); // todo only set when it changes!
+                end.innerText = valueOf(value.date).getFormated();
+            } else {
+                start.innerText = valueOf(value.date).getFormated();
+            }
+
             days.innerText = valueOf(value.date).daysBetween(valueOf(dragStart.getObs(VALUE).getValue().date)) + 1;
         }
     })
