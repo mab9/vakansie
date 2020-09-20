@@ -56,5 +56,4 @@ public class UserControllerTest {
             .andExpect(jsonPath("$[0].name").value(mab.getName()))
             .andExpect(jsonPath("$[0].email").value(mab.getEmail()));
     }
-
 }
