@@ -7,11 +7,14 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -20,9 +23,14 @@ import javax.persistence.Table;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // default strategy
 @DiscriminatorColumn
 @Table(name = "Groups")  // the table name group, is a reserved key word for h2 databae
-public class Group extends BaseModel implements Serializable { // Serializable is not required, this way  the object may be passed across  process boundaries{
+public abstract class Group extends BaseModel implements Serializable { // Serializable is not required, this way  the object may be passed across  process boundaries{
 
-    @ManyToMany(mappedBy = "groups")  // User is the owner of the relationship
+    // owner side of the relationship
+    @JoinTable(name = "user_group",
+        joinColumns = @JoinColumn(name = "group_id"),   // to change name of
+        inverseJoinColumns = @JoinColumn(name = "user_id")  // the join table
+    )
+    @ManyToMany(cascade = CascadeType.ALL)
     private final Set<User> users = new HashSet<>();
 
     @Column(nullable = false)
@@ -42,6 +50,5 @@ public class Group extends BaseModel implements Serializable { // Serializable i
 
     public void addUser(User user) {
         users.add(user);
-        user.addToGroup(this);
     }
 }

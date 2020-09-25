@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 import ch.mab.vakansie.groups.Group;
@@ -13,15 +13,13 @@ import ch.mab.vakansie.groups.GroupRepository;
 import ch.mab.vakansie.users.User;
 import ch.mab.vakansie.users.UserRepository;
 import ch.mab.vakansie.util.TestUtil;
-import java.util.List;
-import javax.transaction.Transactional;
+import java.util.Optional;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.transaction.TestTransaction;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-@SpringBootTest
-@Transactional
+@DataJpaTest
 public class GroupRepositoryTest extends TestUtil {
 
     @Autowired
@@ -30,45 +28,53 @@ public class GroupRepositoryTest extends TestUtil {
     @Autowired
     private GroupRepository groupRepository;
 
-    @Test
-    public void createProjectGroup() {
-        Group group = createProject("SVV");
-        Group createdGroup = groupRepository.save(group);
+    @Autowired
+    private EntityManager entityManager;
 
-        assertThat(createdGroup, notNullValue());
-        assertThat(createdGroup.getId(), notNullValue());
-        assertThat(createdGroup.getName(), comparesEqualTo(group.getName()));
-        assertThat(createdGroup.getUsers(), empty());
+    @Test
+    public void createGroup() {
+        Group group = createProject("SVV");
+        Group groupPersisted = groupRepository.save(group);
+
+        assertThat(groupPersisted, notNullValue());
+        assertThat(groupPersisted.getId(), notNullValue());
+        assertThat(groupPersisted.getName(), comparesEqualTo(group.getName()));
+        assertThat(groupPersisted.getUsers(), empty());
     }
 
     @Test
-    public void updateGroup_addNonPersistedUser_fromInverseSide() {
+    public void createGroup_withUser_fromOwnerSide() {
+        User user = createUser("mab");
+        User userPersisted = userRepository.save(user);
+
         Group group = createProject("SVV");
-        Group createdGroup = groupRepository.save(group);
-        assertThat(createdGroup.getUsers(), empty());
+        group.addUser(userPersisted);
+        Group groupPersisted = groupRepository.save(group);
 
-        User mab = createUser("mab");
-        createdGroup.addUser(mab);
+        assertThat(groupPersisted.getId(), notNullValue());
+        assertThat(groupPersisted.getUsers(), contains(userPersisted));
 
-        List<User> users = userRepository.findAll();
-        assertThat(users, hasSize(0));
+        entityManager.flush();
+
+        Optional<Group> currentGroup = groupRepository.findById(groupPersisted.getId());
+        assertThat(currentGroup.get().getUsers(), contains(userPersisted));
     }
 
     @Test
-    public void updateGroup_addPersistedUser_fromInverseSide() {
+    public void createGroup_withUser_cascade_fromOwnerSide() {
+        User user = createUser("mab");
+
         Group group = createProject("SVV");
-        Group persistedGroup = groupRepository.save(group);
-        assertThat(persistedGroup.getUsers(), empty());
+        group.addUser(user);
+        Group groupPersisted = groupRepository.save(group);
 
-        User mab = createUser("mab");
-        User persistedMab = userRepository.save(mab);
+        assertThat(groupPersisted.getId(), notNullValue());
+        assertThat(groupPersisted.getUsers(), contains(user));
 
-        persistedGroup.addUser(persistedMab);
+        entityManager.flush();
 
-        List<User> users = userRepository.findAll();
-        assertThat(users, hasSize(1));
-        assertThat(users, contains(persistedMab));
+        Optional<Group> currentGroup = groupRepository.findById(groupPersisted.getId());
+        assertThat(currentGroup.get().getUsers(), contains(user));
 
-        assertThat(persistedGroup.getVersion(), equalTo(0L)); // because the update is in the same transaction.
     }
 }
