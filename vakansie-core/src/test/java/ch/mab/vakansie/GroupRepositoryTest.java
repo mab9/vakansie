@@ -6,10 +6,15 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 import ch.mab.vakansie.groups.Group;
 import ch.mab.vakansie.groups.GroupRepository;
+import ch.mab.vakansie.groups.Policy;
+import ch.mab.vakansie.groups.PolicyMinAvailableUser;
+import ch.mab.vakansie.groups.PolicyRepository;
 import ch.mab.vakansie.users.User;
 import ch.mab.vakansie.users.UserRepository;
 import ch.mab.vakansie.util.TestUtil;
@@ -27,6 +32,9 @@ public class GroupRepositoryTest extends TestUtil {
 
     @Autowired
     private GroupRepository groupRepository;
+
+    @Autowired
+    private PolicyRepository policyRepository;
 
     @Autowired
     private EntityManager entityManager;
@@ -79,5 +87,48 @@ public class GroupRepositoryTest extends TestUtil {
         Optional<Group> currentGroup = groupRepository.findById(groupPersisted.getId());
         assertThat(currentGroup.get().getUsers(), contains(mab));
         assertThat(currentGroup.get().getOwner(), is(equalTo(group.getOwner())));
+    }
+
+    @Test
+    public void createGroup_withPolicy() {
+        PolicyMinAvailableUser policy = new PolicyMinAvailableUser();
+        policy.setMinUsers(2);
+        policy.setName("Min 2 Users");
+        policyRepository.save(policy);
+
+        Group group = createProject("SVV");
+        group.addPolicy(policy);
+        Group groupPersisted = groupRepository.save(group);
+
+        entityManager.flush();
+
+        Optional<Group> currentGroup = groupRepository.findById(groupPersisted.getId());
+        assertThat(currentGroup.get().getPolicies(), not(empty()));
+        assertThat(currentGroup.get().getPolicies(), contains(policy));
+    }
+
+
+    //@Test
+    public void removePolicy() {
+        PolicyMinAvailableUser policy = new PolicyMinAvailableUser();
+        policy.setMinUsers(2);
+        policy.setName("Min 2 Users");
+        policyRepository.save(policy);
+
+        Group group = createProject("SVV");
+        group.addPolicy(policy);
+        Group groupPersisted = groupRepository.save(group);
+
+        entityManager.flush();
+
+        Optional<Group> currentGroup = groupRepository.findById(groupPersisted.getId());
+        assertThat(currentGroup.get().getPolicies(), contains(policy));
+
+        currentGroup.get().removePolicy(policy);
+
+        entityManager.flush();
+
+        Optional<Policy> currentPolicy = policyRepository.findById(policy.getId());
+        assertThat(currentPolicy.isEmpty(), is(true));
     }
 }

@@ -4,12 +4,12 @@ import ch.mab.vakansie.base.BaseModel;
 import ch.mab.vakansie.users.User;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -18,8 +18,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")  // https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
 @Entity
@@ -39,8 +40,8 @@ public abstract class Group extends BaseModel {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<Policy> policies = new HashSet<>();
+    @OneToMany(orphanRemoval=true)
+    private final Set<Policy> policies = new HashSet<>();
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private User owner;
@@ -73,7 +74,11 @@ public abstract class Group extends BaseModel {
         return policies;
     }
 
-    public void setPolicies(Set<Policy> policies) {
-        this.policies = policies;
+    public void addPolicy(Policy policy) {
+        policies.add(policy);
+    }
+
+    public boolean removePolicy(Policy policy) {
+        return policies.remove(policy);
     }
 }

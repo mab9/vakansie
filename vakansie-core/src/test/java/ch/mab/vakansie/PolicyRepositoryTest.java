@@ -23,8 +23,6 @@ public class PolicyRepositoryTest extends TestUtil {
 
     @Test
     public void createDefaultPolicy() {
-        GroupTeam group = createTeam("SVV");
-
         Policy policy = new PolicyMinAvailableUser();
         policy.setName("defaultPolicy");
         Policy policyPersisted = policyRepository.save(policy);
@@ -36,8 +34,6 @@ public class PolicyRepositoryTest extends TestUtil {
 
     @Test
     public void createPolicy_differentStartEnd() {
-        GroupTeam group = createTeam("SVV");
-
         Policy policy = new PolicyMinAvailableUser();
         policy.setName("policy");
         policy.setStart(LocalDate.now());

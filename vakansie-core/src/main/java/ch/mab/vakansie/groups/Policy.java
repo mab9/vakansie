@@ -7,11 +7,13 @@ import ch.mab.vakansie.base.BaseModel;
 import java.time.LocalDate;
 import java.util.Objects;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 
 @Entity
 @DiscriminatorColumn
@@ -29,6 +31,9 @@ public class Policy extends BaseModel {
 
     @Column(nullable = false)
     private LocalDate end = LocalDate.now().with(lastDayOfYear());
+
+    @ManyToOne
+    private Group group;
 
     public LocalDate getStart() {
         return start;
