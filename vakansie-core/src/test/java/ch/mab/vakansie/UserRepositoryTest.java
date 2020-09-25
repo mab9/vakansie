@@ -10,11 +10,11 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 import ch.mab.vakansie.groups.Group;
-import ch.mab.vakansie.groups.GroupTeam;
+import ch.mab.vakansie.groups.GroupProject;
 import ch.mab.vakansie.users.Permissions;
 import ch.mab.vakansie.users.User;
 import ch.mab.vakansie.users.UserRepository;
-import java.util.Collection;
+import ch.mab.vakansie.util.TestUtil;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -24,16 +24,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-public class UserRepositoryTest {
+public class UserRepositoryTest extends TestUtil {
 
     @Autowired
     private UserRepository userRepository;
 
     @Test
     public void createUser() {
-        User mab = new User();
-        mab.setEmail("mab9@gmail.com");
-        mab.setName("mab");
+        User mab = createUser("mab");
         User createdMab = userRepository.save(mab);
 
         assertThat(createdMab, notNullValue());
@@ -46,13 +44,11 @@ public class UserRepositoryTest {
 
     @Test
     public void createUserWithGroup() {
-        Group team = new GroupTeam();
-        team.setName("SIE");
+        Group project = new GroupProject();
+        project.setName("SIE");
 
-        User mab = new User();
-        mab.setEmail("mab9@gmail.com");
-        mab.setName("mab");
-        mab.addToGroup(team);
+        User mab = createUser("mab");
+        mab.addToGroup(project);
 
         User createdMab = userRepository.save(mab);
 
@@ -60,23 +56,19 @@ public class UserRepositoryTest {
         assertThat(createdMab.getId(), notNullValue());
         assertThat(createdMab.getName(), comparesEqualTo(mab.getName()));
         assertThat(createdMab.getEmail(), comparesEqualTo(mab.getEmail()));
-        assertThat(createdMab.getGroups(), contains(team));
+        assertThat(createdMab.getGroups(), contains(project));
         assertThat(createdMab.getPermission(), is(equalTo(Permissions.USER)));
     }
 
     @Test
     public void createMultipleUsers_WithSameGroup() {
-        Group team = new GroupTeam();
+        Group team = new GroupProject();
         team.setName("SIE");
 
-        User mab = new User();
-        mab.setEmail("mab9@gmail.com");
-        mab.setName("mab");
+        User mab = createUser("mab");
         mab.addToGroup(team);
 
-        User foo = new User();
-        foo.setEmail("foo@gmail.com");
-        foo.setName("foo");
+        User foo = createUser("foo");
         foo.addToGroup(team);
 
         User createdMab = userRepository.save(mab);
@@ -88,36 +80,30 @@ public class UserRepositoryTest {
 
     @Test
     public void findUsers_withSameGroup() {
-        Group teamA = new GroupTeam();
-        teamA.setName("SIE");
+        Group projectA = new GroupProject();
+        projectA.setName("SVV");
 
-        Group teamB = new GroupTeam();
-        teamA.setName("STE");
+        Group projectB = new GroupProject();
+        projectB.setName("DAB");
 
-        User mab = new User();
-        mab.setEmail("mab9@gmail.com");
-        mab.setName("mab");
-        mab.addToGroup(teamA);
+        User mab = createUser("mab");
+        mab.addToGroup(projectA);
 
-        User foo = new User();
-        foo.setEmail("foo@gmail.com");
-        foo.setName("foo");
-        foo.addToGroup(teamA);
+        User foo = createUser("foo");
+        foo.addToGroup(projectA);
 
-        User lad = new User();
-        lad.setEmail("lad@gmail.com");
-        lad.setName("lad");
-        lad.addToGroup(teamB);
+        User lad = createUser("lad");
+        lad.addToGroup(projectB);
 
         User createdMab = userRepository.save(mab);
         User createdFoo = userRepository.save(foo);
         User createdLad = userRepository.save(lad);
 
-        assertThat(createdMab.getGroups(), contains(teamA));
-        assertThat(createdFoo.getGroups(), contains(teamA));
-        assertThat(createdLad.getGroups(), contains(teamB));
+        assertThat(createdMab.getGroups(), contains(projectA));
+        assertThat(createdFoo.getGroups(), contains(projectA));
+        assertThat(createdLad.getGroups(), contains(projectB));
 
-        List<User> users = userRepository.findUserByGroupsIn(Collections.singleton(teamB));
+        List<User> users = userRepository.findUserByGroupsIn(Collections.singleton(projectB));
         assertThat(users, hasSize(1));
         assertThat(users, contains(lad));
     }

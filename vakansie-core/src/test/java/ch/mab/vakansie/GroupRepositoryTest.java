@@ -10,23 +10,19 @@ import static org.hamcrest.Matchers.notNullValue;
 
 import ch.mab.vakansie.groups.Group;
 import ch.mab.vakansie.groups.GroupRepository;
-import ch.mab.vakansie.groups.GroupTeam;
 import ch.mab.vakansie.users.User;
 import ch.mab.vakansie.users.UserRepository;
-import java.util.Collections;
+import ch.mab.vakansie.util.TestUtil;
 import java.util.List;
 import javax.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.Assert;
+import org.springframework.test.context.transaction.TestTransaction;
 
 @SpringBootTest
 @Transactional
-public class GroupRepositoryTest {
+public class GroupRepositoryTest extends TestUtil {
 
     @Autowired
     private UserRepository userRepository;
@@ -35,31 +31,24 @@ public class GroupRepositoryTest {
     private GroupRepository groupRepository;
 
     @Test
-    public void createGroup() {
-        Group team = new GroupTeam();
-        team.setName("SIE");
+    public void createProjectGroup() {
+        Group group = createProject("SVV");
+        Group createdGroup = groupRepository.save(group);
 
-        Group createdTeam = groupRepository.save(team);
-
-        assertThat(createdTeam, notNullValue());
-        assertThat(createdTeam.getId(), notNullValue());
-        assertThat(createdTeam.getName(), comparesEqualTo(team.getName()));
-        assertThat(createdTeam.getUsers(), empty());
+        assertThat(createdGroup, notNullValue());
+        assertThat(createdGroup.getId(), notNullValue());
+        assertThat(createdGroup.getName(), comparesEqualTo(group.getName()));
+        assertThat(createdGroup.getUsers(), empty());
     }
 
     @Test
     public void updateGroup_addNonPersistedUser_fromInverseSide() {
-        Group team = new GroupTeam();
-        team.setName("SIE");
+        Group group = createProject("SVV");
+        Group createdGroup = groupRepository.save(group);
+        assertThat(createdGroup.getUsers(), empty());
 
-        Group createdTeam = groupRepository.save(team);
-        assertThat(createdTeam.getUsers(), empty());
-
-        User mab = new User();
-        mab.setEmail("mab9@gmail.com");
-        mab.setName("mab");
-
-        createdTeam.addUser(mab);
+        User mab = createUser("mab");
+        createdGroup.addUser(mab);
 
         List<User> users = userRepository.findAll();
         assertThat(users, hasSize(0));
@@ -67,23 +56,19 @@ public class GroupRepositoryTest {
 
     @Test
     public void updateGroup_addPersistedUser_fromInverseSide() {
-        Group team = new GroupTeam();
-        team.setName("SIE");
+        Group group = createProject("SVV");
+        Group persistedGroup = groupRepository.save(group);
+        assertThat(persistedGroup.getUsers(), empty());
 
-        Group createdTeam = groupRepository.save(team);
-        assertThat(createdTeam.getUsers(), empty());
+        User mab = createUser("mab");
+        User persistedMab = userRepository.save(mab);
 
-        User mab = new User();
-        mab.setEmail("mab9@gmail.com");
-        mab.setName("mab");
-        User createdMab = userRepository.save(mab);
-
-        createdTeam.addUser(createdMab);
+        persistedGroup.addUser(persistedMab);
 
         List<User> users = userRepository.findAll();
         assertThat(users, hasSize(1));
-        assertThat(users, contains(createdMab));
+        assertThat(users, contains(persistedMab));
 
-        assertThat(createdTeam.getVersion(), equalTo(0L)); // because the update is in the same transaction.
+        assertThat(persistedGroup.getVersion(), equalTo(0L)); // because the update is in the same transaction.
     }
 }

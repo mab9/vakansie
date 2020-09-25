@@ -1,26 +1,21 @@
 package ch.mab.vakansie.groups;
 
-import java.util.Collection;
+import ch.mab.vakansie.users.User;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
-public class GroupService {
+public interface GroupService {
 
-    @Autowired
-    private GroupRepository groupRepository;
+    Group createTeam(String groupName);
 
-    public Collection<Group> findAll() {
-        return groupRepository.findAll();
-    }
+    Group addUserToGroup(UUID groupId, User user);
 
-    public Optional<Group> findById(UUID id){
-        return groupRepository.findById(id);
-    }
+    Group removeUserFromGroup(UUID groupId, UUID userId);
 
-    public Group createGroup(Group group) {
-        return groupRepository.save(group);
-    }
+    Optional<Group> findById(UUID id);
+
+    Group createProject(String projectName);
+
+    Set<Group> findAllGroupsByTeam(UUID teamId);
 }

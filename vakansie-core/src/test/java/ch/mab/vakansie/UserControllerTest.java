@@ -5,8 +5,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import ch.mab.vakansie.groups.GroupRepository;
 import ch.mab.vakansie.users.User;
 import ch.mab.vakansie.users.UserRepository;
+import ch.mab.vakansie.util.TestUtil;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +20,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserControllerTest {
+public class UserControllerTest extends TestUtil {
 
     @Autowired
     private MockMvc mvc;
 
-    @Autowired
-    private UserRepository userRepository;
-
     @Test
     public void createUser() throws Exception {
-        User mab = new User();
-        mab.setEmail("mab9@gmail.com");
-        mab.setName("mab");
+        User mab = createUser("mab");
 
         String json = new Gson().toJson(mab);
         mvc.perform(MockMvcRequestBuilders.post("/users")
@@ -42,10 +39,7 @@ public class UserControllerTest {
 
     @Test
     public void getUser() throws Exception {
-        User mab = new User();
-        mab.setEmail("mab9@gmail.com");
-        mab.setName("mab");
-        userRepository.save(mab);
+        User mab = createUserAndPersist("mab");
 
         mvc.perform(MockMvcRequestBuilders.get("/users")
             .accept(MediaType.APPLICATION_JSON))
