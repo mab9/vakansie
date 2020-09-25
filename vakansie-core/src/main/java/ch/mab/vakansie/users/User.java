@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")  // https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
@@ -27,6 +28,9 @@ public class User extends BaseModel implements Serializable { // Serializable is
 
     @Column(unique = true, nullable = false)
     private String email;
+
+    @OneToMany(mappedBy = "owner")
+    private Set<Group> owningGroups;
 
     @Enumerated(EnumType.STRING)
     private Permissions permission = Permissions.USER; // default permission
@@ -64,6 +68,18 @@ public class User extends BaseModel implements Serializable { // Serializable is
 
     public void setPermission(Permissions permission) {
         this.permission = permission;
+    }
+
+    public Set<Group> getOwningGroups() {
+        return owningGroups;
+    }
+
+    public void addOwningGroup(Group group) {
+        owningGroups.add(group);
+    }
+
+    public boolean removeOwningGroup(Group group) {
+        return owningGroups.remove(group);
     }
 
     @Override

@@ -16,6 +16,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")  // https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
@@ -36,6 +37,9 @@ public abstract class Group extends BaseModel implements Serializable { // Seria
     @Column(nullable = false)
     private String name;
 
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    private User owner;
+
     public String getName() {
         return name;
     }
@@ -50,5 +54,13 @@ public abstract class Group extends BaseModel implements Serializable { // Seria
 
     public void addUser(User user) {
         users.add(user);
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 }

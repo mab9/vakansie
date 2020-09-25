@@ -40,41 +40,44 @@ public class GroupRepositoryTest extends TestUtil {
         assertThat(groupPersisted.getId(), notNullValue());
         assertThat(groupPersisted.getName(), comparesEqualTo(group.getName()));
         assertThat(groupPersisted.getUsers(), empty());
+        assertThat(groupPersisted.getOwner(), is(equalTo(group.getOwner())));
     }
 
     @Test
     public void createGroup_withUser_fromOwnerSide() {
-        User user = createUser("mab");
-        User userPersisted = userRepository.save(user);
+        User mab = createUser("mab");
+        userRepository.save(mab);
 
         Group group = createProject("SVV");
-        group.addUser(userPersisted);
+        userRepository.save(group.getOwner());
+        group.addUser(mab);
         Group groupPersisted = groupRepository.save(group);
 
         assertThat(groupPersisted.getId(), notNullValue());
-        assertThat(groupPersisted.getUsers(), contains(userPersisted));
+        assertThat(groupPersisted.getUsers(), contains(mab));
 
         entityManager.flush();
 
         Optional<Group> currentGroup = groupRepository.findById(groupPersisted.getId());
-        assertThat(currentGroup.get().getUsers(), contains(userPersisted));
+        assertThat(currentGroup.get().getUsers(), contains(mab));
     }
 
     @Test
     public void createGroup_withUser_cascade_fromOwnerSide() {
-        User user = createUser("mab");
-
+        User mab = createUser("mab");
         Group group = createProject("SVV");
-        group.addUser(user);
+
+        group.addUser(mab);
         Group groupPersisted = groupRepository.save(group);
 
         assertThat(groupPersisted.getId(), notNullValue());
-        assertThat(groupPersisted.getUsers(), contains(user));
+        assertThat(groupPersisted.getUsers(), contains(mab));
+        assertThat(groupPersisted.getOwner(), is(equalTo(group.getOwner())));
 
         entityManager.flush();
 
         Optional<Group> currentGroup = groupRepository.findById(groupPersisted.getId());
-        assertThat(currentGroup.get().getUsers(), contains(user));
-
+        assertThat(currentGroup.get().getUsers(), contains(mab));
+        assertThat(currentGroup.get().getOwner(), is(equalTo(group.getOwner())));
     }
 }

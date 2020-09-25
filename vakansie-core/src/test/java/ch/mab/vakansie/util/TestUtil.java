@@ -1,5 +1,6 @@
 package ch.mab.vakansie.util;
 
+import ch.mab.vakansie.groups.Group;
 import ch.mab.vakansie.groups.GroupProject;
 import ch.mab.vakansie.groups.GroupRepository;
 import ch.mab.vakansie.groups.GroupTeam;
@@ -29,26 +30,28 @@ public abstract class TestUtil {
         return userRepository.save(user);
     }
 
-    protected GroupTeam createTeam(String name, User admin) {
-        GroupTeam group = new GroupTeam();
+    private Group createGroup(Group group, String name) {
+        User owner = createUser("owner");
         group.setName(name);
-        //group.setAdmin(admin);
+        group.setOwner(owner);
         return group;
     }
 
-    protected GroupTeam createTeamAndPersist(String name, User admin) {
-        GroupTeam team = createTeam(name, admin);
-        return groupRepository.save(team);
+    protected GroupTeam createTeam(String name) {
+        Group group = createGroup(new GroupTeam(), name);
+        return (GroupTeam) group;
+    }
+
+    protected GroupTeam createTeamAndPersist(String name) {
+        return groupRepository.save(createTeam(name));
     }
 
     protected GroupProject createProject(String name) {
-        GroupProject group = new GroupProject();
-        group.setName(name);
-        return group;
+        Group group = createGroup(new GroupProject(), name);
+        return (GroupProject) group;
     }
 
     protected GroupProject createProjectAndPersist(String name) {
-        GroupProject team = createProject(name);
-        return groupRepository.save(team);
+        return groupRepository.save(createProject(name));
     }
 }
