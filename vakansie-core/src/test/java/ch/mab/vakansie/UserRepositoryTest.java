@@ -4,11 +4,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 import ch.mab.vakansie.groups.Group;
 import ch.mab.vakansie.groups.GroupTeam;
+import ch.mab.vakansie.users.Permissions;
 import ch.mab.vakansie.users.User;
 import ch.mab.vakansie.users.UserRepository;
 import java.util.Collection;
@@ -38,6 +41,7 @@ public class UserRepositoryTest {
         assertThat(mab.getName(), comparesEqualTo(createdMab.getName()));
         assertThat(mab.getEmail(), comparesEqualTo(createdMab.getEmail()));
         assertThat(mab.getGroups(), empty());
+        assertThat(createdMab.getPermission(), is(equalTo(Permissions.USER)));
     }
 
     @Test
@@ -57,6 +61,7 @@ public class UserRepositoryTest {
         assertThat(createdMab.getName(), comparesEqualTo(mab.getName()));
         assertThat(createdMab.getEmail(), comparesEqualTo(mab.getEmail()));
         assertThat(createdMab.getGroups(), contains(team));
+        assertThat(createdMab.getPermission(), is(equalTo(Permissions.USER)));
     }
 
     @Test

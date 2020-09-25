@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -32,6 +34,9 @@ public class User extends BaseModel implements Serializable { // Serializable is
     @ManyToMany
     @Cascade(CascadeType.ALL)
     private Set<Group> groups = new HashSet<>();
+
+    @Enumerated(EnumType.STRING)
+    private Permissions permission = Permissions.USER; // default permission
 
     public User() {
     }
@@ -60,4 +65,11 @@ public class User extends BaseModel implements Serializable { // Serializable is
         this.email = email;
     }
 
+    public Permissions getPermission() {
+        return permission;
+    }
+
+    public void setPermission(Permissions permission) {
+        this.permission = permission;
+    }
 }
