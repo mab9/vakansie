@@ -17,6 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")  // https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
@@ -24,7 +26,7 @@ import javax.persistence.Table;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // default strategy
 @DiscriminatorColumn
 @Table(name = "Groups")  // the table name group, is a reserved key word for h2 databae
-public abstract class Group extends BaseModel implements Serializable { // Serializable is not required, this way  the object may be passed across  process boundaries{
+public abstract class Group extends BaseModel {
 
     // owner side of the relationship
     @JoinTable(name = "user_group",
@@ -36,6 +38,9 @@ public abstract class Group extends BaseModel implements Serializable { // Seria
 
     @Column(nullable = false)
     private String name;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Policy> policies = new HashSet<>();
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private User owner;
@@ -62,5 +67,13 @@ public abstract class Group extends BaseModel implements Serializable { // Seria
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public Set<Policy> getPolicies() {
+        return policies;
+    }
+
+    public void setPolicies(Set<Policy> policies) {
+        this.policies = policies;
     }
 }

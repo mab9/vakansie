@@ -1,5 +1,6 @@
 package ch.mab.vakansie.base;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 import javax.persistence.GeneratedValue;
@@ -9,7 +10,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
 @MappedSuperclass
-public abstract class BaseModel {
+public abstract class BaseModel implements Serializable { // Serializable is not required, this way  the object may be passed across  process boundaries{
 
     @Id  // Die ID Annotation definiert ob Methoden oder Felder annotiert werden.
     @GeneratedValue(strategy = GenerationType.AUTO) // auto is default value

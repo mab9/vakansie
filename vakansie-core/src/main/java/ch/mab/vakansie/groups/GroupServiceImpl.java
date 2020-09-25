@@ -2,11 +2,13 @@ package ch.mab.vakansie.groups;
 
 import ch.mab.vakansie.users.User;
 import ch.mab.vakansie.users.UserRepository;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -58,6 +60,31 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Set<Group> findAllGroupsByTeam(UUID teamId) {
+        return null;
+    }
+
+    @Override
+    public Set<Policy> findAllRulesByGroupId(UUID groupId) {
+        return null;
+    }
+
+    @Override
+    public Set<Pair<Policy, Set<LocalDate>>> checkRulesForGroupId(UUID groupId) {
+        return null;
+    }
+
+    @Override
+    public Policy createRule(Policy rule) {
+        return null;
+    }
+
+    @Override
+    public Policy removeRule(UUID ruleId) {
+        return null;
+    }
+
+    @Override
+    public Policy updateRule(UUID ruleId) {
         return null;
     }
 }
