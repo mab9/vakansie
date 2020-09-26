@@ -1,4 +1,4 @@
-package ch.mab.vakansie.groups;
+package ch.mab.vakansie.policies;
 
 import ch.mab.vakansie.users.User;
 import java.util.HashSet;

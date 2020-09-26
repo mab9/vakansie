@@ -8,18 +8,21 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
 
 import ch.mab.vakansie.groups.Group;
 import ch.mab.vakansie.groups.GroupRepository;
-import ch.mab.vakansie.groups.Policy;
-import ch.mab.vakansie.groups.PolicyMinAvailableUser;
-import ch.mab.vakansie.groups.PolicyRepository;
+import ch.mab.vakansie.policies.Policy;
+import ch.mab.vakansie.policies.PolicyMinAvailableUser;
+import ch.mab.vakansie.policies.PolicyMinAvailableUserOfDefinedGroup;
+import ch.mab.vakansie.policies.PolicyRepository;
 import ch.mab.vakansie.users.User;
 import ch.mab.vakansie.users.UserRepository;
 import ch.mab.vakansie.util.TestUtil;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.Set;
 import javax.persistence.EntityManager;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -90,25 +93,36 @@ public class GroupRepositoryTest extends TestUtil {
     }
 
     @Test
-    public void createGroup_withPolicy() {
+    public void createGroup_withPolicies() {
         PolicyMinAvailableUser policy = new PolicyMinAvailableUser();
         policy.setMinUsers(2);
         policy.setName("Min 2 Users");
         policyRepository.save(policy);
 
+        User mab = createUser("mab");
+        User foo = createUser("foo");
+        userRepository.save(mab);
+        userRepository.save(foo);
+
+        PolicyMinAvailableUserOfDefinedGroup policy2 = new PolicyMinAvailableUserOfDefinedGroup();
+        policy2.setMinAvailableUsers(1);
+        policy2.setUserGroup(Set.of(mab, foo));
+        policy2.setName("Min 2 out of defined group");
+        policyRepository.save(policy2);
+
         Group group = createProject("SVV");
         group.addPolicy(policy);
+        group.addPolicy(policy2);
         Group groupPersisted = groupRepository.save(group);
-
-        entityManager.flush();
 
         Optional<Group> currentGroup = groupRepository.findById(groupPersisted.getId());
         assertThat(currentGroup.get().getPolicies(), not(empty()));
-        assertThat(currentGroup.get().getPolicies(), contains(policy));
+        assertThat(currentGroup.get().getPolicies().contains(policy), is(true));
+        assertThat(currentGroup.get().getPolicies().contains(policy2), is(true));
     }
 
-
-    //@Test
+    @Disabled
+    @Test
     public void removePolicy() {
         PolicyMinAvailableUser policy = new PolicyMinAvailableUser();
         policy.setMinUsers(2);
@@ -119,14 +133,10 @@ public class GroupRepositoryTest extends TestUtil {
         group.addPolicy(policy);
         Group groupPersisted = groupRepository.save(group);
 
-        entityManager.flush();
-
         Optional<Group> currentGroup = groupRepository.findById(groupPersisted.getId());
         assertThat(currentGroup.get().getPolicies(), contains(policy));
 
         currentGroup.get().removePolicy(policy);
-
-        entityManager.flush();
 
         Optional<Policy> currentPolicy = policyRepository.findById(policy.getId());
         assertThat(currentPolicy.isEmpty(), is(true));

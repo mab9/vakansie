@@ -1,4 +1,4 @@
-package ch.mab.vakansie.groups;
+package ch.mab.vakansie.policies;
 
 import javax.persistence.Basic;
 import javax.persistence.DiscriminatorValue;

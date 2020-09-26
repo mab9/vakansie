@@ -1,13 +1,13 @@
-package ch.mab.vakansie.groups;
+package ch.mab.vakansie.policies;
 
 import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
 
 import ch.mab.vakansie.base.BaseModel;
+import ch.mab.vakansie.groups.Group;
 import java.time.LocalDate;
 import java.util.Objects;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;

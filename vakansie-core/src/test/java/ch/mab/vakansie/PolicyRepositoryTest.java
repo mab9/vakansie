@@ -5,10 +5,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
-import ch.mab.vakansie.groups.GroupTeam;
-import ch.mab.vakansie.groups.Policy;
-import ch.mab.vakansie.groups.PolicyMinAvailableUser;
-import ch.mab.vakansie.groups.PolicyRepository;
+import ch.mab.vakansie.policies.Policy;
+import ch.mab.vakansie.policies.PolicyMinAvailableUser;
+import ch.mab.vakansie.policies.PolicyRepository;
 import ch.mab.vakansie.util.TestUtil;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
