@@ -8,6 +8,7 @@ import ch.mab.vakansie.groups.Group;
 import java.time.LocalDate;
 import java.util.Objects;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -32,7 +33,7 @@ public class Policy extends BaseModel {
     @Column(nullable = false)
     private LocalDate end = LocalDate.now().with(lastDayOfYear());
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Group group;
 
     public LocalDate getStart() {

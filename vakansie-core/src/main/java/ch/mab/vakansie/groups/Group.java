@@ -38,7 +38,7 @@ public abstract class Group extends BaseModel {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(orphanRemoval=true)
+    @OneToMany(orphanRemoval=true, mappedBy = "group", cascade = CascadeType.ALL)
     private final Set<Policy> policies = new HashSet<>();
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)

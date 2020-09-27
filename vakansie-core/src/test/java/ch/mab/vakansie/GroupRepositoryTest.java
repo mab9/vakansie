@@ -21,6 +21,7 @@ import ch.mab.vakansie.util.TestUtil;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -38,9 +39,6 @@ public class GroupRepositoryTest extends TestUtil {
 
     @Autowired
     private PolicyRepository policyRepository;
-
-    @Autowired
-    private EntityManager entityManager;
 
     @Test
     public void createGroup() {
@@ -67,8 +65,6 @@ public class GroupRepositoryTest extends TestUtil {
         assertThat(groupPersisted.getId(), notNullValue());
         assertThat(groupPersisted.getUsers(), contains(mab));
 
-        entityManager.flush();
-
         Optional<Group> currentGroup = groupRepository.findById(groupPersisted.getId());
         assertThat(currentGroup.get().getUsers(), contains(mab));
     }
@@ -84,8 +80,6 @@ public class GroupRepositoryTest extends TestUtil {
         assertThat(groupPersisted.getId(), notNullValue());
         assertThat(groupPersisted.getUsers(), contains(mab));
         assertThat(groupPersisted.getOwner(), is(equalTo(group.getOwner())));
-
-        entityManager.flush();
 
         Optional<Group> currentGroup = groupRepository.findById(groupPersisted.getId());
         assertThat(currentGroup.get().getUsers(), contains(mab));
@@ -127,7 +121,6 @@ public class GroupRepositoryTest extends TestUtil {
         PolicyMinAvailableUser policy = new PolicyMinAvailableUser();
         policy.setMinUsers(2);
         policy.setName("Min 2 Users");
-        policyRepository.save(policy);
 
         Group group = createProject("SVV");
         group.addPolicy(policy);
@@ -136,9 +129,14 @@ public class GroupRepositoryTest extends TestUtil {
         Optional<Group> currentGroup = groupRepository.findById(groupPersisted.getId());
         assertThat(currentGroup.get().getPolicies(), contains(policy));
 
-        currentGroup.get().removePolicy(policy);
+        currentGroup.get().getPolicies().remove(policy);
+        groupRepository.save(currentGroup.get());
 
-        Optional<Policy> currentPolicy = policyRepository.findById(policy.getId());
+        // policyRepository.delete(policy);
+        Optional<Policy> currentPolicy = policyRepository.findById(currentGroup.get().getPolicies().iterator().next().getId());
         assertThat(currentPolicy.isEmpty(), is(true));
+
+        currentGroup = groupRepository.findById(groupPersisted.getId());
+        assertThat(currentGroup.get().getPolicies(), empty());
     }
 }

@@ -17,5 +17,7 @@ public interface GroupService {
 
     Group createProject(String projectName);
 
+    GroupSpace createSpace(Group group, User owner);
+
     Set<Group> findAllGroupsByTeam(UUID teamId);
 }
