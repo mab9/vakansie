@@ -13,13 +13,14 @@ export {Day, ALL_DAY_ATTRIBUTE_NAMES}
  * @property {boolean} dayoff    - indicates if the day was selected as a day off
  * @property {number}  approved  - is day off approved: 0 = requested, 1 = approved, 2 = not approved; might be empty.
  * @property {boolean} holyday   - is day a holyday according the local calendar
+ * @property {number}  fromToId  - Id of a from to entry
  * @method   isNotInMonth        - day is not a true natural date example: 30 february.
  * @method   isWeekendDay        -
  * @method   isBookable          - is a weekday that is not a holy day or a day that is already been booked
- * @example  {id:0, date: 20.20.20, day: 20, dayoff: true, approved: 1}
+ * @example  {id:0, date: 20.20.20, day: 20, dayoff: true, approved: 1, fromToId: 1}
  */
 
-const ALL_DAY_ATTRIBUTE_NAMES = ['id', 'date', 'day', 'dayoff', 'approved', 'holyday'];
+const ALL_DAY_ATTRIBUTE_NAMES = ['id', 'date', 'day', 'dayoff', 'approved', 'holyday', 'fromToId'];
 
 // todo extend presentationmodel with differntiated label!
 const Day = () => {      // facade

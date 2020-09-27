@@ -1,8 +1,8 @@
 import {appendFirst} from "../../assets/util/appendFirst.js";
 import {dom} from "../../assets/util/dom.js";
-import {planningProjector, pageCss, allowanceProjector} from "./planningProjector.js";
+import {planningProjector, pageCss} from "./planningProjector.js";
+import {allowanceProjector} from "./allowanceProjector.js";
 import {i18n} from "../../service/translationService.js";
-import {VALUE} from "../../base/presentationModel/presentationModel.js";
 
 export {PlanningView};
 

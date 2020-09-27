@@ -42,7 +42,7 @@ const ObservableList = list => {
             removeAt(array)(i);
         }
     };
-    const listRemoveItem = removeItem(list);
+        const listRemoveItem = removeItem(list);
     const delListenersRemove = removeAt(delListeners);
     return {
         onAdd: listener => addListeners.push(listener),
@@ -55,8 +55,7 @@ const ObservableList = list => {
         del: item => {
             const r = listRemoveItem(item);
             const safeIterate = [...delListeners]; // shallow copy as we might change listeners array while iterating
-            safeIterate.forEach((listener, index) => listener(item,
-                () => delListenersRemove(index)));
+            safeIterate.forEach((listener, index) => listener(item, () => delListenersRemove(index)));
         },
         removeDeleteListener: removeItem(delListeners),
         count: () => list.length,

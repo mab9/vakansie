@@ -1,8 +1,8 @@
 import {ALL_DAY_ATTRIBUTE_NAMES, Day} from "./planningModel.js";
-import {Attribute, LABEL, VALUE} from "../../base/presentationModel/presentationModel.js";
+import {Attribute, LABEL, VALUE, valueOf} from "../../base/presentationModel/presentationModel.js";
 import "../../assets/util/dates.js"
 import {ListController, SelectionController} from "../../base/controller/controller.js";
-import {ALL_PERSON_ATTRIBUTE_NAMES, Person} from "../person/personModel.js";
+import {FromTo} from "./fromToModel.js";
 
 export {PlanningController, months}
 
@@ -32,28 +32,69 @@ const holydays = [
  */
 const PlanningController = () => {
 
+    const fromToListController = ListController();
     const selectionController = SelectionController(NoDay);
 
-    // total available holydays
-    const holydays = Attribute(20);
+    // total available holy days
+    const holyDays = Attribute(20);
     const isMouseDown = Attribute(false);
-    /** @type dragStart {Attribute} */
-    const dragStart = Attribute(undefined);
-    const dragEnd = Attribute(undefined);
 
     const calendarData = initializeCalendar();
+
+    /** @type fromTo {FromTo} */
+    let fromTo = undefined;
+
+    /** @param {Day} day */
+    const createFromTo = (day) => {
+        fromTo = FromTo();
+        fromTo.id.getObs(VALUE).setValue(fromToListController.size() + 1)
+        day.fromToId = fromTo.id;
+        fromTo.start.getObs(VALUE).setValue(day);
+        fromTo.from.getObs(VALUE).setValue(day);
+        fromTo.to.getObs(VALUE).setValue(day);
+        fromToListController.addModel(fromTo);
+    }
+
+    const endFromTo = () => fromTo = undefined;
+
+    /** @param {Day} day */
+    const setFromTo = (day) => {
+        // distinguish if to is going upwards or backwards
+        if (valueOf(day.date) < valueOf(valueOf(fromTo.start).date)) {
+            // going backwards
+            fromTo.from.getObs(VALUE).setValue(day);
+        } else if (valueOf(day.date) === valueOf(valueOf(fromTo.start).date)) {
+            // is at the start point
+            fromTo.from.getObs(VALUE).setValue(day);
+            fromTo.to.getObs(VALUE).setValue(day);
+        } else {
+            // going forwards
+            fromTo.to.getObs(VALUE).setValue(day);
+        }
+    }
+
+    selectionController.onModelSelected(value => {
+        if (valueOf(isMouseDown)) { // start selection / ongoing selection
+            if (fromTo) {
+                setFromTo(value)
+            } else {
+                createFromTo(value)
+            }
+        } else { // end selection
+            endFromTo()
+        }
+    })
 
     /**
      * @typedef PlanningController
      */
     return Object.freeze({
-        getCalendarData:         () => calendarData,
-        getHolydays:             () => holydays,
-        getDragStart:            () => dragStart,
-        getDragEnd:              () => dragEnd,
+        getCalendarData:         () => calendarData,          // holds year and day details  (is holiday, is weekend day,...)
+        getHolyDays:             () => holyDays,              // national holidays
         getMouseDown:            () => isMouseDown,
-        getSelectionController : () => selectionController,
-        getNoDay:                () => NoDay,
+        getSelectionController:  () => selectionController,   // current selected / hover on day
+        getFromToListController: () => fromToListController,  // object { id, start day, end day, amount of days that are off, list off all days between start and end?)
+        getCurrentFromTo:        () => fromTo,
     });
 };
 

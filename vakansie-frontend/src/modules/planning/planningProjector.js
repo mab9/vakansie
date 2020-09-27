@@ -6,7 +6,7 @@ import {Day} from "./planningModel.js";
 import {VALUE, LABEL, SELECTED, valueOf, Attribute} from "../../base/presentationModel/presentationModel.js";
 import "../../assets/util/dates.js"
 
-export {planningProjector, allowanceProjector, pageCss}
+export {planningProjector, pageCss}
 
 const masterClassName = 'planning-master'; // should be unique for this projector
 const detailClassName = 'planning-detail';
@@ -39,72 +39,6 @@ const planningProjector = (rootElement, planningController) => {
     appendFirst(rootElement)(planning)
 };
 
-/**
- * @param  rootElement        {HTMLElement}
- * @param  planningController {PlanningController}
- */
-const allowanceProjector = (rootElement, planningController) => {
-    const isMouseDown = planningController.getMouseDown();
-    const dragStart = planningController.getDragStart();
-    const dragEnd = planningController.getDragEnd();
-    const selectionCtrl = planningController.getSelectionController();
-    const holydays = planningController.getHolydays();
-
-    const planning = dom(`
-        <h2> Anzahl verbleibende Ferientage: <span>5</span></h2>
-        <div class="${detailClassName}-grid-container">
-            <div>from</div><div>to</div><div>days</div><div>remove</div>
-        </div>
-    `)
-
-    const element = planning.querySelector("span")
-    const container = planning.querySelector("div")
-    holydays.getObs(VALUE).onChange(value => element.innerText = value)
-
-    const createHolydayEntry = () => dom(`<div>start</div><div>stop</div><div>1</div><div><input type="button" value="X"> </div>`);
-
-    let start = undefined;
-    let end = undefined;
-    let days = undefined;
-    let remove = undefined;
-
-    // refactor stuff so that it uses a controller that holds entries as a model!
-
-    dragStart.getObs(VALUE).onChange(value => {
-        if (value) { // is start dragging
-            const entry = createHolydayEntry();
-            [start, end, days, remove] = entry.children;
-
-            start.innerText = valueOf(value.date).getFormated();
-            end.innerText = valueOf(value.date).getFormated();
-            container.appendChild(entry)
-        }
-    })
-
-    dragEnd.getObs(VALUE).onChange(value => {
-        if (value) {
-            console.info("drag end", valueOf(value.id));
-        }
-        // todo highlight new entry  and de highlihgt when new entry is set!
-    })
-
-    selectionCtrl.onModelSelected(value => {
-        if (valueOf(value.date) && end) {
-
-            if (valueOf(value.date) >= valueOf(dragStart.getObs(VALUE).getValue().date)) {
-                // going forward
-                start.innerText = valueOf(dragStart.getObs(VALUE).getValue().date).getFormated(); // todo only set when it changes!
-                end.innerText = valueOf(value.date).getFormated();
-            } else {
-                start.innerText = valueOf(value.date).getFormated();
-            }
-
-            days.innerText = valueOf(value.date).daysBetween(valueOf(dragStart.getObs(VALUE).getValue().date)) + 1;
-        }
-    })
-
-    appendReplacing(rootElement)(planning);
-}
 
 // todo add to utils
 const maybe = cond => func => cond ? func() : ""
@@ -121,43 +55,39 @@ const addClass2 = elements => clazz => {  // todo rewrite addClass so that it ta
     }
 }
 
-const addSelected = day => isDragged => {
-    isDragged
-        ? day.date.getObs(SELECTED).setValue(true)
-        : day.date.getObs(SELECTED).setValue(false)
+const setSelected = day => isDragged => day.date.getObs(SELECTED).setValue(isDragged);
+
+const isDayBetweenStartAndCurrentSelection = selectedDay => day => planningCtrl => {
+    if (!selectedDay) return;
+
+    const fromTo = planningCtrl.getCurrentFromTo();
+
+    const from    = valueOf(valueOf(fromTo.from).id);
+    const to      = valueOf(valueOf(fromTo.to).id);
+    const dayValue = valueOf(day.id);
+
+    return from <= dayValue && to >= dayValue;
 }
 
 const setDayOff = day => off => day.dayoff.getObs(VALUE).setValue(off);
 
 /**
  * @param element
- * @param  day {Day}
- * @param  planningController {PlanningController}
+ * @param day {Day}
+ * @param planningController {PlanningController}
  */
 const setEventListener = (element, day, planningController) => {
 
     const isMouseDown = planningController.getMouseDown();
-    const dragStart = planningController.getDragStart();
-    const dragEnd = planningController.getDragEnd();
     const selectionCtrl = planningController.getSelectionController();
-    const holydays = planningController.getHolydays();
+    const holydays = planningController.getHolyDays();
 
+    // todo start end observables im from to list controller stopfen.
+
+    // behavior when a day is currently selected - pay attention: is execute for each day!
     selectionCtrl.onModelSelected(selectedDay => {
-        // pay attention: is execute for each day!
-        if (valueOf(selectedDay.date)) {
-            const start = valueOf(dragStart.getObs(VALUE).getValue().id);
-            const end = valueOf(selectedDay.id);
-            const dayValue = valueOf(day.id);
-
-            start < end
-                ? addSelected(day)(dayValue >= start && dayValue <= end)
-                : addSelected(day)(dayValue <= start && dayValue >= end)
-
-        } else {
-            // observable guard will prevent loops
-            //dragCurrent.getObs(VALUE).setValue(undefined)
-            addSelected(day)(false)
-        }
+        let selected = Boolean(valueOf(selectedDay.date) && isDayBetweenStartAndCurrentSelection(selectedDay)(day)(planningController));
+        setSelected(day)(selected);
     })
 
     day.date.getObs(SELECTED).onChange(isSelected => {
@@ -196,7 +126,6 @@ const setEventListener = (element, day, planningController) => {
         addClass2(headers)("no-selection")
         addClass2(firsts)("no-selection")
         isMouseDown.getObs(VALUE).setValue(true);
-        dragStart.getObs(VALUE).setValue(day);
         selectionCtrl.setSelectedModel(day);
     }
 
@@ -208,10 +137,9 @@ const setEventListener = (element, day, planningController) => {
         // todo check if we add to each html a no selection
         saveClassRemoval2(headers)("no-selection")
         saveClassRemoval2(firsts)("no-selection")
+
         isMouseDown.getObs(VALUE).setValue(false);
-        dragStart.getObs(VALUE).setValue(undefined);  // todo check if we use noday or undefined
-        dragEnd.getObs(VALUE).setValue(selectionCtrl.getSelectedModel());
-        selectionCtrl.setSelectedModel(planningController.getNoDay());
+        selectionCtrl.clearSelection();
     }
 }
 
@@ -232,9 +160,9 @@ const dayProjector = (rootElement, day, planningController) => {
     maybe(day.isNotInMonth())(() => element.classList.add("cal-not-in-month"))
     maybe(day.holyday.getObs(VALUE).getValue())(() => element.classList.add("cal-holyday"))
     maybe(day.holyday.getObs(VALUE).getValue())(() => setTooltip(element)(day.holyday.getObs(LABEL).getValue()))
-
     rootElement.appendChild(html)
 }
+
 
 const createColumnAmountString = () => {
     let col = "120px";

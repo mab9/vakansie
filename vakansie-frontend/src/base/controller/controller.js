@@ -19,6 +19,7 @@ const ListController = () => {
         removeModel:         listModel.del,
         onModelAdd:          listModel.onAdd,
         onModelRemove:       listModel.onDel,
+        size:                listModel.count,
     }
 };
 
