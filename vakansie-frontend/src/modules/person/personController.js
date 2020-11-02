@@ -1,5 +1,4 @@
-
-import { SelectionController, ListController } from "../../base/controller/controller.js";
+import {ListController, SelectionController} from "../../base/controller/controller.js";
 import {ALL_PERSON_ATTRIBUTE_NAMES, Person} from "./personModel.js";
 import {vakansieService} from "../../service/localService.js";
 import {id} from "../../assets/church/church.js";
@@ -39,7 +38,7 @@ const PersonController = () => {
      */
     return Object.freeze({
         getListController : getListController,
-        getSelectionController : getSelectionController,
+        getSelectionCtrl : getSelectionController,
         addPerson: addPerson,
         initPersons: initPersons,
     });

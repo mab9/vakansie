@@ -1,8 +1,7 @@
-import {appendFirst} from "../../assets/util/appendFirst.js";
+import {appendFirst} from "../../assets/util/appends.js";
 import {dom} from "../../assets/util/dom.js";
-import {listItemProjector, formProjector, pageCss} from "./instantUpdateProjector.js";
-import {ALL_PERSON_ATTRIBUTE_NAMES } from "./personModel.js";
-import {Person} from "./personModel.js";
+import {formProjector, listItemProjector, pageCss} from "./instantUpdateProjector.js";
+import {ALL_PERSON_ATTRIBUTE_NAMES, Person} from "./personModel.js";
 
 export {PersonView};
 
@@ -20,7 +19,7 @@ document.head.appendChild(style);
 const PersonView = (rootElement, personController) => {
 
     const listController      = personController.getListController();
-    const selectionController = personController.getSelectionController();
+    const selectionController = personController.getSelectionCtrl();
 
     const render = () => {
         const person = dom(`
