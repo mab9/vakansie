@@ -77,8 +77,12 @@ const allowanceProjector = (rootElement, planningCtrl) => {
     // const thead = tbody.children[0]; // tr th head
     // const trow = tbody.children[1];  // tr th head
 
+    const updateDaysBetween = days => event => {
+        days.textContent = valueOf(valueOf(event.from).date).daysBetween(valueOf(valueOf(event.to).date)) + 1;
+    }
+
     /** @event event {Event} */
-    eventListCtrl.onModelAdd(event => {
+    const processEvent = event => {
         let row = tbody.insertRow();
         let [start, end, days, remove] = creatRowEntries(row);
 
@@ -119,12 +123,11 @@ const allowanceProjector = (rootElement, planningCtrl) => {
 
         row.onmouseover = _ => styleRowOnHover(true);
         row.onmouseleave = _ => styleRowOnHover(false);
-    })
-
-
-    const updateDaysBetween = days => event => {
-        days.textContent = valueOf(valueOf(event.from).date).daysBetween(valueOf(valueOf(event.to).date)) + 1;
     }
+
+
+    eventListCtrl.getAll().forEach(event => processEvent(event))
+    eventListCtrl.onModelAdd(event => processEvent(event))
 
     appendReplacing(rootElement)(planning);
 }

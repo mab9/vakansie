@@ -2,7 +2,6 @@ import {ALL_DAY_ATTRIBUTE_NAMES, Day} from "../../calendar/day.model.js";
 import {Attribute, setValueOf, valueOf} from "../../base/presentationModel/presentationModel.js";
 import "../../assets/util/dates.js"
 import {SelectionController} from "../../base/controller/controller.js";
-import {calendarService} from "../../calendar/calendar.service.local.js";
 import {calendarController} from "../../calendar/calendar.controller.js";
 
 export {PlanningController}
@@ -31,7 +30,17 @@ const PlanningController = (isCtrlInitialized = false) => {
     const vacationContigent = Attribute(20); // total available events within a time period (usually a year)
     const isMouseDown = Attribute(false);
 
-    const calendar = calendarService.getInitializedCalendar();
+    const calendar = calendarCtrl.getCalendarData();
+
+    const isDayInRangeFromToEvent = day => {
+        const event = calendarCtrl.getCreatedEvent()
+
+        const from = valueOf(valueOf(event.from).id);
+        const to = valueOf(valueOf(event.to).id);
+        const dayValue = valueOf(day.id);
+
+        return from <= dayValue && to >= dayValue;
+    }
 
     const changeDaySelection = () => {
         for (let dayId = 0; dayId <= (12 * 31 - 1); dayId++) {
@@ -85,16 +94,6 @@ const PlanningController = (isCtrlInitialized = false) => {
         updateVacationContigent();
     }
 
-    const isDayInRangeFromToEvent = day => {
-        const event = calendarCtrl.getCreatedEvent()
-
-        const from = valueOf(valueOf(event.from).id);
-        const to = valueOf(valueOf(event.to).id);
-        const dayValue = valueOf(day.id);
-
-        return from <= dayValue && to >= dayValue;
-    }
-
 
     // todo replace code to calendar?
     selectionCtrl.onModelSelected(day => {
@@ -103,6 +102,11 @@ const PlanningController = (isCtrlInitialized = false) => {
         updateEventDayList()
     })
 
+
+    calendarCtrl.initHolidays();
+    calendarCtrl.initEvents();
+    updateEventDayList();
+    updateVacationContigent();
 
     isCtrlInitialized = true;
 
@@ -117,7 +121,7 @@ const PlanningController = (isCtrlInitialized = false) => {
         updateEvent,
         endEvent,
         deleteEvent: deleteEvent,
-        getEventListCtrl : calendarCtrl.getEventListCtrl,
+        getEventListCtrl: calendarCtrl.getEventListCtrl,
     });
 };
 

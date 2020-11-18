@@ -1,5 +1,5 @@
 import {Day} from "./day.model.js";
-import {setValueOf, valueOf} from "../base/presentationModel/presentationModel.js";
+import {setLabelOf, setValueOf, valueOf} from "../base/presentationModel/presentationModel.js";
 import "../assets/util/dates.js"
 import {ListController} from "../base/controller/controller.js";
 import {Event} from "./event.model.js";
@@ -15,7 +15,37 @@ export {calendarController}
 const calendarController = ((isCtrlInitialized = false) => {  // one time creation, singleton
 
     const eventListCtrl = ListController();
-    const calendar = calendarService.getInitializedCalendar();
+    const calendar = calendarService.getEmptyCalendar();
+
+    // todo make async
+    const initHolidays = (holidays = calendarService.getSuisseHolidays()) => {
+        calendar.forEach(month => {
+            month.forEach(day => {
+                const holiday = valueOf(holidays).find(holiday => holiday.day.sameDay(valueOf(day.date)));
+                setValueOf(day.holiday)(!!holiday)
+                setLabelOf(day.holiday)(holiday ? holiday.label : "")
+            })
+        })
+    }
+
+    // todo make async
+    const initEvents = () => {
+        const events = calendarService.getEvents();
+        valueOf(events).forEach(event => {
+            let day = findDayByDate(event.start)
+            createEvent(day)
+            const createdEvent = eventListCtrl.pop();
+            const dayListCtrl = valueOf(createdEvent.days);
+
+            // start day was already added at event creation
+            while (!valueOf(day.date).sameDay(event.to)) {
+                day = findDayById(valueOf(day.id) + 1)
+                dayListCtrl.addModel(day)
+                setValueOf(createdEvent.to)(day)
+            }
+            endEvent();
+        })
+    }
 
     /** @param {Day} day */
     const createEvent = (day) => {
@@ -71,6 +101,13 @@ const calendarController = ((isCtrlInitialized = false) => {  // one time creati
         return calendar[month][day]
     }
 
+    /** @param {Date} date */
+    const findDayByDate = date => {
+        const month = date.getMonth();
+        const day = date.getDate();
+        return calendar[month][day -1]
+    }
+
     const getCurrentAmountEventDays = () => {
         const events = eventListCtrl.getAll();
         if (!events.length) return 0;
@@ -90,10 +127,12 @@ const calendarController = ((isCtrlInitialized = false) => {  // one time creati
         updateEvent,
         endEvent,
         deleteEvent,
-        getData: () => calendar,
+        getCalendarData: () => calendar,
         getDayById: id => findDayById(id),
         getEventListCtrl: () => eventListCtrl,
         getCreatedEvent: () => eventListCtrl.pop(),
+        initHolidays: initHolidays,
+        initEvents: initEvents,
         getCurrentAmountEventDays,
     });
 })();

@@ -1,4 +1,4 @@
-import {Attribute, setLabelOf, setValueOf, valueOf} from "../base/presentationModel/presentationModel.js";
+import {Attribute, setValueOf} from "../base/presentationModel/presentationModel.js";
 import {Day} from "./day.model.js";
 import "../assets/util/times.js"
 
@@ -19,22 +19,24 @@ const suisseHolidays = [
 const months = ["month.jan", "month.feb", "month.mar", "month.apr", "month.mai", "month.jul",
     "month.jun", "month.aug", "month.sep", "month.oct", "month.nov", "month.dez"];
 
+const yyyy = new Date().getFullYear();
 
-const initializeCalendar = holidays => {
-    // only used to generate uuid
+const events = [
+    {id: 1, start: new Date(yyyy, 2, 16), to: new Date(yyyy, 2, 20), amount: undefined, days : undefined},
+    {id: 2, start: new Date(yyyy, 4, 22), to: new Date(yyyy, 4, 29), amount: undefined, days : undefined},
+    {id: 2, start: new Date(yyyy, 5, 2), to: new Date(yyyy, 5, 5), amount: undefined, days : undefined},
+    {id: 3, start: new Date(yyyy, 6, 16), to: new Date(yyyy, 7, 14), amount: undefined, days : undefined},
+    {id: 4, start: new Date(yyyy, 11, 21), to: new Date(yyyy, 11, 31), amount: undefined, days : undefined},
+]
+
+const getEmptyCalendar = () => {
     let data = []
     let idCounter = 0;
-    const today = new Date();
-
-    // add holidays
-    // add events
-    // add weekends / display calendar
-
 
     months.forEach(month => {
         let days = []
 
-        const yyyy = today.getFullYear();
+        const yyyy = new Date().getFullYear();
         const mm = months.indexOf(month);
 
         (31).times((idx) => {
@@ -44,11 +46,7 @@ const initializeCalendar = holidays => {
             setValueOf(day.day)(idx + 1)
 
             const date = new Date(yyyy, mm, idx + 1)
-            const holiday = valueOf(holidays).find(holiday => holiday.day.sameDay(date));
-
             setValueOf(day.date)(new Date(date))
-            setValueOf(day.holiday)(!!holiday)
-            setLabelOf(day.holiday)(holiday ? holiday.label : "")
             days.push(day);
         })
         data.push(days)
@@ -60,11 +58,11 @@ const initializeCalendar = holidays => {
 const calendarService = (() => { // one time creation, singleton
 
     const getSuisseHolidays = () => Attribute(suisseHolidays);
-    const getInitializedCalendar = () => initializeCalendar(getSuisseHolidays());
-
+    const getEvents = () => Attribute(events);
 
     return {
         getSuisseHolidays,
-        getInitializedCalendar,
+        getEmptyCalendar,
+        getEvents,
     }
 })();
