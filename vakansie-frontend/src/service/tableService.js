@@ -1,4 +1,4 @@
-export {generateTable}
+export {generateTable, creatRowEntries}
 
 // todo add i18n
 const generateTableHead = (table, data) => {
@@ -26,4 +26,24 @@ const generateTable = (table, data) => {
             cell.appendChild(text);
         }
     }
+}
+
+
+const creatRowEntries = table => {  // todo add guards (has head, has columns,...)
+    const tbody = table.children[0];
+    const thead = tbody.childNodes[0];
+    const columns = tbody.childNodes[0].cells;
+
+    let row = tbody.insertRow();
+
+    let entries = [];
+
+    for (let i = 0; i < columns.length; i++) {
+        let cell = row.insertCell();
+        let element = document.createElement("div");
+        cell.appendChild(element);
+        entries[entries.length] = element;
+    }
+    entries[entries.length] = row;  // append row to add row manipulations
+    return entries;
 }

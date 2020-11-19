@@ -6,7 +6,7 @@ import {Event} from "./event.model.js";
 import {styleElement} from "../assets/util/cssClasses.js";
 import {calendarService} from "./calendar.service.local.js";
 
-export {calendarController}
+export {calendarController, itCalendarDays}
 
 /**
  * @return Readonly {CalendarController}
@@ -158,5 +158,11 @@ const calendarController = ((isCtrlInitialized = false) => {  // one time creati
         getCurrentAmountEventDays,
     });
 })();
+
+
+const itCalendarDays = fnc => {
+    const calendar = calendarController.getCalendarData();
+    calendar.forEach(month => month.forEach(day => fnc(day)))
+}
 
 

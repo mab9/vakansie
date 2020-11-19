@@ -10,7 +10,7 @@
 
 #main-content {
   left:             0;
-  position:         fixed;
+  /*position:         fixed;*/
   overflow-y:       scroll;
   width:            var(--main-content-full-width);
   height:           var(--main-content-heigth);

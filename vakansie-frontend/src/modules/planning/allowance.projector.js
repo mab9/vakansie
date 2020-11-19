@@ -4,41 +4,11 @@ import "../../assets/util/times.js"
 import {HOVER, onValueChange, valueOf} from "../../base/presentationModel/presentationModel.js";
 import "../../assets/util/dates.js"
 import {styleElement} from "../../assets/util/cssClasses.js";
+import {creatRowEntries} from "../../service/tableService.js";
 
 export {allowanceProjector, pageCss}
 
 const detailClassName = 'planning-detail';
-
-// todo make it generic
-const creatRowEntries = row => {
-    let entries = [];
-
-    let from = row.insertCell();
-    let text = document.createTextNode("");
-    from.appendChild(text);
-    entries[0] = text;
-
-    let to = row.insertCell();
-    text = document.createTextNode("");
-    to.appendChild(text);
-    entries[1] = text;
-
-    let days = row.insertCell();
-    text = document.createTextNode("");
-    days.appendChild(text);
-    entries[2] = text;
-
-    let remove = row.insertCell();
-    text = dom('<input type="button" value="X"></div>');
-    remove.appendChild(text);
-    entries[3] = remove.querySelector("input");
-
-    let status = row.insertCell();
-    text = document.createTextNode("");
-    status.appendChild(text);
-    entries[4] = text;
-    return entries;
-}
 
 /**
  * @param  rootElement        {HTMLElement}
@@ -54,7 +24,6 @@ const allowanceProjector = (rootElement, planningCtrl) => {
         <p>Ferientage dieses Jahr: <span>20</span></p>
         <p>Ferientage gebucht: <span>0</span></p>
         <p>Ferientage verbleibend: <span>0</span></p>
-        <h2> Ferien von nach </h2>
 
         <!-- todo create fancy table generator analogue angular -->
         <table class="${detailClassName}-table">
@@ -80,9 +49,6 @@ const allowanceProjector = (rootElement, planningCtrl) => {
     });
 
     const table = planning.querySelector("table")
-    const tbody = table.children[0]; // tbody
-    // const thead = tbody.children[0]; // tr th head
-    // const trow = tbody.children[1];  // tr th head
 
     const updateDaysBetween = days => event => {
         days.textContent = valueOf(valueOf(event.from).date).daysBetween(valueOf(valueOf(event.to).date)) + 1;
@@ -94,8 +60,7 @@ const allowanceProjector = (rootElement, planningCtrl) => {
 
     /** @event event {Event} */
     const processEvent = event => {
-        let row = tbody.insertRow();
-        let [start, end, days, remove, status] = creatRowEntries(row);
+        let [start, end, days, remove, status, row] = creatRowEntries(table);
 
         row.dataset.eventId = valueOf(event.id);
         start.textContent = valueOf(valueOf(event.from).date).getFormated();
@@ -113,7 +78,9 @@ const allowanceProjector = (rootElement, planningCtrl) => {
 
         onValueChange(event.approved)(value => styleElement(value)("status-approved")(status.parentElement));
 
-        remove.onclick = _ => {
+        remove.appendChild(dom('<input type="button" value="X"></div>'))
+        const removeBtn = remove.querySelector("input");
+        removeBtn.onclick = _ => {
             planningCtrl.deleteEvent(event);
             deleteRow(event);
         }

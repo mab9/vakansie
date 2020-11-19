@@ -1,8 +1,13 @@
 import {Observable} from "../observable/observable.js";
 import {id} from "../../assets/church/church.js";
 
-export { Attribute, presentationModelFromAttributeNames,
-         VALID, VALUE, EDITABLE, LABEL, HOVER, valueOf, setValueOf, labelOf, setLabelOf, onValueChange, hoverOf, setHoverOf}
+export {
+    Attribute, presentationModelFromAttributeNames,
+    VALID, VALUE, EDITABLE, LABEL, HOVER,
+    valueOf, setValueOf, onValueChange,
+    labelOf, setLabelOf, onLabelChange,
+    hoverOf, setHoverOf, onHoverChange,
+}
 
 const VALUE    = "value";
 const VALID    = "valid";
@@ -59,6 +64,8 @@ const setHoverOf = attribute => value => attribute.getObs(HOVER).setValue(value)
 
 /** Convenience function to add on change listeners to the attribute's property observable for the given attribute. */
 const onValueChange = attribute => fnc => attribute.getObs(VALUE).onChange(value => fnc(value))
+const onLabelChange = attribute => fnc => attribute.getObs(LABEL).onChange(value => fnc(value))
+const onHoverChange = attribute => fnc => attribute.getObs(HOVER).onChange(value => fnc(value))
 
 /** Creates Presentation Model with Attributes for each attribute name with VALUE and LABEL observables. */
 const presentationModelFromAttributeNames = attributeNames => {

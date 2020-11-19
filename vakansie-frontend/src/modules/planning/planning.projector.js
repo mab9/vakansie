@@ -3,7 +3,14 @@ import {dom} from "../../assets/util/dom.js";
 import "../../assets/util/times.js"
 import {months} from "../../calendar/calendar.service.local.js";
 import {Day} from "../../calendar/day.model.js";
-import {HOVER, labelOf, onValueChange, setValueOf, valueOf} from "../../base/presentationModel/presentationModel.js";
+import {
+    labelOf,
+    onHoverChange,
+    onValueChange,
+    setHoverOf,
+    setValueOf,
+    valueOf
+} from "../../base/presentationModel/presentationModel.js";
 import "../../assets/util/dates.js"
 import {maybe} from "../../assets/util/maybe.js";
 import {addClass, styleElement} from "../../assets/util/cssClasses.js";
@@ -66,11 +73,10 @@ const dayProjector = (rootElement, day, planningCtrl) => {
     rootElement.appendChild(html)
 }
 
-
-const styleHover = isHovered => event => {
+const styleHoverOnEvent = isHovered => event => {
     const dayListCtrl = valueOf(event.days)
     const days = dayListCtrl.getAll();
-    days.forEach(day => day.event.getObs(HOVER).setValue(isHovered))
+    days.forEach(day => setHoverOf(day.event)(isHovered))
 }
 
 /**
@@ -86,13 +92,15 @@ const setMouseEventListener = (element, planningCtrl) => {
 
     element.onmouseleave = _ => {
         if (!valueOf(isMouseDown)) {
-            maybe(valueOf(day.event))(() => styleHover(false)(valueOf(day.event)))
+            maybe(valueOf(day.event))(() => styleHoverOnEvent(false)(valueOf(day.event)))
+            maybe(valueOf(day.holiday))(() => setHoverOf(day.holiday)(false))
         }
     }
 
     element.onmouseover = _ => { // is triggered before on mouse down
         if (!valueOf(isMouseDown)) {
-            maybe(valueOf(day.event))(() => styleHover(true)(valueOf(day.event)))
+            maybe(valueOf(day.event))(() => styleHoverOnEvent(true)(valueOf(day.event)))
+            maybe(valueOf(day.holiday))(() => setHoverOf(day.holiday)(true))
             return // guard to prevent further steps when no click on day
         }
 
@@ -142,7 +150,8 @@ const setDayEventListener = (element, planningCtrl) => {
     const getDayByElement = element => planningCtrl.getDayById(element.dataset.dayId);
     const day = getDayByElement(element);
 
-    day.event.getObs(HOVER).onChange(isHovered => styleElement(isHovered && day.isNaturalDay())("cal-day-hovered")(element));
+    onHoverChange(day.holiday)(isHovered => styleElement(isHovered)("cal-day-hovered")(element));
+    onHoverChange(day.event)(isHovered => styleElement(isHovered && day.isNaturalDay())("cal-day-hovered")(element));
     onValueChange(day.isSelected)(isSelected => styleElement(isSelected && day.isBookable())("cal-day-dragged")(element));
     onValueChange(day.event)(event => styleElement(event && day.isNaturalDay())("cal-day-requested")(element));
 }
