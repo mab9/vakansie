@@ -2,10 +2,9 @@ import {ALL_DAY_ATTRIBUTE_NAMES, Day} from "../../calendar/day.model.js";
 import {Attribute, setValueOf, valueOf} from "../../base/presentationModel/presentationModel.js";
 import "../../assets/util/dates.js"
 import {SelectionController} from "../../base/controller/controller.js";
-import {calendarController} from "../../calendar/calendar.controller.js";
+import {CalendarController} from "../../calendar/calendar.controller.js";
 
 export {PlanningController}
-
 
 /**
  * @typedef PlanningController
@@ -23,8 +22,7 @@ export {PlanningController}
  */
 const PlanningController = (isCtrlInitialized = false) => {
 
-    const calendarCtrl = calendarController;
-    calendarCtrl.resetCalendar();   // todo refactor
+    const calendarCtrl = CalendarController();
     const selectionCtrl = SelectionController(NoDay);  // selection ctrl wird später für das syncen über verschiedene devices benötigt.
 
     const currentVacationContigent = Attribute(0); // total amount of events booked

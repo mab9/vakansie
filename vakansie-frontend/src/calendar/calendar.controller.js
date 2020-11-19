@@ -6,13 +6,13 @@ import {Event} from "./event.model.js";
 import {styleElement} from "../assets/util/cssClasses.js";
 import {calendarService} from "./calendar.service.local.js";
 
-export {calendarController, itCalendarDays}
+export {CalendarController, itCalendarDays}
 
 /**
  * @return Readonly {CalendarController}
  * @constructor
  */
-const calendarController = ((isCtrlInitialized = false) => {  // one time creation, singleton
+const CalendarController = (isCtrlInitialized = false) => {  // one time creation, singleton
 
     const eventListCtrl = ListController();
     let calendar = calendarService.getEmptyCalendar();
@@ -141,7 +141,7 @@ const calendarController = ((isCtrlInitialized = false) => {  // one time creati
     isCtrlInitialized = true;
 
     /**
-     * @typedef calendarController
+     * @typedef CalendarController
      */
     return Object.freeze({
         createEvent,
@@ -157,12 +157,9 @@ const calendarController = ((isCtrlInitialized = false) => {  // one time creati
         resetCalendar: resetCalendar,
         getCurrentAmountEventDays,
     });
-})();
+};
 
 
-const itCalendarDays = fnc => {
-    const calendar = calendarController.getCalendarData();
-    calendar.forEach(month => month.forEach(day => fnc(day)))
-}
+const itCalendarDays = calendar => fnc => calendar.forEach(month => month.forEach(day => fnc(day)))
 
 

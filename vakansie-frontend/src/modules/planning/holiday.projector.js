@@ -32,8 +32,9 @@ const holidayProjector = (rootElement, planningCtrl) => {
     const table = holidays.querySelector("table")
     const feiertage = holidays.querySelector("span")
     let holidayCounter = 0;
+    const calendar = planningCtrl.getCalendarData();
 
-    itCalendarDays(day => {
+    itCalendarDays(calendar)(day => {
         if (valueOf(day.holiday)) {
             let [holiday, date, row] = creatRowEntries(table);
             holiday.innerText = labelOf(day.holiday);
