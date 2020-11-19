@@ -22,11 +22,11 @@ const months = ["month.jan", "month.feb", "month.mar", "month.apr", "month.mai",
 const yyyy = new Date().getFullYear();
 
 const events = [
-    {id: 1, start: new Date(yyyy, 2, 16), to: new Date(yyyy, 2, 20), amount: undefined, days : undefined},
-    {id: 2, start: new Date(yyyy, 4, 22), to: new Date(yyyy, 4, 29), amount: undefined, days : undefined},
-    {id: 2, start: new Date(yyyy, 5, 2), to: new Date(yyyy, 5, 5), amount: undefined, days : undefined},
-    {id: 3, start: new Date(yyyy, 6, 16), to: new Date(yyyy, 7, 14), amount: undefined, days : undefined},
-    {id: 4, start: new Date(yyyy, 11, 21), to: new Date(yyyy, 11, 31), amount: undefined, days : undefined},
+    {id: 1, start: new Date(yyyy, 2, 16), to: new Date(yyyy, 2, 20), approved: true, amount: undefined, days : undefined},
+    {id: 2, start: new Date(yyyy, 4, 22), to: new Date(yyyy, 4, 29), approved: false, amount: undefined, days : undefined},
+    {id: 2, start: new Date(yyyy, 5, 2), to: new Date(yyyy, 5, 5), approved: true, amount: undefined, days : undefined},
+    {id: 3, start: new Date(yyyy, 6, 16), to: new Date(yyyy, 7, 14), approved: false, amount: undefined, days : undefined},
+    {id: 4, start: new Date(yyyy, 11, 21), to: new Date(yyyy, 11, 31), approved: true, amount: undefined, days : undefined},
 ]
 
 const getEmptyCalendar = () => {

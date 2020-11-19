@@ -6,7 +6,7 @@ import {Day} from "../../calendar/day.model.js";
 import {HOVER, labelOf, onValueChange, setValueOf, valueOf} from "../../base/presentationModel/presentationModel.js";
 import "../../assets/util/dates.js"
 import {maybe} from "../../assets/util/maybe.js";
-import {styleElement} from "../../assets/util/cssClasses.js";
+import {addClass, styleElement} from "../../assets/util/cssClasses.js";
 
 export {planningProjector, pageCss}
 
@@ -47,17 +47,20 @@ const planningProjector = (rootElement, planningCtrl) => {
  */
 const dayProjector = (rootElement, day, planningCtrl) => {
 
-    const html = dom(`<div class="empty"></div>`)
+    const html = dom(`<div></div>`)
     const element = html.querySelector("div");
 
     element.dataset.dayId = valueOf(day.id);
 
     setMouseEventListener(element, planningCtrl);
     setDayEventListener(element, planningCtrl);
-    maybe(day.isWeekendDay())(() => element.classList.add("cal-weekend-day"))
-    maybe(!day.isInMonth())(() => element.classList.add("cal-not-in-month"))
+
+    styleElement(day.isNaturalDay() && valueOf(day.event) && valueOf(valueOf(day.event).approved))("cal-day-approved")(element)
+    styleElement(day.isWeekendDay())("cal-weekend-day")(element)
+    styleElement(!day.isInMonth())("cal-not-in-month")(element)
+
     maybe(valueOf(day.holiday))(() => {
-        element.classList.add("cal-holiday");
+        addClass(element)("cal-holiday");
         setTooltip(element)(labelOf(day.holiday));
     })
     rootElement.appendChild(html)
@@ -67,9 +70,7 @@ const dayProjector = (rootElement, day, planningCtrl) => {
 const styleHover = isHovered => event => {
     const dayListCtrl = valueOf(event.days)
     const days = dayListCtrl.getAll();
-    days.forEach(day => {
-        day.event.getObs(HOVER).setValue(isHovered);
-    })
+    days.forEach(day => day.event.getObs(HOVER).setValue(isHovered))
 }
 
 /**
@@ -141,9 +142,9 @@ const setDayEventListener = (element, planningCtrl) => {
     const getDayByElement = element => planningCtrl.getDayById(element.dataset.dayId);
     const day = getDayByElement(element);
 
-    day.event.getObs(HOVER).onChange(isHovered => styleElement(isHovered && day.isNaturalDay())("cal-day-dragged")(element));
+    day.event.getObs(HOVER).onChange(isHovered => styleElement(isHovered && day.isNaturalDay())("cal-day-hovered")(element));
     onValueChange(day.isSelected)(isSelected => styleElement(isSelected && day.isBookable())("cal-day-dragged")(element));
-    onValueChange(day.event)(event => styleElement(event && day.isNaturalDay())("cal-day-requested-1")(element));
+    onValueChange(day.event)(event => styleElement(event && day.isNaturalDay())("cal-day-requested")(element));
 }
 
 
@@ -191,13 +192,20 @@ const pageCss = `
         background-color: rgb(128,206,214,1) !important;
     }
     .cal-not-in-month {
-        background-color: rgb(192,209,244,1) !important;
+        background-color: rgb(162,229,157,1) !important;
     }
     .cal-holiday {
         background-color: rgb(128,175,214,1) !important;
     }
-    .cal-day-requested-1 {
+    .cal-day-requested {
         background-color: rgb(192,209,244,0.8) !important;
+    }
+    .cal-day-approved {
+        background-color: rgb(225,255,0,1) !important;
+    }
+    .cal-day-hovered {
+        border-top: 7px solid black !important;
+        border-bottom: 7px solid black !important;
     }
     .cal-day-dragged {
         background-color: rgb(192,242,244,1) !important;

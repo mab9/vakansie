@@ -9,6 +9,7 @@ export {allowanceProjector, pageCss}
 
 const detailClassName = 'planning-detail';
 
+// todo make it generic
 const creatRowEntries = row => {
     let entries = [];
 
@@ -31,6 +32,11 @@ const creatRowEntries = row => {
     text = dom('<input type="button" value="X"></div>');
     remove.appendChild(text);
     entries[3] = remove.querySelector("input");
+
+    let status = row.insertCell();
+    text = document.createTextNode("");
+    status.appendChild(text);
+    entries[4] = text;
     return entries;
 }
 
@@ -57,6 +63,7 @@ const allowanceProjector = (rootElement, planningCtrl) => {
             <th>to</th>
             <th>days</th>
             <th>delete</th>
+            <th>status</th>
           </tr>
         </table>
     `)
@@ -81,10 +88,14 @@ const allowanceProjector = (rootElement, planningCtrl) => {
         days.textContent = valueOf(valueOf(event.from).date).daysBetween(valueOf(valueOf(event.to).date)) + 1;
     }
 
+    const deleteRow = event =>{
+        table.querySelector(`[data-event-id="` + valueOf(event.id) + `"]`).remove();
+    }
+
     /** @event event {Event} */
     const processEvent = event => {
         let row = tbody.insertRow();
-        let [start, end, days, remove] = creatRowEntries(row);
+        let [start, end, days, remove, status] = creatRowEntries(row);
 
         row.dataset.eventId = valueOf(event.id);
         start.textContent = valueOf(valueOf(event.from).date).getFormated();
@@ -100,9 +111,11 @@ const allowanceProjector = (rootElement, planningCtrl) => {
             updateDaysBetween(days)(event)
         });
 
+        onValueChange(event.approved)(value => styleElement(value)("status-approved")(status.parentElement));
+
         remove.onclick = _ => {
             planningCtrl.deleteEvent(event);
-            table.querySelector(`[data-event-id="` + valueOf(event.id) + `"]`).remove();
+            deleteRow(event);
         }
 
         const dayListCtrl = valueOf(event.days)
@@ -126,8 +139,8 @@ const allowanceProjector = (rootElement, planningCtrl) => {
     }
 
 
-    eventListCtrl.getAll().forEach(event => processEvent(event))
-    eventListCtrl.onModelAdd(event => processEvent(event))
+    eventListCtrl.getAll().forEach(event => processEvent(event));
+    eventListCtrl.onModelAdd(event => processEvent(event));
 
     appendReplacing(rootElement)(planning);
 }
@@ -159,5 +172,17 @@ const pageCss = `
 
     .row-hovering {
         border: 5px solid orange !important;
+    }
+
+    .status-approved {
+        background-color: rgb(225,255,0,1) !important;
+    }
+
+    .status-requested {
+        background-color: rgb(192,209,244,0.8) !important;
+    }
+
+    .status-denied {
+        background-color: rgb(225,0,0,1) !important;
     }
 `;

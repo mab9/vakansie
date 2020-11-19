@@ -24,6 +24,7 @@ export {PlanningController}
 const PlanningController = (isCtrlInitialized = false) => {
 
     const calendarCtrl = calendarController;
+    calendarCtrl.resetCalendar();   // todo refactor
     const selectionCtrl = SelectionController(NoDay);  // selection ctrl wird später für das syncen über verschiedene devices benötigt.
 
     const currentVacationContigent = Attribute(0); // total amount of events booked
@@ -105,7 +106,6 @@ const PlanningController = (isCtrlInitialized = false) => {
 
     calendarCtrl.initHolidays();
     calendarCtrl.initEvents();
-    updateEventDayList();
     updateVacationContigent();
 
     isCtrlInitialized = true;

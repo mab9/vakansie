@@ -12,11 +12,11 @@ export {Event, ALL_EVENT_ATTRIBUTE_NAMES}
  * @property {date}    from      - date that is equal or before the to date
  * @property {date}    to        - date that is equal or later as the from date
  * @property {number}  amount    - how many days off are between from and to date.
- * @property {Day[]}  days       - all days between from and to date including boundary.
+ * @property {Day[]}   days      - all days between from and to date including boundary.
  * @example  {id:0, from: 17.12.19, to: 17.12.22, amount: 3, day: [day1, day2]}
  */
 
-const ALL_EVENT_ATTRIBUTE_NAMES = ['id', 'start', 'from', 'to', 'amount', 'days'];
+const ALL_EVENT_ATTRIBUTE_NAMES = ['id', 'start', 'from', 'to', 'amount', 'days', 'approved'];
 
 const Event = startDay => {      // facade
     let model = presentationModelFromAttributeNames(ALL_EVENT_ATTRIBUTE_NAMES);
@@ -24,6 +24,7 @@ const Event = startDay => {      // facade
     setValueOf(model.start)(startDay);
     setValueOf(model.from)(startDay);
     setValueOf(model.to)(startDay);
+    setValueOf(model.approved)(false);
     const dayListCtrl = ListController()
     dayListCtrl.addModel(startDay);
     setValueOf(model.days)(dayListCtrl);

@@ -15,7 +15,7 @@ export {calendarController}
 const calendarController = ((isCtrlInitialized = false) => {  // one time creation, singleton
 
     const eventListCtrl = ListController();
-    const calendar = calendarService.getEmptyCalendar();
+    let calendar = calendarService.getEmptyCalendar();
 
     // todo make async
     const initHolidays = (holidays = calendarService.getSuisseHolidays()) => {
@@ -33,8 +33,8 @@ const calendarController = ((isCtrlInitialized = false) => {  // one time creati
         const events = calendarService.getEvents();
         valueOf(events).forEach(event => {
             let day = findDayByDate(event.start)
-            createEvent(day)
-            const createdEvent = eventListCtrl.pop();
+            const createdEvent = Event(day);
+            setValueOf(createdEvent.approved)(event.approved)
             const dayListCtrl = valueOf(createdEvent.days);
 
             // start day was already added at event creation
@@ -43,7 +43,13 @@ const calendarController = ((isCtrlInitialized = false) => {  // one time creati
                 dayListCtrl.addModel(day)
                 setValueOf(createdEvent.to)(day)
             }
-            endEvent();
+
+            dayListCtrl.getAll().forEach(day => {
+                setValueOf(day.isSelected)(false);
+                setValueOf(day.event)(createdEvent);
+            })
+
+            eventListCtrl.addModel(createdEvent);
         })
     }
 
@@ -72,14 +78,14 @@ const calendarController = ((isCtrlInitialized = false) => {  // one time creati
 
     const endEvent = () => {
         /** @type {Event} */
-        const createdEvent = eventListCtrl.pop();
+        const event = eventListCtrl.pop();
         /** @type {ListController} */
-        const dayListCtrl = valueOf(createdEvent.days);
+        const dayListCtrl = valueOf(event.days);
         /** @type {Day[]} */
         const days = dayListCtrl.getAll();
         days.forEach(day => {
             setValueOf(day.isSelected)(false);
-            setValueOf(day.event)(createdEvent);
+            setValueOf(day.event)(event);
         })
     };
 
@@ -89,7 +95,9 @@ const calendarController = ((isCtrlInitialized = false) => {  // one time creati
         days.forEach(day => {
             setValueOf(day.event)(false)
             const element = document.querySelector(`[data-day-id="` + valueOf(day.id) + `"]`);
+            styleElement(false)("cal-day-hovered")(element)
             styleElement(false)("cal-day-dragged")(element)
+            styleElement(false)("cal-day-approved")(element)
         })
         eventListCtrl.removeModel(event)
     }
@@ -105,7 +113,7 @@ const calendarController = ((isCtrlInitialized = false) => {  // one time creati
     const findDayByDate = date => {
         const month = date.getMonth();
         const day = date.getDate();
-        return calendar[month][day -1]
+        return calendar[month][day - 1]
     }
 
     const getCurrentAmountEventDays = () => {
@@ -114,6 +122,19 @@ const calendarController = ((isCtrlInitialized = false) => {  // one time creati
         return eventListCtrl.getAll().map(event => {
             return valueOf(event.days).size(); // dayListCtrl
         }).reduce((sum, val) => sum + val);
+    }
+
+    const resetCalendar = () => {
+        const safeIterate = [...eventListCtrl.getAll()]; // shallow copy as we might change listeners array while iterating
+        safeIterate.forEach(event => {
+            const dayListCtrl = valueOf(event.days)
+            dayListCtrl.reset();
+            eventListCtrl.removeModel(event)
+        });
+        eventListCtrl.reset();
+        calendar.forEach(month => month.splice(0, month.length)); // todo check if we still have references day - event
+        calendar.splice(0, calendar.length);
+        calendar = calendarService.getEmptyCalendar();
     }
 
 
@@ -133,6 +154,7 @@ const calendarController = ((isCtrlInitialized = false) => {  // one time creati
         getCreatedEvent: () => eventListCtrl.pop(),
         initHolidays: initHolidays,
         initEvents: initEvents,
+        resetCalendar: resetCalendar,
         getCurrentAmountEventDays,
     });
 })();
