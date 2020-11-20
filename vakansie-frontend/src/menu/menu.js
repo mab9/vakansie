@@ -6,6 +6,8 @@ import {PlanningController} from "../modules/planning/planning.controller.js";
 import {PlanningView} from "../modules/planning/planning.view.js";
 import {VerifyController} from "../modules/verify/verify.controller.js";
 import {VerifyView} from "../modules/verify/verify.view.js";
+import {GroupController} from "../modules/groups/group.controller.js";
+import {GroupView} from "../modules/groups/group.view.js";
 
 // use of imports to avoid import removal on "ctrl alt o" shortcut
 const homeView = HomeView;
@@ -16,6 +18,8 @@ const planningView = PlanningView;
 const planningController = PlanningController;
 const verifyController = VerifyController;
 const verifyView = VerifyView;
+const groupController = GroupController;
+const groupView = GroupView;
 
 export {Menu}
 
@@ -62,11 +66,20 @@ const Menu = (rootElement) => {
                               "roles":  [],
                               "rights": [],
                               "subs":   []
+                            },
+                            {
+                              "id":     "4" ,
+                              "title":  "menu.main.entry.group",
+                              "ctrl" :  "GroupController",
+                              "view" :  "GroupView",
+                              "roles":  [],
+                              "rights": [],
+                              "subs":   []
                             }
                            ]}`);
 
     // initial entry
-    let selectedEntry = Observable(entries.data[3])  // todo undo default development view
+    let selectedEntry = Observable(entries.data[4])  // todo undo default development view
 
     const setSelectedEntry = value => {
         const newEntry = entries.data.find(entry => entry.id === value)
