@@ -4,9 +4,22 @@
     "view.planning.title.details": "Your Allowance",
     "view.person.card.master.title": "Person List",
     "view.person.card.details.title": "Person Detail",
+
+    "view.person.detail.label.id": "Id",
+    "view.person.detail.label.img":  "Image",
+    "view.person.detail.label.firstname": "Firstname",
+    "view.person.detail.label.lastname":  "Lastname",
+    "view.person.detail.label.job": "Job",
+
+    "view.group.detail.label.name": "Name",
+    "view.group.detail.label.isProject": "Project",
+    "view.group.detail.label.userIds": "Total users",
+    "view.group.detail.label.ownerId": "Owner",
     "menu.main.entry.vakansie": "Vakansie",
     "menu.main.entry.persons": "Persons",
     "menu.main.entry.planning": "Planning",
+    "menu.main.entry.verify": "Approvals",
+    "menu.main.entry.group": "Groups",
     "planning.view.calendar.header.month": "Month",
 
     "month.jan":  "January",

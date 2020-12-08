@@ -1,42 +1,15 @@
-import {EDITABLE, LABEL, VALID, VALUE} from "../../base/presentationModel/presentationModel.js";
 import {appendFirst} from "../../assets/util/appends.js";
+import {dom} from "../../assets/util/dom.js";
+import {formItemProjector, inputProjector} from "../../projector/form.projector.js";
 
 export { listItemProjector, formProjector, pageCss }
 
 const masterClassName = 'instant-update-master'; // should be unique for this projector
 const detailClassName = 'instant-update-detail';
 
-const bindTextInput = (textAttr, inputElement) => {
-    inputElement.oninput = _ => textAttr.setConvertedValue(inputElement.value);
-
-    textAttr.getObs(VALUE).onChange(text => inputElement.value = text);
-
-    textAttr.getObs(VALID, true).onChange(
-        valid => valid
-          ? inputElement.classList.remove("invalid")
-          : inputElement.classList.add("invalid")
-    );
-
-    textAttr.getObs(EDITABLE, true).onChange(
-        isEditable => isEditable
-        ? inputElement.removeAttribute("readonly")
-        : inputElement.setAttribute("readonly", true));
-
-    textAttr.getObs(LABEL, '').onChange(label => inputElement.setAttribute("title", label));
-};
-
-const textInputProjector = textAttr => {
-
-    const inputElement = document.createElement("INPUT");
-    inputElement.type = "text";
-    inputElement.size = 20;
-
-    bindTextInput(textAttr, inputElement);
-
-    return inputElement;
-};
-
 const listItemProjector = (masterController, selectionController, rootElement, model, attributeNames) => {
+
+    const modelDetails = personModelDetails(model); // init model
 
     if(rootElement.style['grid-template-columns'] === '') {
         rootElement.classList.add(masterClassName);
@@ -52,7 +25,7 @@ const listItemProjector = (masterController, selectionController, rootElement, m
     const inputElements = [];
 
     attributeNames.forEach( attributeName => {
-        const inputElement = textInputProjector(model[attributeName]);
+        const inputElement = inputProjector(attributeName)(modelDetails);
         inputElement.onfocus = _ => selectionController.setSelectedModel(model);
         inputElements.push(inputElement);
     });
@@ -76,31 +49,35 @@ const listItemProjector = (masterController, selectionController, rootElement, m
     selectionController.setSelectedModel(model);
 };
 
+const personModelDetails = item => {
+    return {
+        model: item,
+        id: ["view.person.detail.label.id", "text"],
+        img: ["view.person.detail.label.img", "img"],
+        firstname: ["view.person.detail.label.firstname", "text"],
+        lastname: ["view.person.detail.label.lastname", "text"],
+        job: ["view.person.detail.label.job", "text"],
+    }
+}
+
 const formProjector = (detailController, rootElement, model, attributeNames) => {
 
-    const divElement = document.createElement("DIV");
-    divElement.innerHTML = `
-    <FORM>
-        <DIV class="${detailClassName}">
-        </DIV>
-    </FORM>`;
-    const detailFormElement = divElement.querySelector("." + detailClassName);
+    const modelDetails = personModelDetails(model); // init model
+
+    const detailElement = dom(`
+        <FORM style="width: 35%; margin-bottom: 20px; font-size: larger;">
+            <DIV class="${detailClassName}">
+            </DIV>
+        </FORM>
+    `)
+
+    const detailFormElement = detailElement.querySelector("." + detailClassName);
 
     attributeNames.forEach(attributeName => {
-        const labelElement = document.createElement("LABEL"); // add view for attribute of this name
-        labelElement.setAttribute("for", attributeName);
-        const inputElement = document.createElement("INPUT");
-        inputElement.setAttribute("TYPE", "text");
-        inputElement.setAttribute("SIZE", "20");
-        inputElement.setAttribute("ID", attributeName);
-        detailFormElement.appendChild(labelElement);
-        detailFormElement.appendChild(inputElement);
-
-        bindTextInput(model[attributeName], inputElement);
-        model[attributeName].getObs(LABEL, '').onChange(label => labelElement.textContent = label);
+           formItemProjector(detailFormElement, attributeName, modelDetails);
     });
 
-    appendFirst(rootElement)(divElement);
+    appendFirst(rootElement)(detailFormElement);
 };
 
 
@@ -116,5 +93,9 @@ const pageCss = `
         grid-column-gap: 0.5em;
         grid-template-columns: 1fr 3fr;
         margin-bottom:  0.5em ;
+    }
+
+    img {
+        width: 40px;
     }
 `;

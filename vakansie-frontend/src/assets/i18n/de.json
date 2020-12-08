@@ -4,9 +4,22 @@
     "view.planning.title.details": "Ferien Vergütung",
     "view.person.card.master.title": "Personen Übersicht",
     "view.person.card.details.title": "Personen Details",
+
+    "view.person.detail.label.id": "Id",
+    "view.person.detail.label.img":  "Bild",
+    "view.person.detail.label.firstname": "Vorname",
+    "view.person.detail.label.lastname":  "Nachname",
+    "view.person.detail.label.job": "Beruf",
+
+    "view.group.detail.label.name": "Name",
+    "view.group.detail.label.isProject": "Projekt",
+    "view.group.detail.label.userIds": "Anzahl User",
+    "view.group.detail.label.ownerId": "Eigner",
     "menu.main.entry.vakansie": "Vakansie",
     "menu.main.entry.persons": "Personen",
     "menu.main.entry.planning": "Planung",
+    "menu.main.entry.verify": "Freigaben",
+    "menu.main.entry.group": "Gruppen",
     "planning.view.calendar.header.month": "Monat",
 
     "month.jan":  "Januar",
