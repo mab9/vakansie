@@ -10,7 +10,7 @@ import "../domainDoc.js"
 /**
  * Common interface for all services (abstract factory pattern)
  *
- * @typedef {{loadPersons: (function(onPersonsReadyCallback): undefined)}} VakansieService
+ * @typedef {{loadPersons: (function(onPersonsReadyCallback): undefined)}} PersonService
  * */
 
 

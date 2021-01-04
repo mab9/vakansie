@@ -2,6 +2,7 @@ import {ListController} from "../../base/controller/controller.js";
 import {UUID} from "../../assets/util/uuid.js";
 import {ALL_PERSON_ATTRIBUTE_NAMES, Person} from "../person/personModel.js";
 import {
+    personService,
     uuidUser0,
     uuidUser1,
     uuidUser2,
@@ -11,9 +12,8 @@ import {
     uuidUser6,
     uuidUser7,
     uuidUser8,
-    uuidUser9,
-    vakansieService
-} from "../../service/localService.js"
+    uuidUser9
+} from "../person/person.service.local.js"
 import {VALUE, valueOf} from "../../base/presentationModel/presentationModel.js";
 import {id} from "../../assets/church/church.js"
 
@@ -68,7 +68,7 @@ const groupService = () => { // one time creation, singleton
 
     const  fetchGroupUsers = groupId => groups => {
         const group = groups.find(item => valueOf(item.id) === groupId);
-        const users = findAll(vakansieService().loadPersons(id))(valueOf(group.userIds).getAll());
+        const users = findAll(personService().loadPersons(id))(valueOf(group.userIds).getAll());
         const data = ListController();
 
         users.forEach(userData => {

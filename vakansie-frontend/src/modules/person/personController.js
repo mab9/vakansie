@@ -1,6 +1,6 @@
 import {ListController, SelectionController} from "../../base/controller/controller.js";
 import {ALL_PERSON_ATTRIBUTE_NAMES, Person} from "./personModel.js";
-import {vakansieService} from "../../service/localService.js";
+import {personService} from "./person.service.local.js";
 import {id} from "../../assets/church/church.js";
 import {VALUE} from "../../base/presentationModel/presentationModel.js";
 
@@ -29,7 +29,7 @@ const PersonController = () => {
         listController.addModel(person);
     };
 
-    const initPersons = () => vakansieService().loadPersons(id).forEach(person => addPerson(person))
+    const initPersons = () => personService().loadPersons(id).forEach(person => addPerson(person))
 
 
 
