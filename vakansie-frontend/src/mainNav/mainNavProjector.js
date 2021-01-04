@@ -1,6 +1,7 @@
 import {dom} from "../assets/util/dom.js";
 import {appendFirst} from "../assets/util/appends.js";
-import {i18n, translationService} from "../service/translationService.js";
+import {translationService} from "../service/translationService.js";
+import {AuthController} from "../auth/auth.js";
 
 export {mainNavProjector}
 
@@ -58,6 +59,8 @@ const mainNavProjector = (rootElement, mainNavController, menu) => {
     }
 
     avatar.src = './src/assets/img/avatars/svg/035-man-4.svg';
+
+    avatar.onclick = () => AuthController.logout();
 
     hamburger.onclick = () => mainnav.className === "mainnav"
         ? mainnav.className += " responsive"
