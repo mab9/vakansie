@@ -1,4 +1,4 @@
-import {translationService} from "./service/translationService.js";
+import {translationService} from "./service/translation.service.js";
 import {start} from "../starter.js";
 
 const appRootId = window.appRootId;

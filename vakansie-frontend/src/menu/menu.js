@@ -1,7 +1,7 @@
 import {Observable} from "../base/observable/observable.js";
 import {HomeController, HomeView} from "../modules/home/home.js";
-import {PersonController} from "../modules/person/personController.js"
-import {PersonView} from "../modules/person/personView.js"
+import {PersonController} from "../modules/person/person.controller.js"
+import {PersonView} from "../modules/person/person.view.js"
 import {PlanningController} from "../modules/planning/planning.controller.js";
 import {PlanningView} from "../modules/planning/planning.view.js";
 import {VerifyController} from "../modules/verify/verify.controller.js";

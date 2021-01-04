@@ -3,7 +3,7 @@ import {dom} from "../../assets/util/dom.js";
 import {breadCrumbProjector, groupDetailsProjector, pageCss as pageCssGroup} from "./group.projector.js";
 import {Attribute, onValueChange, setValueOf, valueOf} from "../../base/presentationModel/presentationModel.js";
 import {Group} from "./group.model.js";
-import {appendRow, bindTableSearchListener, clearTableRows, creatRowEntries} from "../../service/tableService.js";
+import {appendRow, bindTableSearchListener, clearTableRows, creatRowEntries} from "../../service/table.service.js";
 import {maybe} from "../../assets/util/maybe.js";
 
 export {GroupView};

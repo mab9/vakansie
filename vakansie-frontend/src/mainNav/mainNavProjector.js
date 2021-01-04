@@ -1,6 +1,6 @@
 import {dom} from "../assets/util/dom.js";
 import {appendFirst} from "../assets/util/appends.js";
-import {translationService} from "../service/translationService.js";
+import {translationService} from "../service/translation.service.js";
 import {AuthController} from "../auth/auth.js";
 
 export {mainNavProjector}

@@ -1,4 +1,5 @@
 export const config = {
     lang: 'de',
-    langTranslations: ['de', 'en']
+    langTranslations: ['de', 'en'],
+    environment: "local",
 };

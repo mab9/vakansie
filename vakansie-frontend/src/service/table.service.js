@@ -1,4 +1,4 @@
-import {i18n} from "./translationService.js";
+import {i18n} from "./translation.service.js";
 
 export {generateTable, creatRowEntries, clearTableRows, bindTableSearchListener, appendRow}
 

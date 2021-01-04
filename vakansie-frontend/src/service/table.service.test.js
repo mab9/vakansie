@@ -1,5 +1,5 @@
 import {Suite} from "../test/test.js";
-import {appendRow, clearTableRows, creatRowEntries, generateTable} from "./tableService.js";
+import {appendRow, clearTableRows, creatRowEntries, generateTable} from "./table.service.js";
 import {dom} from "../assets/util/dom.js";
 
 const util = Suite("table builder");
