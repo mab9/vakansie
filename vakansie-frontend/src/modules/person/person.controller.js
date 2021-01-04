@@ -1,5 +1,5 @@
 import {ListController, SelectionController} from "../../base/controller/controller.js";
-import {ALL_PERSON_ATTRIBUTE_NAMES, Person} from "./personModel.js";
+import {ALL_PERSON_ATTRIBUTE_NAMES, Person} from "./person.model.js";
 import {personService} from "./person.service.local.js";
 import {id} from "../../assets/church/church.js";
 import {VALUE} from "../../base/presentationModel/presentationModel.js";

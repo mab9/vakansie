@@ -1,5 +1,5 @@
 import {EDITABLE, LABEL, setValueOf, VALID, VALUE, valueOf} from "../base/presentationModel/presentationModel.js";
-import {i18n} from "../service/translationService.js";
+import {i18n} from "../service/translation.service.js";
 
 export {bindInput, formItemProjector, inputProjector, inputProjectorFixedValue, labelProjector}
 

@@ -1,4 +1,4 @@
-import {I18N_CURRENT_LANG, translationService, i18n} from "./translationService.js";
+import {i18n, I18N_CURRENT_LANG, translationService} from "./translation.service.js";
 import {Suite} from "../test/test.js";
 import {config} from "../../config.js";
 

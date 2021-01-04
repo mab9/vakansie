@@ -1,4 +1,4 @@
-import {i18n} from "../../service/translationService.js";
+import {i18n} from "../../service/translation.service.js";
 
 export {dom}
 

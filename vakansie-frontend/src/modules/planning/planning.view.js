@@ -3,7 +3,7 @@ import {dom} from "../../assets/util/dom.js";
 import {pageCss as pageCssPlanning, planningProjector} from "./planning.projector.js";
 import {allowanceProjector, pageCss as pageCssAllowance} from "./allowance.projector.js";
 import {holidayProjector, pageCss as pageCssHoliday} from "./holiday.projector.js";
-import {i18n} from "../../service/translationService.js";
+import {i18n} from "../../service/translation.service.js";
 
 export {PlanningView};
 

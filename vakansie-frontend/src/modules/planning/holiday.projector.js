@@ -5,7 +5,7 @@ import "../../assets/util/dates.js"
 import {labelOf, onHoverChange, setHoverOf, valueOf} from "../../base/presentationModel/presentationModel.js";
 import {styleElement} from "../../assets/util/cssClasses.js";
 import {itCalendarDays} from "../../calendar/calendar.controller.js";
-import {creatRowEntries} from "../../service/tableService.js";
+import {creatRowEntries} from "../../service/table.service.js";
 
 export {holidayProjector, pageCss}
 

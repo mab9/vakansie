@@ -4,7 +4,7 @@ import "../../assets/util/times.js"
 import {HOVER, onValueChange, valueOf} from "../../base/presentationModel/presentationModel.js";
 import "../../assets/util/dates.js"
 import {styleElement} from "../../assets/util/cssClasses.js";
-import {creatRowEntries} from "../../service/tableService.js";
+import {creatRowEntries} from "../../service/table.service.js";
 
 export {allowanceProjector, pageCss}
 

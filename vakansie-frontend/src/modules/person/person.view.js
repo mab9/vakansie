@@ -1,7 +1,7 @@
 import {appendFirst} from "../../assets/util/appends.js";
 import {dom} from "../../assets/util/dom.js";
 import {formProjector, listItemProjector, pageCss} from "./instantUpdateProjector.js";
-import {ALL_PERSON_ATTRIBUTE_NAMES, Person} from "./personModel.js";
+import {ALL_PERSON_ATTRIBUTE_NAMES, Person} from "./person.model.js";
 
 export {PersonView};
 

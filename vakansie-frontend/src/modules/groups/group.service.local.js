@@ -1,6 +1,6 @@
 import {ListController} from "../../base/controller/controller.js";
 import {UUID} from "../../assets/util/uuid.js";
-import {ALL_PERSON_ATTRIBUTE_NAMES, Person} from "../person/personModel.js";
+import {ALL_PERSON_ATTRIBUTE_NAMES, Person} from "../person/person.model.js";
 import {
     personService,
     uuidUser0,

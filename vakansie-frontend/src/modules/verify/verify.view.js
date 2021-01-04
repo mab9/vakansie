@@ -2,7 +2,7 @@ import {appendFirst, appendsStyle} from "../../assets/util/appends.js";
 import {dom} from "../../assets/util/dom.js";
 import {pageCss as pageCssMonth, verifyCalendarProjector} from "./verifyCalendar.projector.js";
 import {pageCss as pageCssUserGroup, userGroupProjector} from "./userGroup.projector.js";
-import {i18n} from "../../service/translationService.js";
+import {i18n} from "../../service/translation.service.js";
 
 export {VerifyView};
 
