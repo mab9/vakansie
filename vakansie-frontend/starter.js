@@ -1,6 +1,7 @@
 import {LayoutController, LayoutView} from "./src/layout/layout.js";
 import {dom} from "./src/assets/util/dom.js";
 import {AuthController} from "./src/auth/auth.js";
+import {LandingView} from "./src/landing/landing.view.js";
 
 export {start} ;
 
@@ -9,8 +10,11 @@ const start = (appRootId, persons) => {
     const CONTENT_WRAPPER = 'root';
     const layoutController = LayoutController();
 
-    const login = () => {
+    // check if logged in or not
+    // if logged in show privileged views
+    // if not looged in show welcom page
 
+    const login = () => {
         // https://github.com/keycloak/keycloak-documentation/blob/master/securing_apps/topics/oidc/javascript-adapter.adoc
         AuthController.login().then(authenticated => {
             // After the user is authenticated the application can make
@@ -36,7 +40,8 @@ const start = (appRootId, persons) => {
             LayoutView(vakansie, layoutController);
             root.replaceWith(vakansie);
         } else {
-            login();
+            LandingView(root);
+            // login();
         }
     }
 
