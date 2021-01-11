@@ -2,6 +2,7 @@ import {LayoutController, LayoutView} from "./src/layout/layout.js";
 import {dom} from "./src/assets/util/dom.js";
 import {AuthController} from "./src/auth/auth.js";
 import {LandingView} from "./src/landing/landing.view.js";
+import {onValueChange} from "./src/base/presentationModel/presentationModel.js";
 
 export {start} ;
 
@@ -9,41 +10,20 @@ const start = (appRootId, persons) => {
 
     const CONTENT_WRAPPER = 'root';
     const layoutController = LayoutController();
+    const loggedIn = AuthController.loggedIn();
 
-    // check if logged in or not
-    // if logged in show privileged views
-    // if not looged in show welcom page
-
-    const login = () => {
-        // https://github.com/keycloak/keycloak-documentation/blob/master/securing_apps/topics/oidc/javascript-adapter.adoc
-        AuthController.login().then(authenticated => {
-            // After the user is authenticated the application can make
-            // requests to RESTful services secured by vakansie by including the bearer token
-            // in the Authorization header.
-            console.info(authenticated ? 'authenticated' : 'not authenticated');
-            // keycloak.token
-            render(authenticated);
-        }).catch(event => {
-            alert('failed to initialize');
-        });
-    }
-
-
-    const render = loggedIn => {
-
+    const render = () => {
         // todo: think about resetting the model world on a possible re-render
-
         const root = document.getElementById(CONTENT_WRAPPER)
         const vakansie = dom(`<div id="${appRootId}">`);
 
-        if (loggedIn) {
+        if (AuthController.isLoggedIn()) {
             LayoutView(vakansie, layoutController);
-            root.replaceWith(vakansie);
+            root.replaceWith(vakansie); // why replace???
         } else {
             LandingView(root);
-            // login();
         }
     }
 
-    render(false);
+    onValueChange(loggedIn)(() => render());
 }
