@@ -22,7 +22,7 @@ const mainNavProjector = (rootElement, mainNavController, menu) => {
           <a class="mainnav-avatar">
             <img alt="Avatar" class="avatar">
           </a>
-          <a class="mainnav-user">mab9.test@gmail.com</a>
+          <a class="mainnav-user">mab9@vakansie.com</a>
           <a class="mainnav-language">DE</a>
           <a href="javascript:void(0);" class="hamburger">
             <i class="fa fa-bars"></i>
@@ -34,6 +34,14 @@ const mainNavProjector = (rootElement, mainNavController, menu) => {
     const avatar    = navBarElement.querySelector('.avatar');
     const hamburger = navBarElement.querySelector('.hamburger');
     const language  = navBarElement.querySelector('.mainnav-language');
+    const user  = navBarElement.querySelector('.mainnav-user');
+
+
+    AuthController.loadUserProfile().then(result => {
+        user.innerHTML = result.email;
+    }).catch(error => {
+        console.error("user profile could not be loaded", error);
+    });
 
 
     // todo make language management generic
