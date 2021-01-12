@@ -37,12 +37,8 @@ const mainNavProjector = (rootElement, mainNavController, menu) => {
     const user  = navBarElement.querySelector('.mainnav-user');
 
 
-    AuthController.loadUserProfile().then(result => {
-        user.innerHTML = result.email;
-    }).catch(error => {
-        console.error("user profile could not be loaded", error);
-    });
-
+    const userDetails = AuthController.getUserDetails();
+    user.innerHTML = userDetails.email;
 
     // todo make language management generic
     language.onclick = () => {
