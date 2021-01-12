@@ -32,13 +32,26 @@ const authController = () => {
         keycloak.clearToken();
     }
 
+    const getAccessTokenPayload = () => JSON.parse(atob(keycloak.token.split(".")[1]));
+
+    const getUserDetails = () => {
+        const jwtPayload = getAccessTokenPayload();
+        return  {
+            groups: jwtPayload.groups,
+            roles: jwtPayload.realm_access.roles, // todo remove default roles? slice[..]
+            email: jwtPayload.email,
+            firstName: jwtPayload.given_name,
+            lastName: jwtPayload.family_name,
+        }
+    }
+
     return Object.freeze({
         login: login,
         logout: logout,
         isLoggedIn: () => keycloak.authenticated,
         register: register,
         init: init,
-        loadUserProfile: () => keycloak.loadUserProfile(),
+        getUserDetails: getUserDetails,
     })
 }
 
