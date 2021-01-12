@@ -1,5 +1,8 @@
 import "../../keycloak.js"
 import {maybe} from "../assets/util/maybe.js";
+import {authLocalController} from "./auth.local.js"
+import {config} from "../../config.js";
+
 
 export {AuthController}
 
@@ -39,4 +42,17 @@ const authController = () => {
     })
 }
 
-const AuthController = authController();
+let AuthController;
+
+if (config.environment === 'local') {
+    AuthController = authLocalController();
+} else {
+    AuthController = authController();
+}
+
+
+
+
+
+
+

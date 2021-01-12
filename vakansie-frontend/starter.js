@@ -1,11 +1,10 @@
 import {LayoutController, LayoutView} from "./src/layout/layout.js";
 import {dom} from "./src/assets/util/dom.js";
-import {AuthController} from "./src/auth/auth.js";
 import {LandingView} from "./src/landing/landing.view.js";
 
 export {start} ;
 
-const start = (appRootId) => {
+const start = (appRootId, authenticated) => {
 
     const CONTENT_WRAPPER = 'root';
     const layoutController = LayoutController();
@@ -14,7 +13,7 @@ const start = (appRootId) => {
     const root = document.getElementById(CONTENT_WRAPPER)
     const vakansie = dom(`<div id="${appRootId}">`);
 
-    if (AuthController.isLoggedIn()) {
+    if (authenticated) {
         LayoutView(vakansie, layoutController);
         root.replaceWith(vakansie); // why replace???
     } else {
