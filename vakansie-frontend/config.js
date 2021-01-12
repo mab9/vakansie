@@ -1,5 +1,15 @@
-export const config = {
+
+
+export { config, env}
+
+const env = {
+    LOCAL: "local",
+    PROD: "prod",
+}
+
+const config = {
     lang: 'de',
     langTranslations: ['de', 'en'],
-    environment: "prod",
+    environment: env.PROD,
+    startMenuEntry: 0,
 };

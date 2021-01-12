@@ -8,6 +8,7 @@ import {VerifyController} from "../modules/verify/verify.controller.js";
 import {VerifyView} from "../modules/verify/verify.view.js";
 import {GroupController} from "../modules/groups/group.controller.js";
 import {GroupView} from "../modules/groups/group.view.js";
+import {AuthController} from "../auth/auth.prod.js";
 
 // use of imports to avoid import removal on "ctrl alt o" shortcut
 const homeView = HomeView;
@@ -21,7 +22,14 @@ const verifyView = VerifyView;
 const groupController = GroupController;
 const groupView = GroupView;
 
-export {Menu}
+export {Menu, roles}
+
+const roles = {
+    ADMIN: "admin",
+    ADMIN_TENANT: "admin-tenant",
+    EMPLOYEE: "employee"
+}
+
 
 /**
  * @return {Menu}
@@ -29,8 +37,7 @@ export {Menu}
  * @param {Element} rootElement  is used by the eval function
  */
 const Menu = (rootElement) => {
-
-    const entries = JSON.parse(`{ "data" : [
+    let entries = JSON.parse(`{ "data" : [
                             {
                               "id":     "0",
                               "title":  "menu.main.entry.vakansie",
@@ -45,7 +52,7 @@ const Menu = (rootElement) => {
                               "title":  "menu.main.entry.persons",
                               "ctrl" :  "PersonController",
                               "view" :  "PersonView",
-                              "roles":  [],
+                              "roles":  ["${roles.ADMIN}"],
                               "rights": [],
                               "subs":   []
                             },
@@ -63,7 +70,7 @@ const Menu = (rootElement) => {
                               "title":  "menu.main.entry.verify",
                               "ctrl" :  "VerifyController",
                               "view" :  "VerifyView",
-                              "roles":  [],
+                              "roles":  ["${roles.ADMIN}"],
                               "rights": [],
                               "subs":   []
                             },
@@ -72,14 +79,27 @@ const Menu = (rootElement) => {
                               "title":  "menu.main.entry.group",
                               "ctrl" :  "GroupController",
                               "view" :  "GroupView",
-                              "roles":  [],
+                              "roles":  ["${roles.ADMIN}","${roles.ADMIN_TENANT}"],
                               "rights": [],
                               "subs":   []
                             }
                            ]}`);
 
+
+    const userDetails = AuthController.getUserDetails();
+
+    const reduceMenuEntriesAccordingUserRoles = () => {
+        return entries.data.filter(entry => {
+            if (!entry.roles.length) return true; // no role defined then allow access
+            return entry.roles.some(item => userDetails.roles.includes(item));
+        })
+    }
+
+    entries.data = reduceMenuEntriesAccordingUserRoles();
+
+
     // initial entry
-    let selectedEntry = Observable(entries.data[4])  // todo undo default development view
+    let selectedEntry = Observable(entries.data[config.startMenuEntry])
 
     const setSelectedEntry = value => {
         const newEntry = entries.data.find(entry => entry.id === value)
