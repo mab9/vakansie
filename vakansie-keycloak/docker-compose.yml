@@ -20,12 +20,17 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:12.0.1
     container_name: v-keycloak
+    #volumes:
+    #  - ./imports:/opt/jboss/keycloak/imports
+    # todo import directly from file! for that don't leak secrets
     ports:
       - 8080:8080
       - 587:587
     depends_on:
       - postgres
     environment:
+      # KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/realm-export.json
+      # todo import directly from file! for that don't leak secrets
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
       DB_VENDOR: POSTGRES
