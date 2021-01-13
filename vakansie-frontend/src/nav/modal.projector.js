@@ -60,8 +60,15 @@ const modalProjector = (rootElement, authCtrl, showModalAttr, showModalBtn, menu
     const body = modalElement.querySelector(`.${masterClassName}-modal-body`);
     const [manage, signout] = body.children;
 
-    manage.onclick = () => menu.setSelectedEntry("5"); // todo rework it to avoid using ids
-    signout.onclick = () => authCtrl.logout();
+    manage.onclick = () => {
+        menu.setSelectedEntry("5");
+        setValueOf(showModalAttr)(false)
+    } // todo rework it to avoid using ids
+
+    signout.onclick = () => {
+        authCtrl.logout();
+        setValueOf(showModalAttr)(false)
+    }
 
     appendFirst(rootElement)(modalElement);
 };
