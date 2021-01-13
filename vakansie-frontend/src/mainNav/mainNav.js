@@ -1,6 +1,9 @@
-import {mainNavProjector} from "./mainNavProjector.js";
+import {mainNavProjector, pageCss} from "./mainNavProjector.js";
+import {appendsStyle} from "../assets/util/appends.js";
 
 export {mainNavController, MainNavView};
+
+appendsStyle(pageCss);
 
 /**
  * @return Readonly {MainNavController}

@@ -10,6 +10,6 @@ const env = {
 const config = {
     lang: 'de',
     langTranslations: ['de', 'en'],
-    environment: env.PROD,
+    environment: env.LOCAL,
     startMenuEntry: 0,
 };
