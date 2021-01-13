@@ -57,6 +57,7 @@ const authController = () => {
 
 let AuthController;
 
+// todo rethink about the dependency to both controllers
 if (config.environment === 'local') {
     AuthController = authLocalController();
 } else {
