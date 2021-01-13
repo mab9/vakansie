@@ -10,8 +10,7 @@ export {LandingView};
  */
 const LandingView = (rootElement) => {
 
-    const render = () => {
-        const containerElement = dom(`
+    const containerElement = dom(`
             <DIV id="mainnav-section"></DIV>
             <DIV id="content-section">
                 <DIV id="main-content" class="main-content">
@@ -23,23 +22,15 @@ const LandingView = (rootElement) => {
                 </DIV>
             </DIV>`);
 
-        const signInElement = containerElement.querySelector('.signin');
-        const signUpElement = containerElement.querySelector('.signup');
-        const joinElement = containerElement.querySelector('.join');
-        const logoutElement = containerElement.querySelector('.logout') // only for test
+    const signInElement = containerElement.querySelector('.signin');
+    const signUpElement = containerElement.querySelector('.signup');
+    const joinElement = containerElement.querySelector('.join');
+    const logoutElement = containerElement.querySelector('.logout') // only for test
 
-        signInElement.onclick = () => AuthController.login();
-        signUpElement.onclick = () => AuthController.register();
-        joinElement.onclick = () => alert("join me in")
-        logoutElement.onclick = () => AuthController.logout();
+    signInElement.onclick = () => AuthController.login();
+    signUpElement.onclick = () => AuthController.register();
+    joinElement.onclick = () => alert("join me in")
+    logoutElement.onclick = () => AuthController.logout();
 
-        appendReplacing(rootElement)(containerElement)
-    };
-
-    // show welcom stuff
-    // show btns for login, signup, join group
-    // on auth action, invoke authCtrl. keycloak will redirect by himself if
-    // auth was successful to the starter.js view.
-
-    render();
+    appendReplacing(rootElement)(containerElement)
 };
