@@ -29,10 +29,8 @@ const MainNavView = (rootElement, menu) => {
           <a class="mainnav-avatar">
             <img alt="Avatar" class="avatar">
           </a>
-          <a class="mainnav-user">mab9@vakansie.com</a>
           <a class="mainnav-language">DE</a>
 
-          <button class="${masterClassName}-myBtn">Open Modal</button>
           <div id="modal"></div>
 
           <a href="javascript:void(0);" class="hamburger">
@@ -45,12 +43,7 @@ const MainNavView = (rootElement, menu) => {
     const avatar = navBarElement.querySelector('.avatar');
     const hamburger = navBarElement.querySelector('.hamburger');
     const language = navBarElement.querySelector('.mainnav-language');
-    const user = navBarElement.querySelector('.mainnav-user');
     const modal = navBarElement.querySelector('#modal');
-
-
-    const userDetails = AuthController.getUserDetails();
-    user.innerHTML = userDetails.email;
 
     // todo make language management generic
     language.onclick = () => {
@@ -74,21 +67,15 @@ const MainNavView = (rootElement, menu) => {
         }
     }
 
-    avatar.src = './src/assets/img/avatars/svg/035-man-4.svg';
-
-    avatar.onclick = () => AuthController.logout();
-
     hamburger.onclick = () => mainnav.className === "mainnav"
         ? mainnav.className += " responsive"
         : mainnav.className = "mainnav";
 
-
-    // Modal stuff
-    const modalBtn = navBarElement.querySelector(`.${masterClassName}-myBtn`);
-    const showModalAttr = Attribute(false);
     // When the user clicks on the button, open the modal
-    modalBtn.onclick = () => setValueOf(showModalAttr)(true);
-    modalProjector(modal, AuthController, showModalAttr, modalBtn);
+    const showModalAttr = Attribute(false);
+    avatar.src = './src/assets/img/avatars/svg/035-man-4.svg';
+    avatar.onclick = () => setValueOf(showModalAttr)(true);
+    modalProjector(modal, AuthController, showModalAttr, avatar);
 
 
     appendFirst(rootElement)(navBarElement);

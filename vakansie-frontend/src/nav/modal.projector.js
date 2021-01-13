@@ -17,11 +17,12 @@ const modalProjector = (rootElement, authCtrl, showModalAttr, showModalBtn) => {
     const modalElement = dom(`
            <div class="${masterClassName}-modal">
                  <div class="${masterClassName}-modal-header">
-                   <h2>Firstname Lastname</h2>
+                   <img alt="Avatar" class="${masterClassName}-avatar">
+                   <h3>Firstname Lastname</h3>
                    <p>email</p>
-                   <p>Manage your Vakansie Account</p>
                  </div>
                  <div class="${masterClassName}-modal-body">
+                   <p>Manage your Vakansie Account</p>
                    <p>Sign out</p>
                  </div>
                  <div class="${masterClassName}-modal-footer">
@@ -31,8 +32,7 @@ const modalProjector = (rootElement, authCtrl, showModalAttr, showModalBtn) => {
 
 
     const [modal] = modalElement.children;
-
-    onValueChange(showModalAttr)(isVisible => {
+        onValueChange(showModalAttr)(isVisible => {
         isVisible
             ? modal.style.display = "block"
             : modal.style.display = "none";
@@ -46,19 +46,45 @@ const modalProjector = (rootElement, authCtrl, showModalAttr, showModalBtn) => {
         }
     }
 
+    const header = modalElement.querySelector(`.${masterClassName}-modal-header`);
+    const [avatar, names, email] = header.children;
+
+    avatar.src = './src/assets/img/avatars/svg/035-man-4.svg';
+
+    const userDetails = authCtrl.getUserDetails();
+    names.innerHTML = userDetails.firstname + " " + userDetails.lastname;
+    email.innerHTML = userDetails.email;
+
+
+    const body = modalElement.querySelector(`.${masterClassName}-modal-body`);
+    const [manage, signout] = body.children;
+
+    manage.onclick = () => alert("Will show logged in user management view");
+    signout.onclick = () => authCtrl.logout();
+
+
+
     appendFirst(rootElement)(modalElement);
 };
 
 const pageCss = `
 
+    .${masterClassName}-avatar {
+        width: 80px;
+        height: 80px;
+        border: none;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
     .${masterClassName}-modal {
         display: none; /* Hidden by default */
         position: fixed; /* Stay in place */
         z-index: 1; /* Sit on top */
-        right: 16px;
+        right: 32px;
         top: 50px;
-        width: 355px; /* Full width */
-        height: 405px; /* Full height */
+        width: 400px; /* Full width */
+        height: 500px; /* Full height */
         overflow: auto; /* Enable scroll if needed */
         padding: 10px;
 
@@ -71,6 +97,7 @@ const pageCss = `
         animation: fadeIn .2s;
 
         box-shadow: 0 2px 10px rgba(0,0,0,.2);
+        color: black;
     }
 
     @-webkit-keyframes fadeIn {
@@ -84,17 +111,20 @@ const pageCss = `
     }
 
 
-    .${masterClassName}-modal-header {
-      padding: 2px 16px;
-      background-color: #5cb85c;
-      color: white;
+    .${masterClassName}-modal-header, .${masterClassName}-modal-body, .${masterClassName}-modal-footer {
+        vertical-align: top;
+        text-align: center;
+        padding: 2px 16px;
+        margin: 20px 33px;
+     }
+
+    .${masterClassName}-modal-body > p {
+       border: 1px solid #ccc;
+       padding: 8px;
+       border-radius: 15px;
     }
 
-    .${masterClassName}-modal-body {padding: 2px 16px;}
-
-    .${masterClassName}-modal-footer {
-      padding: 2px 16px;
-      background-color: #5cb85c;
-      color: white;
+    .${masterClassName}-modal-body > p:hover {
+       background-color: #f7f8f8;
     }
 `;

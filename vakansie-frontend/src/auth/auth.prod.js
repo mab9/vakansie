@@ -10,6 +10,10 @@ export {AuthController}
  * @typedef AuthController
  * @property {Function} login
  * @property {Function} logout
+ * @property {Function} isLoggedIn
+ * @property {Function} register
+ * @property {Function} init
+ * @property {Function} getUserDetails
  */
 const authController = () => {
 
@@ -40,8 +44,8 @@ const authController = () => {
             groups: jwtPayload.groups,
             roles: jwtPayload.realm_access.roles, // todo remove default roles? slice[..]
             email: jwtPayload.email,
-            firstName: jwtPayload.given_name,
-            lastName: jwtPayload.family_name,
+            firstname: jwtPayload.given_name,
+            lastname: jwtPayload.family_name,
         }
     }
 

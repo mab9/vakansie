@@ -32,7 +32,10 @@ const authLocalController = () => {
 
     const register = () => alert("Not implemented for local development");
 
-    const logout = () => setValueOf(loggedIn)(false);
+    const logout = () => {
+        alert("Not implemented for local development");
+        setValueOf(loggedIn)(false);
+    }
 
     /*
         example how to fake promise values.
@@ -53,8 +56,8 @@ const authLocalController = () => {
             groups: jwtPayload.groups,
             roles: jwtPayload.realm_access.roles, // todo remove default roles? slice[..]
             email: jwtPayload.email,
-            firstName: jwtPayload.given_name,
-            lastName: jwtPayload.family_name,
+            firstname: jwtPayload.given_name,
+            lastname: jwtPayload.family_name,
         }
     }
 
