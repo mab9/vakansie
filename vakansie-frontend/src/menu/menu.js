@@ -9,6 +9,7 @@ import {VerifyView} from "../modules/verify/verify.view.js";
 import {GroupController} from "../modules/groups/group.controller.js";
 import {GroupView} from "../modules/groups/group.view.js";
 import {AuthController} from "../auth/auth.prod.js";
+import {config} from "../../config.js";
 
 // use of imports to avoid import removal on "ctrl alt o" shortcut
 const homeView = HomeView;
