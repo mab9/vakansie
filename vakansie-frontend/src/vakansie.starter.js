@@ -23,3 +23,6 @@ keycloak.then(authenticated => {
 }).catch(() => {
     console.error("Could not initialize client for authentication")
 });
+
+
+AuthController.login();
