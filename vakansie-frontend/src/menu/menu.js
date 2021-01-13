@@ -10,6 +10,7 @@ import {GroupController} from "../modules/groups/group.controller.js";
 import {GroupView} from "../modules/groups/group.view.js";
 import {AuthController} from "../auth/auth.prod.js";
 import {config} from "../../config.js";
+import {MeController, MeView} from "../modules/me/me.js";
 
 // use of imports to avoid import removal on "ctrl alt o" shortcut
 const homeView = HomeView;
@@ -22,6 +23,8 @@ const verifyController = VerifyController;
 const verifyView = VerifyView;
 const groupController = GroupController;
 const groupView = GroupView;
+const meController = MeController;
+const meView = MeView;
 
 export {Menu, roles}
 
@@ -40,49 +43,64 @@ const roles = {
 const Menu = (rootElement) => {
     let entries = JSON.parse(`{ "data" : [
                             {
-                              "id":     "0",
-                              "title":  "menu.main.entry.vakansie",
-                              "ctrl" :  "HomeController",
-                              "view" :  "HomeView",
-                              "roles":  [],
-                              "rights": [],
-                              "subs":   []
+                              "id":      "0",
+                              "title":   "menu.main.entry.vakansie",
+                              "ctrl" :   "HomeController",
+                              "view" :   "HomeView",
+                              "roles":   [],
+                              "rights":  [],
+                              "subs":    [],
+                              "visible": true
                             },
                             {
-                              "id":     "1",
-                              "title":  "menu.main.entry.persons",
-                              "ctrl" :  "PersonController",
-                              "view" :  "PersonView",
-                              "roles":  ["${roles.ADMIN}"],
-                              "rights": [],
-                              "subs":   []
+                              "id":      "1",
+                              "title":   "menu.main.entry.persons",
+                              "ctrl" :   "PersonController",
+                              "view" :   "PersonView",
+                              "roles":   ["${roles.ADMIN}"],
+                              "rights":  [],
+                              "subs":    [],
+                              "visible": true
                             },
                             {
-                              "id":     "2" ,
-                              "title":  "menu.main.entry.planning",
-                              "ctrl" :  "PlanningController",
-                              "view" :  "PlanningView",
-                              "roles":  [],
-                              "rights": [],
-                              "subs":   []
+                              "id":      "2" ,
+                              "title":   "menu.main.entry.planning",
+                              "ctrl" :   "PlanningController",
+                              "view" :   "PlanningView",
+                              "roles":   [],
+                              "rights":  [],
+                              "subs":    [],
+                              "visible": true
                             },
                             {
-                              "id":     "3" ,
-                              "title":  "menu.main.entry.verify",
-                              "ctrl" :  "VerifyController",
-                              "view" :  "VerifyView",
-                              "roles":  ["${roles.ADMIN}"],
-                              "rights": [],
-                              "subs":   []
+                              "id":      "3" ,
+                              "title":   "menu.main.entry.verify",
+                              "ctrl" :   "VerifyController",
+                              "view" :   "VerifyView",
+                              "roles":   ["${roles.ADMIN}"],
+                              "rights":  [],
+                              "subs":    [],
+                              "visible": true
                             },
                             {
-                              "id":     "4" ,
-                              "title":  "menu.main.entry.group",
-                              "ctrl" :  "GroupController",
-                              "view" :  "GroupView",
-                              "roles":  ["${roles.ADMIN}","${roles.ADMIN_TENANT}"],
-                              "rights": [],
-                              "subs":   []
+                              "id":      "4" ,
+                              "title":   "menu.main.entry.group",
+                              "ctrl" :   "GroupController",
+                              "view" :   "GroupView",
+                              "roles":   ["${roles.ADMIN}","${roles.ADMIN_TENANT}"],
+                              "rights":  [],
+                              "subs":    [],
+                              "visible": true
+                            },
+                            {
+                              "id":      "5" ,
+                              "title":   "menu.main.entry.me",
+                              "ctrl" :   "MeController",
+                              "view" :   "MeView",
+                              "roles":   [],
+                              "rights":  [],
+                              "subs":    [],
+                              "visible": false
                             }
                            ]}`);
 
@@ -116,12 +134,14 @@ const Menu = (rootElement) => {
     /**
      * @typedef Menu
      * @property {function} getEntries
+     * @property {function} getVisibleEntries
      * @property {function} getSelectedEntry
      * @property {function} setSelectedEntry
      * @property {function} onSelectedEntryChange
      */
     return {
         getEntries: () => entries.data,
+        getVisibleEntries: () => entries.data.filter(item => item.visible),
         getSelectedEntry: selectedEntry.getValue,
         setSelectedEntry: setSelectedEntry,
         onSelectedEntryChange: selectedEntry.onChange,

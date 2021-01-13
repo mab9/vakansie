@@ -11,8 +11,9 @@ const masterClassName = 'nav-main-view'; // should be unique for this projector
  * @param authCtrl {AuthController}
  * @param showModalAttr {Attribute}
  * @param showModalBtn {HTMLElement}
+ * @param menu {Menu}
  */
-const modalProjector = (rootElement, authCtrl, showModalAttr, showModalBtn) => {
+const modalProjector = (rootElement, authCtrl, showModalAttr, showModalBtn, menu) => {
 
     const modalElement = dom(`
            <div class="${masterClassName}-modal">
@@ -32,7 +33,7 @@ const modalProjector = (rootElement, authCtrl, showModalAttr, showModalBtn) => {
 
 
     const [modal] = modalElement.children;
-        onValueChange(showModalAttr)(isVisible => {
+    onValueChange(showModalAttr)(isVisible => {
         isVisible
             ? modal.style.display = "block"
             : modal.style.display = "none";
@@ -59,10 +60,8 @@ const modalProjector = (rootElement, authCtrl, showModalAttr, showModalBtn) => {
     const body = modalElement.querySelector(`.${masterClassName}-modal-body`);
     const [manage, signout] = body.children;
 
-    manage.onclick = () => alert("Will show logged in user management view");
+    manage.onclick = () => menu.setSelectedEntry("5"); // todo rework it to avoid using ids
     signout.onclick = () => authCtrl.logout();
-
-
 
     appendFirst(rootElement)(modalElement);
 };

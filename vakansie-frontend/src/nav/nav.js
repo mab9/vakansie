@@ -3,7 +3,7 @@ import {appendFirst, appendsStyle} from "../assets/util/appends.js";
 import {dom} from "../assets/util/dom.js";
 import {AuthController} from "../auth/auth.prod.js";
 import {translationService} from "../service/translation.service.js";
-import {Attribute, setValueOf} from "../base/presentationModel/presentationModel.js";
+import {Attribute, setValueOf, valueOf} from "../base/presentationModel/presentationModel.js";
 
 export {MainNavView};
 
@@ -23,7 +23,7 @@ const MainNavView = (rootElement, menu) => {
         <NAV class="mainnav"> <div class="menu-entries">` +
 
         // use of the html5 data attribute to associate the unique menu id to an element
-        menu.getEntries().map(entry => '<a data-menu-id="' + entry.id + '" data-i18n="' + entry.title + '"></a>').join('')
+        menu.getVisibleEntries().map(entry => '<a data-menu-id="' + entry.id + '" data-i18n="' + entry.title + '"></a>').join('')
 
         + `</div>
           <a class="mainnav-avatar">
@@ -74,8 +74,8 @@ const MainNavView = (rootElement, menu) => {
     // When the user clicks on the button, open the modal
     const showModalAttr = Attribute(false);
     avatar.src = './src/assets/img/avatars/svg/035-man-4.svg';
-    avatar.onclick = () => setValueOf(showModalAttr)(true);
-    modalProjector(modal, AuthController, showModalAttr, avatar);
+    avatar.onclick = () => setValueOf(showModalAttr)(!valueOf(showModalAttr));
+    modalProjector(modal, AuthController, showModalAttr, avatar, menu);
 
 
     appendFirst(rootElement)(navBarElement);
