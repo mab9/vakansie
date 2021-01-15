@@ -67,6 +67,6 @@ const MasterView = (listController, selectionController, rootElement) => {
 };
 
 const DetailView = (selectionController, rootElement) => {
-    const render = person => formProjector(selectionController, rootElement, person, ALL_PERSON_ATTRIBUTE_NAMES);
+    const render = person => formProjector(selectionController, rootElement, person, ALL_PERSON_ATTRIBUTE_NAMES.filter(item => item !== "id"));
     selectionController.onModelSelected(render);
 };

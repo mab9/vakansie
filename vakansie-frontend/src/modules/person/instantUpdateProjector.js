@@ -56,7 +56,11 @@ const personModelDetails = item => {
         img: ["view.person.detail.label.img", "img"],
         firstname: ["view.person.detail.label.firstname", "text"],
         lastname: ["view.person.detail.label.lastname", "text"],
-        job: ["view.person.detail.label.job", "text"],
+        email: ["view.person.detail.label.email", "text"],
+        joined: ["view.person.detail.label.joined", "checkbox"],
+        isAdmin: ["view.person.detail.label.roles.admin", "checkbox"],
+        isApprover: ["view.person.detail.label.roles.approver", "checkbox"],
+        isSpacer: ["view.person.detail.label.roles.spacer", "checkbox"],
     }
 }
 

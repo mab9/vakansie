@@ -9,7 +9,11 @@
     "view.person.detail.label.img":  "Bild",
     "view.person.detail.label.firstname": "Vorname",
     "view.person.detail.label.lastname":  "Nachname",
-    "view.person.detail.label.job": "Beruf",
+    "view.person.detail.label.email": "E-Mail",
+    "view.person.detail.label.joined": "Ist beigetreten",
+    "view.person.detail.label.roles.admin": "Ist Admin",
+    "view.person.detail.label.roles.spacer": "Ist Spacer",
+    "view.person.detail.label.roles.approver": "Ist Approver",
 
     "view.group.detail.label.name": "Name",
     "view.group.detail.label.isProject": "Projekt",
