@@ -24,10 +24,17 @@ const bindInput = (attribute, inputElement) => {
             : inputElement.classList.add("invalid")
     );
 
-    attribute.getObs(EDITABLE, true).onChange(
-        isEditable => isEditable
-            ? inputElement.removeAttribute("readonly")
-            : inputElement.setAttribute("readonly", true));
+
+    attribute.getObs(EDITABLE, true).onChange(isEditable => {
+            if (isEditable) {
+                inputElement.removeAttribute("readonly");
+                inputElement.disabled = false;
+            } else {
+                inputElement.setAttribute("readonly", true)
+                inputElement.disabled = true;
+            }
+        }
+    )
 
     attribute.getObs(LABEL, '').onChange(label => inputElement.setAttribute("title", label));
 };
@@ -61,10 +68,16 @@ const inputProjectorFixedValue = value => attributeName => attributeDetails => {
     element.size = 20;
     element.value = value;
 
-    attribute.getObs(EDITABLE, true).onChange(
-        isEditable => isEditable
-            ? element.removeAttribute("readonly")
-            : element.setAttribute("readonly", true));
+    attribute.getObs(EDITABLE, true).onChange(isEditable => {
+            if (isEditable) {
+                inputElement.removeAttribute("readonly");
+                inputElement.disabled = false;
+            } else {
+                inputElement.setAttribute("readonly", true)
+                inputElement.disabled = true;
+            }
+        }
+    )
 
     return element;
 };

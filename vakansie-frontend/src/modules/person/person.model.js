@@ -1,4 +1,8 @@
-import {presentationModelFromAttributeNames, setValueOf,} from "../../base/presentationModel/presentationModel.js";
+import {
+    EDITABLE,
+    presentationModelFromAttributeNames,
+    setValueOf,
+} from "../../base/presentationModel/presentationModel.js";
 
 export { Person, ALL_PERSON_ATTRIBUTE_NAMES}
 
@@ -24,8 +28,11 @@ const Person = () => {      // facade
     setValueOf(person.email)("");
     //person.email.setConverter(input => input.toUpperCase());
     person.email.setValidator(input => input.indexOf("@") >= 0);
+    person.joined.getObs(EDITABLE).setValue(false);
     return person;
 }
+
+// joined attribute true, wenn user eingeladen wurde und sich angemledet hat.
 
 
 // funktion person einladen, joined boolean

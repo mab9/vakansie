@@ -2,6 +2,7 @@ import {appendFirst} from "../../assets/util/appends.js";
 import {dom} from "../../assets/util/dom.js";
 import {formProjector, listItemProjector, pageCss} from "./instantUpdateProjector.js";
 import {ALL_PERSON_ATTRIBUTE_NAMES, Person} from "./person.model.js";
+import {setValueOf} from "../../base/presentationModel/presentationModel.js";
 
 export {PersonView};
 
@@ -18,7 +19,7 @@ document.head.appendChild(style);
  */
 const PersonView = (rootElement, personController) => {
 
-    const listController      = personController.getListController();
+    const listController = personController.getListController();
     const selectionController = personController.getSelectionCtrl();
 
     const render = () => {
@@ -26,7 +27,8 @@ const PersonView = (rootElement, personController) => {
             <div class="card">
                 <h1 data-i18n="view.person.card.master.title"></h1>
                 <div class="holder">
-                    <button id="plus" autofocus> + </button>
+                    <button id="plus" autofocus> invite </button>
+                    <input  id="email" type="text" placeholder="mab@vakansie.ch" autofocus>
                     <div    id="masterContainer"></div>
                 </div>
             </div>
@@ -40,7 +42,19 @@ const PersonView = (rootElement, personController) => {
         const masterContainer = person.querySelector("#masterContainer");
         const detailContainer = person.querySelector("#detailContainer");
         const plus = person.querySelector("#plus");
-        plus.onclick = _ => listController.addModel(Person());
+        const email = person.querySelector("#email");  // todo impl multiple emails "e1;e2;..."
+
+        plus.disabled = true;
+        plus.onclick = _ => {
+            const model = Person();
+            setValueOf(model.email)(email.value);
+            listController.addModel(model);
+            plus.disabled = true;
+            email.value = "";
+        }
+
+        const isEmailValid = value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+        email.oninput = () => isEmailValid(email.value) ? plus.disabled = false : plus.disabled = true;
 
         MasterView(listController, selectionController, masterContainer);
         DetailView(selectionController, detailContainer);
@@ -56,7 +70,7 @@ const PersonView = (rootElement, personController) => {
 const MasterView = (listController, selectionController, rootElement) => {
 
     const render = person => listItemProjector(listController, selectionController, rootElement,
-            person, ['firstname', 'lastname']);
+        person, ['firstname', 'lastname', 'email']);
 
     // binding
     listController.onModelAdd(render);
