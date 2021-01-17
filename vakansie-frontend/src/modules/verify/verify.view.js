@@ -1,13 +1,11 @@
 import {appendFirst, appendsStyle} from "../../assets/util/appends.js";
 import {dom} from "../../assets/util/dom.js";
-import {pageCss as pageCssMonth, verifyCalendarProjector} from "./verifyCalendar.projector.js";
-import {pageCss as pageCssUserGroup, userGroupProjector} from "./userGroup.projector.js";
+import {calendarApprovalProjector, pageCss as pageCssMonth} from "./calendar.approval.projector.js";
 import {i18n} from "../../service/translation.service.js";
 
 export {VerifyView};
 
 // page-style change, only executed once
-appendsStyle(pageCssUserGroup);
 appendsStyle(pageCssMonth);
 
 
@@ -55,7 +53,17 @@ const VerifyView = (rootElement, verifyCtrl) => {
  */
 const MasterView = (rootElement, verifyCtrl) => {
     const render = () => userGroupProjector(rootElement, verifyCtrl);
-    render();
+    //render();
+
+    // todo impl :
+    /*
+        verfiy alnedar for tennant with calendar overview -> count how many users have vacation for a day
+        choose a group and show vacations per day for the given group
+        approve vacations from to date.
+        approve vacations per user
+        approve vacations per group
+        approve vacations for all but one or two dudes.
+     */
 };
 
 /**
@@ -64,7 +72,7 @@ const MasterView = (rootElement, verifyCtrl) => {
  * @constructor
  */
 const DetailView = (rootElement, verifyCtrl) => {
-    const render = () => verifyCalendarProjector(rootElement, verifyCtrl);
+    const render = () => calendarApprovalProjector(rootElement, verifyCtrl);
     render();
 };
 
