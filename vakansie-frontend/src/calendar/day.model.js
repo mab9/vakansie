@@ -4,6 +4,7 @@ import {
     setValueOf,
     valueOf
 } from "../base/presentationModel/presentationModel.js";
+import {ListController} from "../base/controller/controller.js";
 
 export {Day, ALL_DAY_ATTRIBUTE_NAMES}
 
@@ -36,8 +37,9 @@ const Day = () => {      // facade
 
     setValueOf(model.isSelected)(false); // default
     setHoverOf(model.event)(false); // default
+    setValueOf(model.event)(ListController()); // default empty
 
-    const isEventDay = () => !!valueOf(model.event);
+    const isEventDay = () => !!valueOf(model.event).size();
 
     const isWeekendDay = () => valueOf(model.date).getDay() === 0 || valueOf(model.date).getDay() === 6;
 
