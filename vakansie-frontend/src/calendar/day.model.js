@@ -15,7 +15,7 @@ export {Day, ALL_DAY_ATTRIBUTE_NAMES}
  * @property {string}   date         - date in format yyyy.mm.dd; mandatory
  * @property {string}   day          - day from the date above format m without preceding 0; mandatory
  * @property {boolean}  holiday      - is day a holiday according the local calendar
- * @property {Event}    event        - reference to an event
+ * @property {ListController} event        - reference to listController containing events
  * @property {boolean}  isSelected   - indicates if the day is currently selected via gui or not
  * @property {Function} isEventDay   - is day that was selected as day off from the user. Is not a weekend day nor a holiday.
  * @property {Function} isWeekendDay -
