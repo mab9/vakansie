@@ -1,4 +1,5 @@
 :root {
+  --main-nav-height: 48px;
   --main-content-padding:       3em;
   --main-content-width:         calc(100% - var(--side-nav-width) - 2 * var(--main-content-padding));
   --main-content-full-width:    calc(100% - 2 * var(--main-content-padding));
@@ -11,8 +12,8 @@
 #main-content {
   left:             0;
   /*position:         fixed;*/
-  overflow-y:       scroll;
-  width:            var(--main-content-full-width);
+  /*overflow-y:       scroll;*/
+  min-width:        var(--main-content-full-width);
   height:           var(--main-content-heigth);
   background-color: var(--surface-color);
   padding:          var(--main-content-padding);
