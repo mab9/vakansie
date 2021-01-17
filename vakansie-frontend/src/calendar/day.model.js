@@ -6,7 +6,7 @@ import {
 } from "../base/presentationModel/presentationModel.js";
 import {ListController} from "../base/controller/controller.js";
 
-export {Day, ALL_DAY_ATTRIBUTE_NAMES}
+export {Day, NoDay, ALL_DAY_ATTRIBUTE_NAMES}
 
 /**
  * @typedef Day
@@ -28,16 +28,18 @@ export {Day, ALL_DAY_ATTRIBUTE_NAMES}
  */
 
 
-const ALL_DAY_ATTRIBUTE_NAMES = ['id', 'date', 'day', 'holiday', 'event', 'isSelected'];
+// todo status to replace is weekend day, natural day, day off and so one
+const ALL_DAY_ATTRIBUTE_NAMES = ['id', 'date', 'day', 'holiday', 'event', 'isSelected', 'status'];
 
 // todo extend presentationmodel with differntiated label!
 const Day = () => {      // facade
 
     const model = presentationModelFromAttributeNames(ALL_DAY_ATTRIBUTE_NAMES);
 
-    setValueOf(model.isSelected)(false); // default
-    setHoverOf(model.event)(false); // default
-    setValueOf(model.event)(ListController()); // default empty
+    setValueOf(model.isSelected)(false);
+    setHoverOf(model.event)(false);
+    setValueOf(model.event)(ListController());
+    setValueOf(model.status)(undefined);
 
     const isEventDay = () => !!valueOf(model.event).size();
 
@@ -64,3 +66,9 @@ const Day = () => {      // facade
         ...model,
     };
 }
+
+const NoDay = (() => { // one time creation, singleton
+    const feb30 = Day();
+    ALL_DAY_ATTRIBUTE_NAMES.forEach(name => feb30[name].setConvertedValue(""));
+    return feb30;
+})();

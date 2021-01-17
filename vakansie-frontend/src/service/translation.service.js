@@ -1,5 +1,6 @@
 import {config} from "../../config.js";
 import {Observable} from "../base/observable/observable.js";
+import {doIf} from "../assets/util/maybe.js";
 
 export {i18n, I18N_CURRENT_LANG} // See export at the bottom of the file!
 
@@ -17,7 +18,12 @@ const i18n = (key) => (destination) => {
         return 'no.i18n.key.provided';
     }
 
-    const callback = (translation) => destination.innerText = translation;
+    const callback = (translation) => {
+        destination.type === 'button'
+            ? destination.value = translation
+            : destination.innerText = translation;
+    }
+
     translationService.translate(key, callback);
 };
 
@@ -68,9 +74,13 @@ const TranslationService = () => {
         return translation;
     };
 
-    // Translate languages without page refresh
-    const translate = (key, callback) => isLangLoaded.onChange( _ => callback(resolveKey(key)))
+    const resolveCallback = (callback, languageReady, key) => doIf(languageReady)(callback(resolveKey(key)));
 
+    // Translate languages without page refresh
+    const translate = (key, callback) => {
+        isLangLoaded.onChange( value => resolveCallback(callback, value, key));
+        resolveCallback(callback, isLangLoaded.getValue(), key);
+    }
 
     // is used to prevent to load the current lang
     // via the currentLang.onChange definition

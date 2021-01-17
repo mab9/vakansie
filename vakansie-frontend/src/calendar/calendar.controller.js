@@ -1,4 +1,10 @@
-import {Attribute, setLabelOf, setValueOf, valueOf} from "../base/presentationModel/presentationModel.js";
+import {
+    Attribute,
+    onValueChange,
+    setLabelOf,
+    setValueOf,
+    valueOf
+} from "../base/presentationModel/presentationModel.js";
 import "../assets/util/dates.js"
 import {ListController} from "../base/controller/controller.js";
 import {Event} from "./event.model.js";
@@ -27,13 +33,14 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
         })
     }
 
-    const initEvents = events => {
-        valueOf(events).forEach(event => {
+    const initEvents = eventModels => {
+        return valueOf(eventModels).map(event => {
             // Provide reference from event to day
             let day = findDayByDate(event.start)
             const createdEvent = Event(day);
             setValueOf(createdEvent.approved)(event.approved)
-            const dayListCtrl = valueOf(createdEvent.days);
+            setValueOf(createdEvent.status)(event.status)
+            let dayListCtrl = valueOf(createdEvent.days);
 
             // start day was already added at event creation
             while (!valueOf(day.date).sameDay(event.to)) {
@@ -48,8 +55,30 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
                 valueOf(item.event).addModel(createdEvent);
             })
 
+            // Remove reference from day to event
+            eventListCtrl.onModelRemove(item => {
+                if (item === createdEvent) { // guard
+                    dayListCtrl = valueOf(createdEvent.days)
+
+                    // iterate over all event days and remove ref day to event
+                    dayListCtrl.getAll().forEach(value => {
+                        valueOf(value.event).removeModel(createdEvent);
+                    })
+                }
+            })
+
+            onValueChange(createdEvent.status)(stat => {
+                dayListCtrl.getAll().forEach(item => setValueOf(item.status)(stat))
+            })
+
             eventListCtrl.addModel(createdEvent);
+            return createdEvent;
         })
+    }
+
+    const clearEvents = () => {
+        const shallowCopy = [...eventListCtrl.getAll()];
+        shallowCopy.forEach(item => eventListCtrl.removeModel(item)); // save iteration
     }
 
     // todo make async
@@ -63,7 +92,7 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
     const initPlanningEvents = () => initEvents(calendarService.getEvents());
 
     /** @param {Day} day */
-    const createEvent = (day) =>  eventListCtrl.addModel(Event(day));
+    const createEvent = (day) => eventListCtrl.addModel(Event(day));
 
     /** @param {Day} day */
     const updateEvent = (day) => {  // day => current der from to, days between müssen aktualisiert werden.
@@ -141,10 +170,21 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
         calendar.forEach(month => month.splice(0, month.length)); // todo check if we still have references day - event
         calendar.splice(0, calendar.length);
         calendar = calendarService.getEmptyCalendar();
+        clearDaySelection();
     }
 
+    const changeDaySelection = (from, to) => {
+        for (let dayId = 0; dayId <= (12 * 31 - 1); dayId++) {
+            /** @type {Day} */
+            const day = findDayById(dayId);
+            const isBetween = valueOf(day.date).isBetween(from, to);
+            setValueOf(day.isSelected)(isBetween);
+        }
+    }
 
-    isCtrlInitialized = true;
+    const clearDaySelection = () => {
+        itCalendarDays(calendar)(day => setValueOf(day.isSelected)(false))
+    }
 
     /**
      * @typedef CalendarController
@@ -161,8 +201,12 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
         initHolidays: initHolidays,
         initPlanningEvents: initPlanningEvents,
         initApprovalEvents: initApprovalEvents,
+        initEvents: initEvents,
+        clearEvents: clearEvents,
         resetCalendar: resetCalendar,
         getCurrentAmountEventDays,
+        changeDaySelection,
+        clearDaySelection,
     });
 };
 

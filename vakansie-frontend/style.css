@@ -3,7 +3,7 @@
 @import "src/assets/css/main-nav.css";
 @import "src/assets/css/side-nav.css";
 @import "src/assets/css/main-content.css";
-@import "src/modules/person/instantUpdateProjector.css";
+@import "src/views/person/instantUpdateProjector.css";
 
 :root {
   /* Colors */

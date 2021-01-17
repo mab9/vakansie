@@ -18,7 +18,7 @@ const Observable = value => {
             if (listeners.length > 50) {
                 console.debug("log listener count suspicious: ",listeners.length);
             }
-            callback(value, value);
+            //callback(value, value);  // I don't like on change events that are executed right away
         },
         getValue: () => value,
         setValue: newValue => {

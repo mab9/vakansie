@@ -1,16 +1,16 @@
 import {Observable} from "../base/observable/observable.js";
-import {HomeController, HomeView} from "../modules/home/home.js";
-import {PersonController} from "../modules/person/person.controller.js"
-import {PersonView} from "../modules/person/person.view.js"
-import {PlanningController} from "../modules/planning/planning.controller.js";
-import {PlanningView} from "../modules/planning/planning.view.js";
-import {VerifyController} from "../modules/verify/verify.controller.js";
-import {VerifyView} from "../modules/verify/verify.view.js";
-import {GroupController} from "../modules/groups/group.controller.js";
-import {GroupView} from "../modules/groups/group.view.js";
+import {HomeController, HomeView} from "../views/home/home.js";
+import {PersonController} from "../views/person/person.controller.js"
+import {PersonView} from "../views/person/person.view.js"
+import {PlanningController} from "../views/planning/planning.controller.js";
+import {PlanningView} from "../views/planning/planning.view.js";
+import {ApprovalController} from "../views/approval/approval.controller.js";
+import {ApprovalView} from "../views/approval/approval.view.js";
+import {GroupController} from "../views/groups/group.controller.js";
+import {GroupView} from "../views/groups/group.view.js";
 import {AuthController} from "../auth/auth.prod.js";
 import {config} from "../../config.js";
-import {MeController, MeView} from "../modules/me/me.js";
+import {MeController, MeView} from "../views/me/me.js";
 
 // use of imports to avoid import removal on "ctrl alt o" shortcut
 const homeView = HomeView;
@@ -19,8 +19,8 @@ const personView = PersonView;
 const personController = PersonController;
 const planningView = PlanningView;
 const planningController = PlanningController;
-const verifyController = VerifyController;
-const verifyView = VerifyView;
+const approvalController = ApprovalController;
+const approvalView = ApprovalView;
 const groupController = GroupController;
 const groupView = GroupView;
 const meController = MeController;
@@ -74,9 +74,9 @@ const Menu = (rootElement) => {
                             },
                             {
                               "id":      "3" ,
-                              "title":   "menu.main.entry.verify",
-                              "ctrl" :   "VerifyController",
-                              "view" :   "VerifyView",
+                              "title":   "menu.main.entry.approval",
+                              "ctrl" :   "ApprovalController",
+                              "view" :   "ApprovalView",
                               "roles":   ["${roles.ADMIN}"],
                               "rights":  [],
                               "subs":    [],

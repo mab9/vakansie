@@ -3,8 +3,17 @@
  */
 import {Observable, ObservableList} from "../observable/observable.js";
 import {valueOf} from "../presentationModel/presentationModel.js";
+import {isFunction} from "../../assets/util/isfnc.js";
 
 export {ListController, SelectionController}
+
+const expressionMaker = fnc => callFnc => {
+    isFunction(fnc)
+        ? callFnc(fnc)
+        : callFnc(_ => fnc());
+}
+
+// valueOf(day.event).onModelRemove(_ => resetDay())
 
 /**
  * @typedef ListController
@@ -29,11 +38,11 @@ const ListController = () => {
         addModel: model => listModel.add(model),
         findById,
         removeModel: listModel.del,
-        onModelAdd: listModel.onAdd,
-        onModelRemove: listModel.onDel,
+        onModelAdd: fnc => expressionMaker(fnc)(listModel.onAdd),
+        onModelRemove: fnc => expressionMaker(fnc)(listModel.onDel),
         size: () => listModel.count(),
         getAll: () => innerList,
-        reset: () => innerList.splice(0, innerList.length),
+        reset: () => innerList.splice(0, innerList.length), // todo rework so that listeners get triggered -> getAll for each removeModel?
         pop: () => innerList[innerList.length - 1],
     }
 };
@@ -52,7 +61,7 @@ const SelectionController = noSelection => {
     return {
         setSelectedModel: selectedModelObs.setValue,
         getSelectedModel: selectedModelObs.getValue,
-        onModelSelected: selectedModelObs.onChange,
+        onModelSelected: fnc => expressionMaker(fnc)(selectedModelObs.onChange),
         clearSelection: () => selectedModelObs.setValue(noSelection),
     }
 };

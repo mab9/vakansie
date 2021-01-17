@@ -27,29 +27,33 @@ util.add("guard check", assert => {
     }
 
     try {
-        day.between("null", new Date());
+        day.isBetween("null", new Date());
         assert.true(0) // should never arrive to this code!
     } catch (exception) {
         assert.true(exception);
     }
 
     try {
-        day.between(new Date(), false);
+        day.isBetween(new Date(), false);
         assert.true(0) // should never arrive to this code!
     } catch (exception) {
         assert.true(exception);
     }
 });
 
-util.add("between", assert => {
+util.add("isBetween", assert => {
 
     const day = new Date(2019, 5, 6);
+    const tomorrow = new Date(day.getFullYear(), day.getMonth(), day.getDate() + 1);
     const yesterday = new Date(day.getFullYear(), day.getMonth(), day.getDate() - 1);
     const nextWeek = new Date(day.getFullYear(), day.getMonth(), day.getDate() + 7);
 
-    assert.true(day.between(yesterday, nextWeek));
-    assert.true(!yesterday.between(day, nextWeek));
-    assert.true(!nextWeek.between(day, yesterday));
+    assert.true(day.isBetween(day, day));
+    assert.true(day.isBetween(day, tomorrow));
+    assert.true(day.isBetween(yesterday, day));
+    assert.true(day.isBetween(yesterday, nextWeek));
+    assert.true(!yesterday.isBetween(day, nextWeek));
+    assert.true(!nextWeek.isBetween(day, yesterday));
 });
 
 util.add("count days between", assert => {
@@ -59,11 +63,11 @@ util.add("count days between", assert => {
     const nextWeek = new Date(day.getFullYear(), day.getMonth(), day.getDate() + 7);
     const lastYear = new Date(day.getFullYear() - 1, day.getMonth(), day.getDate());
 
-    assert.is(day.daysBetween(day), 0)
-    assert.is(day.daysBetween(yesterday), 1)
-    assert.is(day.daysBetween(nextWeek), 7)
-    assert.is(lastYear.daysBetween(day), 365)
-    assert.is(day.daysBetween(lastYear), 365)
+    assert.is(day.countDaysBetween(day), 0)
+    assert.is(day.countDaysBetween(yesterday), 1)
+    assert.is(day.countDaysBetween(nextWeek), 7)
+    assert.is(lastYear.countDaysBetween(day), 365)
+    assert.is(day.countDaysBetween(lastYear), 365)
 })
 
 util.run();

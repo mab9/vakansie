@@ -22,9 +22,15 @@
     "menu.main.entry.vakansie": "Vakansie",
     "menu.main.entry.persons": "Personen",
     "menu.main.entry.planning": "Planung",
-    "menu.main.entry.verify": "Freigaben",
+    "menu.main.entry.approval": "Freigaben",
     "menu.main.entry.group": "Gruppen",
     "planning.view.calendar.header.month": "Monat",
+
+
+    "view.approval.label.employeesLeft" : "Verbleibende Mitarbeiter zählen",
+    "view.approval.label.approve.btn" : "Freigeben",
+    "view.approval.label.fromDate" : "Von",
+    "view.approval.label.toDate" : "Bis",
 
     "month.jan":  "Januar",
     "month.feb":  "Februar",

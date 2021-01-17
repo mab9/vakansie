@@ -1,4 +1,12 @@
-import {EDITABLE, LABEL, setValueOf, VALID, VALUE, valueOf} from "../base/presentationModel/presentationModel.js";
+import {
+    EDITABLE,
+    LABEL,
+    setValueOf,
+    toggleClick,
+    VALID,
+    VALUE,
+    valueOf
+} from "../base/presentationModel/presentationModel.js";
 import {i18n} from "../service/translation.service.js";
 
 export {bindInput, formItemProjector, inputProjector, inputProjectorFixedValue, labelProjector}
@@ -13,17 +21,24 @@ const bindInput = (attribute, inputElement) => {
         inputElement.oninput = _ => attribute.setConvertedValue(inputElement.value);
     }
 
+    if (inputElement.type === "button") {
+        inputElement.onclick = () => toggleClick(attribute);
+    }
+
     attribute.getObs(VALUE).onChange(text => {
         inputElement.value = text
         inputElement.checked = text;
     });
+
+    // init at least
+    inputElement.value = valueOf(attribute);
+    inputElement.checked = valueOf(attribute);
 
     attribute.getObs(VALID, true).onChange(
         valid => valid
             ? inputElement.classList.remove("invalid")
             : inputElement.classList.add("invalid")
     );
-
 
     attribute.getObs(EDITABLE, true).onChange(isEditable => {
             if (isEditable) {
@@ -44,6 +59,7 @@ const inputProjector = attributeName => attributeDetails => {
 
     const attribute = attributeDetails.model[attributeName];
     const inputType = attributeDetails[attributeName][MODEL_DETAIL_INPUT_TYPE];
+    const label = attributeDetails[attributeName][MODEL_DETAIL_LABEL];
 
     if (inputType === "img") {
         const element = document.createElement("IMG");
@@ -54,6 +70,10 @@ const inputProjector = attributeName => attributeDetails => {
         element.type = inputType;
         element.size = 20;
         bindInput(attribute, element);
+
+        if (inputType === "button") {
+            i18n(label)(element);
+        }
         return element;
     }
 };

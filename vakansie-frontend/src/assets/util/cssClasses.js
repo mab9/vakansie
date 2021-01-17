@@ -1,9 +1,10 @@
-import {maybe} from "./maybe.js";
+export {saveClassRemoval, addClass, styleElement,
+addClassNoSelection, saveClassRemovalNoSelection}
 
-export {saveClassRemoval, addClass, styleElement}
+const noSelection = 'no-selection'
 
 const addClass = elements => clazz => {
-    if (!HTMLCollection.prototype.isPrototypeOf(elements) && !HTMLCollection.prototype.isPrototypeOf(elements)) {
+    if (!HTMLCollection.prototype.isPrototypeOf(elements) && !NodeList.prototype.isPrototypeOf(elements)) {
         elements.classList.add(clazz);
     } else {
         for (let i = 0; i < elements.length; i++) {
@@ -12,21 +13,26 @@ const addClass = elements => clazz => {
     }
 }
 
+const addClassNoSelection = element => addClass(element)(noSelection)
+const saveClassRemovalNoSelection = element => saveClassRemoval(element)(noSelection)
+
 const saveClassRemoval = elements => clazz => {
-    if (!HTMLCollection.prototype.isPrototypeOf(elements) && !HTMLCollection.prototype.isPrototypeOf(elements)) {
-        maybe(elements.classList.contains(clazz))(() => elements.classList.remove(clazz));
+    if (!HTMLCollection.prototype.isPrototypeOf(elements) && !NodeList.prototype.isPrototypeOf(elements)) {
+        if (elements.classList.contains(clazz)) {
+            elements.classList.remove(clazz);
+        }
     } else {
         for (let i = 0; i < elements.length; i++) {
-            maybe(elements[i].classList.contains(clazz))(() => elements[i].classList.remove(clazz));
+            if (elements[i].classList.contains(clazz)) {
+                elements[i].classList.remove(clazz);
+            }
         }
     }
 }
 
 
 const styleElement = add => clazz => element => {
-    if (add) {
-        addClass(element)(clazz)
-    } else {
-        saveClassRemoval(element)(clazz);
-    }
+    add
+        ? addClass(element)(clazz)
+        : saveClassRemoval(element)(clazz);
 }

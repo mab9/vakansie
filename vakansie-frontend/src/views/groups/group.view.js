@@ -212,9 +212,9 @@ const DetailView = (rootElement, bucketSelectionCtrl, groupCtrl) => {
 
     /** @type {ListController} */
     const groupListCtrl = groupCtrl.getListController();
-    groupListCtrl.onModelRemove(_ => render());
-    groupListCtrl.onModelAdd(_ => render());
-    bucketSelectionCtrl.onModelSelected(_ => render());
-    onValueChange(addUserElement)(_ => render());
+    groupListCtrl.onModelRemove(render);
+    groupListCtrl.onModelAdd(render);
+    bucketSelectionCtrl.onModelSelected(render);
+    onValueChange(addUserElement)(render);
 
 };
