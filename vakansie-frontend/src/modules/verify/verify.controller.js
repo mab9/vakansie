@@ -1,6 +1,7 @@
 import {Attribute} from "../../base/presentationModel/presentationModel.js";
 import "../../assets/util/dates.js"
 import {CalendarController} from "../../calendar/calendar.controller.js";
+import {GroupController} from "../groups/group.controller.js";
 
 export {VerifyController}
 
@@ -13,22 +14,25 @@ const VerifyController = (isCtrlInitialized = false) => {
     const calendarCtrl = CalendarController();
     const calendar = calendarCtrl.getCalendarData();
 
+    const groupCtrl = GroupController();
+    const groupListCtrl = groupCtrl.getListController();
+    const selectedBucket = groupCtrl.getSelectedBucket();
+
+
     const isMouseDown = Attribute(false);
 
     /*
-        process events:
-        1. load
-        2. create all calendar days
-        3. go throug each event and link to a day
-        4. link day to an event
+        todos:
+        todo vacation eingabe stoppen, befor die freigabe erfolgt? iergend eine strategie erarbeiten.
+        cool wäre -> instant update über alle user und abstellbar falls nötig, weil zu vieles ändert..
 
-        process rules
-        1
+        load groups, rules, users
+        process calendar against the group, user and rule selection
+
+        provide master view with approval buttons.
+        approve events according selections
+
      */
-
-    // todo vacation eingabe stoppen, befor die freigabe erfolgt? iergend eine strategie erarbeiten.
-    // cool wäre -> instant update über alle user und abstellbar falls nötig, weil zu vieles ändert..
-
 
     calendarCtrl.initHolidays();
     calendarCtrl.initApprovalEvents();
@@ -36,6 +40,7 @@ const VerifyController = (isCtrlInitialized = false) => {
 
     return Object.freeze({
         getCalendarData: () => calendar,
+        getGroupCtrl: () => groupCtrl,
     });
 };
 
