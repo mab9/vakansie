@@ -4,22 +4,24 @@ import "../assets/util/times.js"
 
 export {calendarService, months}
 
+const yyyy = new Date().getFullYear();
+
+// those are the holidays from 2020
 const suisseHolidays = [
-    {day: new Date(2020, 0, 1), label: "Neujahr"},
-    {day: new Date(2020, 0, 2), label: "Berchtoldstag"},
-    {day: new Date(2020, 3, 10), label: "Karfreitag"},
-    {day: new Date(2020, 3, 13), label: "Ostermontag"},
-    {day: new Date(2020, 4, 21), label: "Auffahrt"},
-    {day: new Date(2020, 5, 1), label: "Pfingstmontag"},
-    {day: new Date(2020, 7, 1), label: "Nationalfeiertag Schweiz"},
-    {day: new Date(2020, 11, 25), label: "Weihnachten"},
-    {day: new Date(2020, 11, 26), label: "Stephanstag"},
+  {day: new Date(yyyy, 0, 1), label: "Neujahr"},
+  {day: new Date(yyyy, 0, 2), label: "Berchtoldstag"},
+  {day: new Date(yyyy, 3, 10), label: "Karfreitag"},
+  {day: new Date(yyyy, 3, 13), label: "Ostermontag"},
+  {day: new Date(yyyy, 4, 21), label: "Auffahrt"},
+  {day: new Date(yyyy, 5, 1), label: "Pfingstmontag"},
+  {day: new Date(yyyy, 7, 1), label: "Nationalfeiertag Schweiz"},
+  {day: new Date(yyyy, 11, 25), label: "Weihnachten"},
+  {day: new Date(yyyy, 11, 26), label: "Stephanstag"},
 ]
 
 const months = ["month.jan", "month.feb", "month.mar", "month.apr", "month.mai", "month.jul",
     "month.jun", "month.aug", "month.sep", "month.oct", "month.nov", "month.dez"];
 
-const yyyy = new Date().getFullYear();
 
 const events = [
     {id: 1, start: new Date(yyyy, 2, 16), to: new Date(yyyy, 2, 20), approved: true, amount: undefined, days : undefined},
@@ -28,6 +30,27 @@ const events = [
     {id: 3, start: new Date(yyyy, 6, 16), to: new Date(yyyy, 7, 14), approved: false, amount: undefined, days : undefined},
     {id: 4, start: new Date(yyyy, 11, 21), to: new Date(yyyy, 11, 31), approved: true, amount: undefined, days : undefined},
 ]
+
+const loadEvents = () => {
+  return [
+    {
+        userId: 3,
+        email: "mab9.test@gmail.com",
+        vacations: [
+            {id: 1,start: new Date(yyyy, 6, 1),to: new Date(yyyy, 7, 1),approved: false,amount: undefined,days: undefined},
+            {id: 2,start: new Date(yyyy, 8, 1),to: new Date(yyyy, 8, 15),approved: false,amount: undefined,days: undefined},
+            {id: 3,start: new Date(yyyy, 9, 1),to: new Date(yyyy, 9, 6),approved: false,amount: undefined,days: undefined}]
+    },
+    {
+      userId: 4,
+      email: "gibbs@gmail.com",
+      vacations: [
+            {id: 30,start: new Date(yyyy, 6, 15),to: new Date(yyyy, 7, 15),approved: false,amount: undefined,days: undefined}, // overlapping event
+            {id: 31,start: new Date(yyyy, 8, 16), to: new Date(yyyy, 9, 1),approved: false,amount: undefined,days: undefined},// adjacent event
+            {id: 32,start: new Date(yyyy, 9, 1),to: new Date(yyyy, 9, 6),approved: false,amount: undefined,days: undefined}]// non overlapping event
+    }]
+}
+
 
 const getEmptyCalendar = () => {
     let data = []
@@ -57,12 +80,12 @@ const getEmptyCalendar = () => {
 
 const calendarService = (() => { // one time creation, singleton
 
-    const getSuisseHolidays = () => Attribute(suisseHolidays);
-    const getEvents = () => Attribute(events);
+  const getSuisseHolidays = () => Attribute(suisseHolidays);
+  const getEvents = () => Attribute(events);
 
-    return {
-        getSuisseHolidays,
-        getEmptyCalendar,
-        getEvents,
-    }
+  return {
+    getSuisseHolidays,
+    getEmptyCalendar,
+    getEvents,
+  }
 })();
