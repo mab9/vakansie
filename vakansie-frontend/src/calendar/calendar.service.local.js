@@ -31,12 +31,12 @@ const events = [
     {id: 4, start: new Date(yyyy, 11, 21), to: new Date(yyyy, 11, 31), approved: true, amount: undefined, days : undefined},
 ]
 
-const loadEvents = () => {
+const loadApprovalData = () => {
   return [
     {
         userId: 3,
         email: "mab9.test@gmail.com",
-        vacations: [
+        events: [
             {id: 1,start: new Date(yyyy, 6, 1),to: new Date(yyyy, 7, 1),approved: false,amount: undefined,days: undefined},
             {id: 2,start: new Date(yyyy, 8, 1),to: new Date(yyyy, 8, 15),approved: false,amount: undefined,days: undefined},
             {id: 3,start: new Date(yyyy, 9, 1),to: new Date(yyyy, 9, 6),approved: false,amount: undefined,days: undefined}]
@@ -44,7 +44,7 @@ const loadEvents = () => {
     {
       userId: 4,
       email: "gibbs@gmail.com",
-      vacations: [
+      events: [
             {id: 30,start: new Date(yyyy, 6, 15),to: new Date(yyyy, 7, 15),approved: false,amount: undefined,days: undefined}, // overlapping event
             {id: 31,start: new Date(yyyy, 8, 16), to: new Date(yyyy, 9, 1),approved: false,amount: undefined,days: undefined},// adjacent event
             {id: 32,start: new Date(yyyy, 9, 1),to: new Date(yyyy, 9, 6),approved: false,amount: undefined,days: undefined}]// non overlapping event
@@ -59,7 +59,7 @@ const getEmptyCalendar = () => {
     months.forEach(month => {
         let days = []
 
-        const yyyy = new Date().getFullYear();
+        //const yyyy = new Date().getFullYear(); already declared in the upper scope
         const mm = months.indexOf(month);
 
         (31).times((idx) => {
@@ -82,10 +82,12 @@ const calendarService = (() => { // one time creation, singleton
 
   const getSuisseHolidays = () => Attribute(suisseHolidays);
   const getEvents = () => Attribute(events);
+  const getApprovalData = () => Attribute(loadApprovalData());
 
   return {
     getSuisseHolidays,
     getEmptyCalendar,
     getEvents,
+    getApprovalData,
   }
 })();

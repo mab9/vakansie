@@ -1,5 +1,5 @@
 import {Day} from "./day.model.js";
-import {setLabelOf, setValueOf, valueOf} from "../base/presentationModel/presentationModel.js";
+import {Attribute, setLabelOf, setValueOf, valueOf} from "../base/presentationModel/presentationModel.js";
 import "../assets/util/dates.js"
 import {ListController} from "../base/controller/controller.js";
 import {Event} from "./event.model.js";
@@ -21,10 +21,40 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
     const initHolidays = (holidays = calendarService.getSuisseHolidays()) => {
         calendar.forEach(month => {
             month.forEach(day => {
-                const holiday = valueOf(holidays).find(holiday => holiday.day.sameDay(valueOf(day.date)));
+                const holiday = valueOf(holidays).find(item => item.day.sameDay(valueOf(day.date)));
                 setValueOf(day.holiday)(!!holiday)
                 setLabelOf(day.holiday)(holiday ? holiday.label : "")
             })
+        })
+    }
+
+    // todo make async
+    const initApprovalEvents = () => {
+        const approvalData = calendarService.getApprovalData();
+        const events = Attribute(valueOf(approvalData).flatMap(item => item.events)); // todo replace attribute creation
+
+        valueOf(events).forEach(event => {
+            // Provide reference from event to day
+            let day = findDayByDate(event.start)
+            const createdEvent = Event(day);
+            setValueOf(createdEvent.approved)(event.approved)
+            const dayListCtrl = valueOf(createdEvent.days);
+
+            // start day was already added at event creation
+            while (!valueOf(day.date).sameDay(event.to)) {
+                day = findDayById(valueOf(day.id) + 1)
+                dayListCtrl.addModel(day)
+                setValueOf(createdEvent.to)(day)
+            }
+
+            // Provide reference from day to event
+            dayListCtrl.getAll().forEach(day => {
+                setValueOf(day.isSelected)(false);  //
+                setValueOf(day.event)(createdEvent);    // todo make array / listcontroller
+                // todo provide counter, increment for each event
+            })
+
+            eventListCtrl.addModel(createdEvent);
         })
     }
 
@@ -154,6 +184,7 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
         getCreatedEvent: () => eventListCtrl.pop(),
         initHolidays: initHolidays,
         initEvents: initEvents,
+        initApprovalEvents: initApprovalEvents,
         resetCalendar: resetCalendar,
         getCurrentAmountEventDays,
     });
