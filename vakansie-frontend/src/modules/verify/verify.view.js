@@ -56,9 +56,26 @@ const VerifyView = (rootElement, verifyCtrl) => {
  */
 const MasterView = (rootElement, verifyCtrl) => {
 
+    const render = () => {
+        const containerElement = dom(`
+            <div id="${masterClassName}-details">
+                <div id="${masterClassName}-details-calendar">
+                    <div id="calendar" class="verify-detail-grid-container"></div> <!-- todo replace code for verify-detail-grid container left over -->
+                </div>
+                <div id="${masterClassName}-details-approvals">
+                    <p>approve from to date</p>
+                    <p>exclude user from approval</p>
+                    <p>approve...</p>
+                </div>
+            </div>
+        `)
 
-
-    const render = () => calendarApprovalProjector(rootElement, verifyCtrl);
+        //const calendarElement = containerElement.querySelector(`#calendar`)
+        const detailsCalendar = containerElement.querySelector(`#${masterClassName}-details-calendar`)
+        const detailsApproval = containerElement.querySelector(`#${masterClassName}-details-approvals`)
+        calendarApprovalProjector(detailsCalendar.children[0], verifyCtrl);
+        appendFirst(rootElement)(containerElement)
+    }
     render();
 
     // todo impl :
@@ -126,6 +143,30 @@ const DetailView = (rootElement, verifyCtrl) => {
 
     appendReplacing(rootElement)(groupContainerElement);
 };
+
+
+const masterPageCss = `
+    * {
+      box-sizing: border-box;
+    }
+
+    #${masterClassName}-details {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+    }
+
+    #${masterClassName}-details-calendar {
+        width: 60%;
+    }
+
+
+    #${masterClassName}-details-approvals {
+        width: 37%;
+        margin-left: 3%;
+    }
+
+`;
 
 
 const detailPageCss = `
@@ -196,6 +237,7 @@ const detailPageCss = `
     }
 `;
 
+appendsStyle(masterPageCss)
 appendsStyle(detailPageCss)
 
 
