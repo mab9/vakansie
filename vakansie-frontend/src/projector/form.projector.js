@@ -70,11 +70,11 @@ const inputProjectorFixedValue = value => attributeName => attributeDetails => {
 
     attribute.getObs(EDITABLE, true).onChange(isEditable => {
             if (isEditable) {
-                inputElement.removeAttribute("readonly");
-                inputElement.disabled = false;
+                element.removeAttribute("readonly");
+                element.disabled = false;
             } else {
-                inputElement.setAttribute("readonly", true)
-                inputElement.disabled = true;
+                element.setAttribute("readonly", true)
+                element.disabled = true;
             }
         }
     )

@@ -16,13 +16,14 @@ const VerifyController = (isCtrlInitialized = false) => {
     const isMouseDown = Attribute(false);
 
     /*
-        provess events:
+        process events:
         1. load
         2. create all calendar days
         3. go throug each event and link to a day
         4. link day to an event
 
         process rules
+        1
      */
 
     // todo vacation eingabe stoppen, befor die freigabe erfolgt? iergend eine strategie erarbeiten.
