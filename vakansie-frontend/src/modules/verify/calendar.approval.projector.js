@@ -56,7 +56,7 @@ const dayProjector = (rootElement, day, verifyCtrl) => {
 
     element.dataset.dayId = valueOf(day.id);
 
-    styleElement(day.isNaturalDay() && valueOf(day.event) && valueOf(valueOf(day.event).approved))("cal-day-approved")(element)
+    styleElement(day.isNaturalDay() && valueOf(day.event).size() > 0 && valueOf(day.event).getAll()[0].approved)("cal-day-approved")(element)
     styleElement(day.isWeekendDay())("cal-weekend-day")(element)
     styleElement(!day.isInMonth())("cal-not-in-month")(element)
 
@@ -64,6 +64,17 @@ const dayProjector = (rootElement, day, verifyCtrl) => {
         addClass(element)("cal-holiday");
         setTooltip(element)(labelOf(day.holiday));
     })
+
+    const resetCounter = () => {
+        if (day.isNaturalDay() && valueOf(day.event).size() > 0) {
+            element.innerHTML = valueOf(day.event).size();
+        }
+    }
+
+    valueOf(day.event).onModelAdd(_ => resetCounter())
+    valueOf(day.event).onModelRemove(_ => resetCounter())
+    resetCounter();
+
     rootElement.appendChild(html)
 }
 

@@ -46,8 +46,8 @@ const loadApprovalData = () => {
       email: "gibbs@gmail.com",
       events: [
             {id: 30,start: new Date(yyyy, 6, 15),to: new Date(yyyy, 7, 15),approved: false,amount: undefined,days: undefined}, // overlapping event
-            {id: 31,start: new Date(yyyy, 8, 16), to: new Date(yyyy, 9, 1),approved: false,amount: undefined,days: undefined},// adjacent event
-            {id: 32,start: new Date(yyyy, 9, 1),to: new Date(yyyy, 9, 6),approved: false,amount: undefined,days: undefined}]// non overlapping event
+            {id: 31,start: new Date(yyyy, 8, 16), to: new Date(yyyy, 9, 1),approved: false,amount: undefined,days: undefined}, // adjacent event
+            {id: 32,start: new Date(yyyy, 11, 1),to: new Date(yyyy, 11, 6),approved: false,amount: undefined,days: undefined}]// non overlapping event
     }]
 }
 
