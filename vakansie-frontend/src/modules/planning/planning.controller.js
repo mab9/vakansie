@@ -103,7 +103,7 @@ const PlanningController = (isCtrlInitialized = false) => {
 
 
     calendarCtrl.initHolidays();
-    calendarCtrl.initEvents();
+    calendarCtrl.initPlanningEvents();
     updateVacationContigent();
 
     isCtrlInitialized = true;

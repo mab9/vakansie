@@ -27,67 +27,43 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
         })
     }
 
+    const initEvents = events => {
+        valueOf(events).forEach(event => {
+            // Provide reference from event to day
+            let day = findDayByDate(event.start)
+            const createdEvent = Event(day);
+            setValueOf(createdEvent.approved)(event.approved)
+            const dayListCtrl = valueOf(createdEvent.days);
+
+            // start day was already added at event creation
+            while (!valueOf(day.date).sameDay(event.to)) {
+                day = findDayById(valueOf(day.id) + 1)
+                dayListCtrl.addModel(day)
+                setValueOf(createdEvent.to)(day)
+            }
+
+            // Provide reference from day to event
+            dayListCtrl.getAll().forEach(item => {
+                setValueOf(item.isSelected)(false);
+                valueOf(item.event).addModel(createdEvent);
+            })
+
+            eventListCtrl.addModel(createdEvent);
+        })
+    }
+
     // todo make async
     const initApprovalEvents = () => {
         const approvalData = calendarService.getApprovalData();
         const events = Attribute(valueOf(approvalData).flatMap(item => item.events)); // todo replace attribute creation
-
-        valueOf(events).forEach(event => {
-            // Provide reference from event to day
-            let day = findDayByDate(event.start)
-            const createdEvent = Event(day);
-            setValueOf(createdEvent.approved)(event.approved)
-            const dayListCtrl = valueOf(createdEvent.days);
-
-            // start day was already added at event creation
-            while (!valueOf(day.date).sameDay(event.to)) {
-                day = findDayById(valueOf(day.id) + 1)
-                dayListCtrl.addModel(day)
-                setValueOf(createdEvent.to)(day)
-            }
-
-            // Provide reference from day to event
-            dayListCtrl.getAll().forEach(item => {
-                setValueOf(item.isSelected)(false);
-                valueOf(item.event).addModel(createdEvent);
-            })
-
-            eventListCtrl.addModel(createdEvent);
-        })
+        initEvents(events);
     }
 
     // todo make async
-    const initEvents = () => {
-        const events = calendarService.getEvents();
-        valueOf(events).forEach(event => {
-            // Provide reference from event to day
-            let day = findDayByDate(event.start)
-            const createdEvent = Event(day);
-            setValueOf(createdEvent.approved)(event.approved)
-            const dayListCtrl = valueOf(createdEvent.days);
-
-            // start day was already added at event creation
-            while (!valueOf(day.date).sameDay(event.to)) {
-                day = findDayById(valueOf(day.id) + 1)
-                dayListCtrl.addModel(day)
-                setValueOf(createdEvent.to)(day)
-            }
-
-            // Provide reference from day to event
-            dayListCtrl.getAll().forEach(item => {
-                setValueOf(item.isSelected)(false);
-                valueOf(item.event).addModel(createdEvent);
-            })
-
-            eventListCtrl.addModel(createdEvent);
-        })
-    }
+    const initPlanningEvents = () => initEvents(calendarService.getEvents());
 
     /** @param {Day} day */
-    const createEvent = (day) => {
-        const event = Event(day);
-        eventListCtrl.addModel(event);
-    }
+    const createEvent = (day) =>  eventListCtrl.addModel(Event(day));
 
     /** @param {Day} day */
     const updateEvent = (day) => {  // day => current der from to, days between müssen aktualisiert werden.
@@ -183,7 +159,7 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
         getEventListCtrl: () => eventListCtrl,
         getCreatedEvent: () => eventListCtrl.pop(),
         initHolidays: initHolidays,
-        initEvents: initEvents,
+        initPlanningEvents: initPlanningEvents,
         initApprovalEvents: initApprovalEvents,
         resetCalendar: resetCalendar,
         getCurrentAmountEventDays,
