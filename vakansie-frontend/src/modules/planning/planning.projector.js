@@ -2,7 +2,6 @@ import {appendFirst} from "../../assets/util/appends.js";
 import {dom} from "../../assets/util/dom.js";
 import "../../assets/util/times.js"
 import {months} from "../../calendar/calendar.service.local.js";
-import {Day} from "../../calendar/day.model.js";
 import {
     labelOf,
     onHoverChange,
@@ -59,10 +58,10 @@ const dayProjector = (rootElement, day, planningCtrl) => {
 
     element.dataset.dayId = valueOf(day.id);
 
-    setMouseEventListener(element, planningCtrl);
-    setDayEventListener(element, planningCtrl);
+    setMouseEventListener(element, planningCtrl);  // todo check why don't pass day
+    setDayEventListener(element, planningCtrl); // todo check why don't pass day
 
-    styleElement(day.isNaturalDay() && valueOf(day.event) && valueOf(valueOf(day.event).approved))("cal-day-approved")(element)
+    styleElement(day.isNaturalDay() && valueOf(day.event).size() > 0 && valueOf(day.event).getAll()[0].approved)("cal-day-approved")(element)
     styleElement(day.isWeekendDay())("cal-weekend-day")(element)
     styleElement(!day.isInMonth())("cal-not-in-month")(element)
 
@@ -74,7 +73,10 @@ const dayProjector = (rootElement, day, planningCtrl) => {
 }
 
 const styleHoverOnEvent = isHovered => event => {
-    const dayListCtrl = valueOf(event.days)
+    if (!event.size()) return; // guard
+
+    const eventOne = event.getAll()[0]; // we only provide planning data for one user
+    const dayListCtrl = valueOf(eventOne.days)
     const days = dayListCtrl.getAll();
     days.forEach(day => setHoverOf(day.event)(isHovered))
 }
@@ -87,19 +89,19 @@ const setMouseEventListener = (element, planningCtrl) => {
 
     const isMouseDown = planningCtrl.getMouseDown();
 
-    const getDayByElement = element => planningCtrl.getDayById(element.dataset.dayId);
+    const getDayByElement = el3ment => planningCtrl.getDayById(el3ment.dataset.dayId);
     const day = getDayByElement(element);
 
     element.onmouseleave = _ => {
         if (!valueOf(isMouseDown)) {
-            maybe(valueOf(day.event))(() => styleHoverOnEvent(false)(valueOf(day.event)))
+            maybe(valueOf(day.event).size() > 0)(() => styleHoverOnEvent(false)(valueOf(day.event)))
             maybe(valueOf(day.holiday))(() => setHoverOf(day.holiday)(false))
         }
     }
 
     element.onmouseover = _ => { // is triggered before on mouse down
         if (!valueOf(isMouseDown)) {
-            maybe(valueOf(day.event))(() => styleHoverOnEvent(true)(valueOf(day.event)))
+            maybe(valueOf(day.event).size() > 0)(() => styleHoverOnEvent(true)(valueOf(day.event)))
             maybe(valueOf(day.holiday))(() => setHoverOf(day.holiday)(true))
             return // guard to prevent further steps when no click on day
         }
@@ -147,13 +149,18 @@ const setMouseEventListener = (element, planningCtrl) => {
  */
 const setDayEventListener = (element, planningCtrl) => {
 
-    const getDayByElement = element => planningCtrl.getDayById(element.dataset.dayId);
+    const getDayByElement = el3ment => planningCtrl.getDayById(el3ment.dataset.dayId);
     const day = getDayByElement(element);
 
     onHoverChange(day.holiday)(isHovered => styleElement(isHovered)("cal-day-hovered")(element));
     onHoverChange(day.event)(isHovered => styleElement(isHovered && day.isNaturalDay())("cal-day-hovered")(element));
     onValueChange(day.isSelected)(isSelected => styleElement(isSelected && day.isBookable())("cal-day-dragged")(element));
-    onValueChange(day.event)(event => styleElement(event && day.isNaturalDay())("cal-day-requested")(element));
+    valueOf(day.event).onModelAdd( _ => {
+        styleElement(valueOf(day.event).size() > 0 && day.isNaturalDay())("cal-day-requested")(element)
+    })
+    valueOf(day.event).onModelRemove( _ => {
+        styleElement(valueOf(day.event).size() > 0 && day.isNaturalDay())("cal-day-requested")(element)
+    })
 }
 
 

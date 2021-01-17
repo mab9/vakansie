@@ -1,4 +1,3 @@
-import {Day} from "./day.model.js";
 import {Attribute, setLabelOf, setValueOf, valueOf} from "../base/presentationModel/presentationModel.js";
 import "../assets/util/dates.js"
 import {ListController} from "../base/controller/controller.js";
@@ -48,10 +47,9 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
             }
 
             // Provide reference from day to event
-            dayListCtrl.getAll().forEach(day => {
-                setValueOf(day.isSelected)(false);  //
-                setValueOf(day.event)(createdEvent);    // todo make array / listcontroller
-                // todo provide counter, increment for each event
+            dayListCtrl.getAll().forEach(item => {
+                setValueOf(item.isSelected)(false);
+                valueOf(item.event).addModel(createdEvent);
             })
 
             eventListCtrl.addModel(createdEvent);
@@ -62,6 +60,7 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
     const initEvents = () => {
         const events = calendarService.getEvents();
         valueOf(events).forEach(event => {
+            // Provide reference from event to day
             let day = findDayByDate(event.start)
             const createdEvent = Event(day);
             setValueOf(createdEvent.approved)(event.approved)
@@ -74,9 +73,10 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
                 setValueOf(createdEvent.to)(day)
             }
 
-            dayListCtrl.getAll().forEach(day => {
-                setValueOf(day.isSelected)(false);
-                setValueOf(day.event)(createdEvent);
+            // Provide reference from day to event
+            dayListCtrl.getAll().forEach(item => {
+                setValueOf(item.isSelected)(false);
+                valueOf(item.event).addModel(createdEvent);
             })
 
             eventListCtrl.addModel(createdEvent);
@@ -115,7 +115,7 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
         const days = dayListCtrl.getAll();
         days.forEach(day => {
             setValueOf(day.isSelected)(false);
-            setValueOf(day.event)(event);
+            valueOf(day.event).addModel(event);
         })
     };
 
@@ -123,7 +123,7 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
         const dayListCtrl = valueOf(event.days)
         const days = dayListCtrl.getAll();
         days.forEach(day => {
-            setValueOf(day.event)(false)
+            valueOf(day.event).removeModel(event);
             const element = document.querySelector(`[data-day-id="` + valueOf(day.id) + `"]`);
             styleElement(false)("cal-day-hovered")(element)
             styleElement(false)("cal-day-dragged")(element)
