@@ -1,4 +1,3 @@
-import {appendFirst} from "../../assets/util/appends.js";
 import {dom} from "../../assets/util/dom.js";
 import "../../assets/util/times.js"
 import {Day} from "../../calendar/day.model.js";
@@ -10,7 +9,7 @@ import {months} from "../../calendar/calendar.service.local.js";
 
 export {calendarApprovalProjector, pageCss}
 
-const detailClassName = 'verify-detail'; // should be unique for this projector
+    const detailClassName = 'verify-detail'; // should be unique for this projector
 
 /**
  * @param  rootElement {HTMLElement}
@@ -18,11 +17,7 @@ const detailClassName = 'verify-detail'; // should be unique for this projector
  */
 const calendarApprovalProjector = (rootElement, verifyCtrl) => {
 
-    const containerElement = dom(`
-        <div id="calendar" class="${detailClassName}-grid-container"></div>
-    `)
-
-    const [calendarElement] = containerElement.children;
+    const calendarElement = rootElement;
 
     const addHeader = () => {
         calendarElement.appendChild(dom(`<div class="cal-header">Month</div>`));
@@ -41,7 +36,7 @@ const calendarApprovalProjector = (rootElement, verifyCtrl) => {
     addHeader();
     displayYear(); // default
 
-    appendFirst(rootElement)(containerElement)
+    //appendFirst(rootElement)(containerElement)
 };
 
 /**
