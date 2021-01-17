@@ -1,7 +1,7 @@
 import {appendReplacing} from "../../assets/util/appends.js";
 import {dom} from "../../assets/util/dom.js";
 import "../../assets/util/times.js"
-import {HOVER, onValueChange, valueOf} from "../../base/presentationModel/presentationModel.js";
+import {forEach, HOVER, onValueChange, valueOf} from "../../base/presentationModel/presentationModel.js";
 import "../../assets/util/dates.js"
 import {styleElement} from "../../assets/util/cssClasses.js";
 import {creatRowEntries} from "../../service/table.service.js";
@@ -51,7 +51,7 @@ const allowanceProjector = (rootElement, planningCtrl) => {
     const table = planning.querySelector("table")
 
     const updateDaysBetween = days => event => {
-        days.textContent = valueOf(valueOf(event.from).date).daysBetween(valueOf(valueOf(event.to).date)) + 1;
+        days.textContent = valueOf(valueOf(event.from).date).countDaysBetween(valueOf(valueOf(event.to).date)) + 1;
     }
 
     const deleteRow = event =>{
@@ -63,20 +63,23 @@ const allowanceProjector = (rootElement, planningCtrl) => {
         let [start, end, days, remove, status, row] = creatRowEntries(table);
 
         row.dataset.eventId = valueOf(event.id);
-        start.textContent = valueOf(valueOf(event.from).date).getFormated();
-        end.textContent = valueOf(valueOf(event.to).date).getFormated();
+        start.textContent = valueOf(valueOf(event.from).date).getFormatted();
+        end.textContent = valueOf(valueOf(event.to).date).getFormatted();
 
         onValueChange(event.from)(day => {
-            start.textContent = valueOf(day.date).getFormated();
+            start.textContent = valueOf(day.date).getFormatted();
             updateDaysBetween(days)(event)
         });
 
         onValueChange(event.to)(day => {
-            end.textContent = valueOf(day.date).getFormated();
+            end.textContent = valueOf(day.date).getFormatted();
             updateDaysBetween(days)(event)
         });
 
-        onValueChange(event.approved)(value => styleElement(value)("status-approved")(status.parentElement));
+        updateDaysBetween(days)(event) // init
+
+        onValueChange(event.status)(value => styleElement(value)("status-" + valueOf(event.status).toLowerCase())(status.parentElement));
+        styleElement(valueOf(event.status))("status-" + valueOf(event.status).toLowerCase())(status.parentElement);
 
         remove.appendChild(dom('<input type="button" value="X"></div>'))
         const removeBtn = remove.querySelector("input");
@@ -85,17 +88,14 @@ const allowanceProjector = (rootElement, planningCtrl) => {
             deleteRow(event);
         }
 
-        const dayListCtrl = valueOf(event.days)
-        const eventDays = dayListCtrl.getAll();
-
-        eventDays.forEach(day => {
+        forEach(event.days)(day => {
             day.event.getObs(HOVER).onChange(isHovered => {
                 styleElement(isHovered)("row-hovering")(row)
             });
         })
 
         const styleRowOnHover = isHovered => {
-            eventDays.forEach(day => {
+            forEach(event.days)(day => {
                 day.event.getObs(HOVER).setValue(isHovered);
             })
         }
@@ -141,15 +141,16 @@ const pageCss = `
         border: 5px solid orange !important;
     }
 
-    .status-approved {
-        background-color: rgb(225,255,0,1) !important;
-    }
-
     .status-requested {
-        background-color: rgb(192,209,244,0.8) !important;
+        background-color: rgb(255,128,0,0.8) !important;
     }
-
-    .status-denied {
+    .status-approved {
+        background-color: rgb(153,255,89,1) !important;
+    }
+    .status-rejected {
         background-color: rgb(225,0,0,1) !important;
+    }
+    .status-withdrawn {
+        background-color: rgb(192,209,244,1) !important;
     }
 `;

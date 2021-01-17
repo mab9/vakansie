@@ -13,16 +13,15 @@ const sameDay = function (date) {
     return left.getFullYear() === date.getFullYear() && left.getMonth() === date.getMonth() && left.getDate() === date.getDate();
 };
 
-// todo rename to isBetween
-const between = function (from, to) {
+const isBetween = function (from, to) {
     guardInstanceOfDate(from);
     guardInstanceOfDate(to);
 
     const between = this;
-    return between >= from && between <= to;
+    return between.getFormatted() >= from.getFormatted() && between.getFormatted() <= to.getFormatted();
 };
 
-const daysBetween = function (right) {
+const countDaysBetween = function (right) {
     guardInstanceOfDate(right);
     const left = this;
 
@@ -38,7 +37,7 @@ const daysBetween = function (right) {
     return Math.abs((start - end) / oneDay);
 }
 
-const getFormated = function () {
+const getFormatted = function () {
     const left = this;
     let year = '' + left.getFullYear();
     let month = '' + (left.getMonth() + 1);
@@ -55,6 +54,6 @@ const getFormated = function () {
 }
 
 Date.prototype.sameDay = sameDay;
-Date.prototype.between = between;
-Date.prototype.getFormated = getFormated;
-Date.prototype.daysBetween = daysBetween;
+Date.prototype.isBetween = isBetween;
+Date.prototype.getFormatted = getFormatted;
+Date.prototype.countDaysBetween = countDaysBetween;

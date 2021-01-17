@@ -22,9 +22,14 @@
     "menu.main.entry.vakansie": "Vakansie",
     "menu.main.entry.persons": "Persons",
     "menu.main.entry.planning": "Planning",
-    "menu.main.entry.verify": "Approvals",
+    "menu.main.entry.approval": "Approvals",
     "menu.main.entry.group": "Groups",
     "planning.view.calendar.header.month": "Month",
+
+    "view.approval.label.employeesLeft" : "Count employees left",
+    "view.approval.label.approve.btn" : "Approve",
+    "view.approval.label.fromDate" : "From",
+    "view.approval.label.toDate" : "To",
 
     "month.jan":  "January",
     "month.feb":  "February",

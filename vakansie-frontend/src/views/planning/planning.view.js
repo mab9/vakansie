@@ -1,16 +1,18 @@
-import {appendFirst, appendsStyle} from "../../assets/util/appends.js";
+import {appendFirst, appendReplacing, appendsStyle} from "../../assets/util/appends.js";
 import {dom} from "../../assets/util/dom.js";
-import {pageCss as pageCssPlanning, planningProjector} from "./planning.projector.js";
 import {allowanceProjector, pageCss as pageCssAllowance} from "./allowance.projector.js";
 import {holidayProjector, pageCss as pageCssHoliday} from "./holiday.projector.js";
 import {i18n} from "../../service/translation.service.js";
+import {calendarProjector} from "../../calendar/calendar.projector.js";
 
 export {PlanningView};
 
 // page-style change, only executed once
-appendsStyle(pageCssPlanning);
 appendsStyle(pageCssAllowance);
 appendsStyle(pageCssHoliday);
+
+const masterClassName = "planning-main-view"
+const detailClassName = "planning-detail-view"
 
 
 /**
@@ -31,12 +33,7 @@ const PlanningView = (rootElement, planningCtrl) => {
             </div>
 
             <div class="cards">
-                <h1 data-i18n="view.planning.title.details"></h1>
                 <div class="holder" id="detailContainer"></div>
-            </div>
-            <div class="cards">
-                <h1 data-i18n="view.planning.title.holidays"></h1>
-                <div class="holder" id="holidaysContainer"></div>
             </div>
         `)
 
@@ -45,11 +42,9 @@ const PlanningView = (rootElement, planningCtrl) => {
 
         const masterContainer = planning.querySelector("#masterContainer");
         const detailContainer = planning.querySelector("#detailContainer");
-        const holidaysContainer = planning.querySelector("#holidaysContainer");
 
         MasterView(masterContainer, planningCtrl);
         DetailView(detailContainer, planningCtrl);
-        HolidayView(holidaysContainer, planningCtrl);
 
         rootElement.textContent = '';
         appendFirst(rootElement)(planning)
@@ -64,7 +59,20 @@ const PlanningView = (rootElement, planningCtrl) => {
  * @constructor
  */
 const MasterView = (rootElement, planningCtrl) => {
-    const render = () => planningProjector(rootElement, planningCtrl);
+    const render = () => {
+        const containerElement = dom(`
+            <div id="${masterClassName}-details">
+                <h2> Planning Calendar </h2>
+                <div id="${masterClassName}-details-calendar">
+                    <div id="calendar" class="approval-detail-grid-container"></div> <!-- todo replace code for approval-detail-grid container left over -->
+                </div>
+            </div>
+        `)
+
+        const detailsCalendar = containerElement.querySelector(`#${masterClassName}-details-calendar`)
+        calendarProjector(detailsCalendar.children[0], planningCtrl, false);
+        appendFirst(rootElement)(containerElement)
+    }
     render();
 };
 
@@ -74,16 +82,35 @@ const MasterView = (rootElement, planningCtrl) => {
  * @constructor
  */
 const DetailView = (rootElement, planningCtrl) => {
-    const render = () => allowanceProjector(rootElement, planningCtrl);
-    render();
+     const containerElement = dom(`
+        <div id="${detailClassName}-details">
+            <div id="${detailClassName}-details-allowance"></div>
+            <div id="${detailClassName}-details-holidays"></div>
+        </div>
+    `)
+
+    const allowance = containerElement.querySelector(`#${detailClassName}-details-allowance`)
+    const holiday = containerElement.querySelector(`#${detailClassName}-details-holidays`)
+
+    allowanceProjector(allowance, planningCtrl);
+    holidayProjector(holiday, planningCtrl);
+    appendReplacing(rootElement)(containerElement);
+
 };
 
-/**
- * @param rootElement
- * @param  planningCtrl {PlanningController}
- * @constructor
- */
-const HolidayView = (rootElement, planningCtrl) => {
-    const render = () => holidayProjector(rootElement, planningCtrl);
-    render();
-};
+appendsStyle(`
+    #${detailClassName}-details {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+    }
+
+    #${detailClassName}-details-allowance {
+        width: 47%;
+    }
+
+    #${detailClassName}-details-holidays {
+        width: 47%;
+        margin-left: 5%;
+    }
+`);

@@ -38,7 +38,7 @@ const holidayProjector = (rootElement, planningCtrl) => {
         if (valueOf(day.holiday)) {
             let [holiday, date, row] = creatRowEntries(table);
             holiday.innerText = labelOf(day.holiday);
-            date.innerText = valueOf(day.date).getFormated();
+            date.innerText = valueOf(day.date).getFormatted();
             holidayCounter++;
 
             onHoverChange(day.holiday)(isHovered => {

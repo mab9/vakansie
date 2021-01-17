@@ -1,4 +1,4 @@
-import {vakansieService} from "./localService.js"
+import {vakansieService} from "./local.service.js"
 import {Suite} from "../test/test.js";
 
 const localServiceSuite = Suite("localService");
