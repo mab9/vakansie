@@ -3,9 +3,9 @@ import {dom} from "../../assets/util/dom.js";
 import {calendarApprovalProjector, pageCss as pageCssMonth} from "./calendar.approval.projector.js";
 import {i18n} from "../../service/translation.service.js";
 import {appendRow, bindTableSearchListener, clearTableRows, creatRowEntries} from "../../service/table.service.js";
-import {valueOf} from "../../base/presentationModel/presentationModel.js";
+import {Attribute, valueOf} from "../../base/presentationModel/presentationModel.js";
 import {breadCrumbProjector} from "../groups/group.projector.js";
-
+import {ListController} from "../../base/controller/controller.js";
 
 export {VerifyView};
 
@@ -106,18 +106,7 @@ const DetailView = (rootElement, approvalCtrl) => {
         <div id="${detailClassName}-details">
             <div id="${detailClassName}-details-groups"></div>
             <div id="${detailClassName}-details-users"></div>
-            <div id="${detailClassName}-details-rules">
-                <h2>Rules</h2>
-                <form id="${detailClassName}-form">
-                    <input type="text" id="${detailClassName}-myInput" placeholder="Search for rules...">
-                </form>
-                <table id="${detailClassName}-myTable">
-                    <tr class="header">
-                        <th style="width:80%;">Rule name</th>
-                        <th style="width:20%;">active</th>
-                    </tr>
-                </table>
-            </div>
+            <div id="${detailClassName}-details-rules"></div>
         </div>
     `)
 
@@ -126,8 +115,11 @@ const DetailView = (rootElement, approvalCtrl) => {
 
     const detailsGroups = groupContainerElement.querySelector(`#${detailClassName}-details-groups`)
     const detailsUsers = groupContainerElement.querySelector(`#${detailClassName}-details-users`)
+    const detailsRules = groupContainerElement.querySelector(`#${detailClassName}-details-rules`)
+
     detailsGroupsProjector(detailsGroups)(groupCtrl);
     selectedBucket.onModelSelected(group => detailsUsersProjector(detailsUsers)(group)(groupCtrl));
+    detailsRulesProjector(detailsRules)(approvalCtrl);
 
     appendReplacing(rootElement)(groupContainerElement);
 };
@@ -210,6 +202,45 @@ const detailsUsersProjector = rootElement => group => groupCtrl => {
     appendReplacing(rootElement)(detailElement)
 };
 
+const detailsRulesProjector = rootElement => approvalCtrl => {
+
+    const detailElement = dom(`
+        <h2>Rules</h2>
+        <form id="${detailClassName}-form">
+            <input type="text" id="${detailClassName}-myInput" placeholder="Search for rules...">
+        </form>
+        <table id="${detailClassName}-myTable">
+            <tr class="header">
+                <th style="width:80%;">Rule name</th>
+                <th style="width:20%;">active</th>
+            </tr>
+        </table>
+    `)
+
+    const table = detailElement.querySelector("table");
+    const search = detailElement.querySelector("#" + detailClassName + "-myInput");
+
+    const rules = [{
+        name: Attribute("Min 1 available per day"),
+        days: Attribute(ListController),
+        active: Attribute(true)
+    },
+    {
+        name: Attribute("Min 1 Architect per day"),
+        days: Attribute(ListController),
+        active: Attribute(true)
+    }];
+
+    rules.forEach(item => {
+        const [name, active] = creatRowEntries(table);
+        name.textContent = valueOf(item.name);
+        active.innerHTML = "X"  // replace with checkbox
+    })
+
+    bindTableSearchListener(table)(search)(0) // name column = 1;
+
+    appendFirst(rootElement)(detailElement);
+}
 
 const masterPageCss = `
     * {
