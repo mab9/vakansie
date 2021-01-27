@@ -17,6 +17,7 @@ import {NoDay} from "../../calendar/day.model.js";
 export {ApprovalController}
 
 /**
+ * @implements CalendarProjectorCtrl
  * @return Readonly {ApprovalController}
  * @constructor
  */
@@ -164,10 +165,3 @@ const ApprovalController = (isCtrlInitialized = false) => {
     });
 
 };
-
-
-// approvalCtrl.startDragOnDay(day);
-// approvalCtrl.endDragOnDay(day);
-// approvalCtrl.updateDragOnDay(day);
-
-

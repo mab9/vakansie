@@ -19,10 +19,10 @@ export {dayProjector}
 /**
  * @param  rootElement {HTMLElement}
  * @param  day {Day}
- * @param  pageController {ApprovalController}  // todo use interface
+ * @param  controller {CalendarProjectorCtrl}
  * @param  activateEventCounter {boolean}
  */
-const dayProjector = (rootElement, day, pageController, activateEventCounter) => {
+const dayProjector = (rootElement, day, controller, activateEventCounter) => {
 
     const containerElement = dom(`<div></div>`)
     const element = containerElement.querySelector("div");
@@ -33,8 +33,8 @@ const dayProjector = (rootElement, day, pageController, activateEventCounter) =>
 
     element.dataset.dayId = valueOf(day.id);
 
-    const isMouseDown = pageController.getMouseDown();
-    const selectionCtrl = pageController.getSelectionCtrl();
+    const isMouseDown = controller.getMouseDown();
+    const selectionCtrl = controller.getSelectionCtrl();
 
     setMouseEventListener(element, isMouseDown, selectionCtrl, day);
     setDayStyleListener(element, day, isHoverOnDay);
@@ -42,7 +42,7 @@ const dayProjector = (rootElement, day, pageController, activateEventCounter) =>
 
     // is only defined for approval controller
     if (activateEventCounter) {
-        setDayEventCounterListener(element, pageController, day);
+        setDayEventCounterListener(element, controller, day);
     }
 
     rootElement.appendChild(containerElement)
@@ -115,13 +115,13 @@ const setDayStyleListener = (dayElement, day, isHoverOnDay) => {
 
 /**
  * @param dayElement
- * @param pageController {ApprovalController}
+ * @param approvalCtrl {ApprovalController}
  * @param day {Day}
  */
-const setDayEventCounterListener = (dayElement, pageController, day) => {
+const setDayEventCounterListener = (dayElement, approvalCtrl, day) => {
 
-    const employeesLeft = pageController.getEmployeesLeft();
-    const groupCtrl = pageController.getGroupCtrl();
+    const employeesLeft = approvalCtrl.getEmployeesLeft();
+    const groupCtrl = approvalCtrl.getGroupCtrl();
     const selectedBucket = groupCtrl.getSelectedBucket()
 
     const resetCounter = () => {
@@ -157,21 +157,21 @@ const styleHoverOnEvent = isHovered => event => {
 }
 
 /**
- * @param element {HTMLElement}
+ * @param dayElement {HTMLElement}
  * @param isMouseDown {Attribute}
  * @param selectionCtrl {SelectionController}
  * @param day {Day}
  */
-const setMouseEventListener = (element, isMouseDown,selectionCtrl, day) => {
+const setMouseEventListener = (dayElement, isMouseDown,selectionCtrl, day) => {
 
-    element.onmouseleave = _ => {
+    dayElement.onmouseleave = _ => {
         if (!valueOf(isMouseDown)) {
             maybe(valueOf(day.event).size() > 0)(() => styleHoverOnEvent(false)(valueOf(day.event)))
             maybe(valueOf(day.holiday))(() => setHoverOf(day.holiday)(false))
         }
     }
 
-    element.onmouseover = _ => { // is triggered before on mouse down
+    dayElement.onmouseover = _ => { // is triggered before on mouse down
         if (!valueOf(isMouseDown)) {
             maybe(valueOf(day.event).size() > 0)(() => styleHoverOnEvent(true)(valueOf(day.event)))
             maybe(valueOf(day.holiday))(() => setHoverOf(day.holiday)(true))
@@ -181,7 +181,7 @@ const setMouseEventListener = (element, isMouseDown,selectionCtrl, day) => {
         selectionCtrl.setSelectedModel(day);
     }
 
-    element.onmousedown = _ => {
+    dayElement.onmousedown = _ => {
         if (day.isDayOff() || !day.isNaturalDay()) return // guard to prevent start of events on day off
         setValueOf(isMouseDown)(true)
         selectionCtrl.setSelectedModel(day);
@@ -189,7 +189,7 @@ const setMouseEventListener = (element, isMouseDown,selectionCtrl, day) => {
         addClassNoSelection(document.querySelector("#calendar"))
     }
 
-    element.onmouseup = _ => {
+    dayElement.onmouseup = _ => {
         if (!valueOf(isMouseDown)) return // guard to prevent further steps when no clicked on a day
         setValueOf(isMouseDown)(false)
         selectionCtrl.clearSelection();

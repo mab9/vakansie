@@ -7,18 +7,9 @@ import {CalendarController} from "../../calendar/calendar.controller.js";
 export {PlanningController}
 
 /**
- * @typedef PlanningController
- * @property {Function} getSelectionCtrl
- * @property {Function} getMouseDown
- * @property {Function} getCalendarData
- * @property {Function} getVacationContigent
- * @property {Function} currentVacationContigent
- * @property {Function} getDayById
- * @property {Function} createEvent
- * @property {Function} updateEvent
- * @property {Function} endEvent
- * @property {Function} deleteEvent
- * @property {Function} getEventListCtrl
+ * @implements CalendarProjectorCtrl
+ * @return Readonly PlanningController
+ * @constructor
  */
 const PlanningController = (isCtrlInitialized = false) => {
 
@@ -83,6 +74,9 @@ const PlanningController = (isCtrlInitialized = false) => {
     calendarCtrl.initPlanningEvents();
     updateVacationContigent();
 
+    /**
+    * @typedef PlanningController
+    */
     return Object.freeze({
         getSelectionCtrl: () => selectionCtrl,
         getMouseDown: () => isMouseDown,

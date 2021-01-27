@@ -7,22 +7,8 @@ import {ALL_GROUP_ATTRIBUTE_NAMES, Group} from "./group.model.js";
 export {GroupController}
 
 /**
- * @typedef GroupController
- * @property {Function} getListController
- * @property {Function} getTenantGroup
- * @property {Function} getProjectGroups
- * @property {Function} getChildrenByGroup
- * @property {Function} getParentGroup
- * @property {Function} getMyParentsSorted
- * @property {Function} getSelectedGroup
- * @property {Function} getSelectedBucket
- * @property {Function} getGroupUsers
- * @property {Function} addGroup
- * @property {Function} removeGroup
- * @property {Function} getParentUsersNotInChildGroup
- * @property {Function} removeUserFromGroup
- * @property {Function} addUserToGroup
- * @property {Function} initGroups
+ * @return Readonly GroupController
+ * @constructor
  */
 const GroupController = (isCtrlInitialized = false) => {
 
@@ -130,6 +116,9 @@ const GroupController = (isCtrlInitialized = false) => {
     const initGroups = () => groupService().loadGroups().forEach(group => addGroup(group));
 
 
+    /**
+    * @typedef GroupController
+    */
     return Object.freeze({
         initGroups,
         getListController: () => listController,

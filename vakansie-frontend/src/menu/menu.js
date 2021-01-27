@@ -36,7 +36,7 @@ const roles = {
 
 
 /**
- * @return {Menu}
+ * @return Readonly {Menu}
  * @constructor
  * @param {Element} rootElement  is used by the eval function
  */
@@ -133,11 +133,6 @@ const Menu = (rootElement) => {
 
     /**
      * @typedef Menu
-     * @property {function} getEntries
-     * @property {function} getVisibleEntries
-     * @property {function} getSelectedEntry
-     * @property {function} setSelectedEntry
-     * @property {function} onSelectedEntryChange
      */
     return {
         getEntries: () => entries.data,

@@ -10,7 +10,7 @@ const detailClassName = 'approval-detail'; // should be unique for this projecto
 
 /**
  * @param  rootElement {HTMLElement}
- * @param  controller {ApprovalController} // todo use interface
+ * @param  controller {CalendarProjectorCtrl}
  * @param  activateEventCounter {boolean} // only approval controller is able to use this boolean. rework?
  */
 const calendarProjector = (rootElement, controller, activateEventCounter) => {

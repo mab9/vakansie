@@ -6,7 +6,6 @@ import {VALUE} from "../../base/presentationModel/presentationModel.js";
 
 export { PersonController }
 
-
 /**
  * @return Readonly {PersonController}
  * @constructor
@@ -30,8 +29,6 @@ const PersonController = () => {
     };
 
     const initPersons = () => personService().loadPersons(id).forEach(person => addPerson(person))
-
-
 
     /**
      * @typedef PersonController
