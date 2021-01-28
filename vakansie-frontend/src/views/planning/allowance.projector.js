@@ -1,10 +1,17 @@
 import {appendReplacing} from "../../assets/util/appends.js";
 import {dom} from "../../assets/util/dom.js";
 import "../../assets/util/times.js"
-import {forEach, HOVER, onValueChange, valueOf} from "../../base/presentationModel/presentationModel.js";
+import {
+    forEach,
+    onHoverChange,
+    onValueChange,
+    setHoverOf,
+    valueOf
+} from "../../base/presentationModel/presentationModel.js";
 import "../../assets/util/dates.js"
 import {styleElement} from "../../assets/util/cssClasses.js";
-import {creatRowEntries} from "../../service/table.service.js";
+import {addRowHovering, creatRowEntries} from "../../service/table.service.js";
+import {tableProjector} from "./table.projector.js";
 
 export {allowanceProjector, pageCss}
 
@@ -17,7 +24,6 @@ const detailClassName = 'planning-detail';
 const allowanceProjector = (rootElement, planningCtrl) => {
     const vacationContigent = planningCtrl.getVacationContigent();
     const currentVacationContigent = planningCtrl.getCurrentVacationContigent();
-    const eventListCtrl = planningCtrl.getEventListCtrl();
 
     const planning = dom(`
         <h2> Details Ferienkontingent</h2>
@@ -25,41 +31,38 @@ const allowanceProjector = (rootElement, planningCtrl) => {
         <p>Ferientage gebucht: <span>0</span></p>
         <p>Ferientage verbleibend: <span>0</span></p>
 
-        <!-- todo create fancy table generator analogue angular -->
-        <table class="${detailClassName}-table">
-          <tr>
+        <div style="width: 400px;"></div>
+    `)
+
+    const [title, contigent, booked, left, tableTarget] = planning.children;
+
+    onValueChange(vacationContigent)(value => contigent.children[0].innerText = value)
+    onValueChange(currentVacationContigent)(value => {
+        booked.children[0].innerText = value
+        left.children[0].innerText = valueOf(vacationContigent) - valueOf(currentVacationContigent);
+    });
+
+    const tableData = {
+        target: tableTarget,
+        props: {search: ["Search for Events...", 0, false]},
+        model: planningCtrl.getEventListCtrl()
+    }
+
+    const renderTableHeader = `
+          <tr class="header">
             <th>from</th>
             <th>to</th>
             <th>days</th>
             <th>delete</th>
             <th>status</th>
           </tr>
-        </table>
-    `)
-
-    const span = planning.querySelectorAll("span")
-    const vacationContigentThisYear = span[0];
-    const vacationBoockedThisYear = span[1];
-    const vacationLeftThisYear = span[2];
-
-    onValueChange(vacationContigent)(value => vacationContigentThisYear.innerText = value)
-    onValueChange(currentVacationContigent)(value => {
-        vacationBoockedThisYear.innerText = value
-        vacationLeftThisYear.innerText = valueOf(vacationContigent) - valueOf(currentVacationContigent);
-    });
-
-    const table = planning.querySelector("table")
+    `;
 
     const updateDaysBetween = days => event => {
         days.textContent = valueOf(valueOf(event.from).date).countDaysBetween(valueOf(valueOf(event.to).date)) + 1;
     }
 
-    const deleteRow = event =>{
-        table.querySelector(`[data-event-id="` + valueOf(event.id) + `"]`).remove();
-    }
-
-    /** @event event {Event} */
-    const processEvent = event => {
+    const renderListItem = (table, event) => {
         let [start, end, days, remove, status, row] = creatRowEntries(table);
 
         row.dataset.eventId = valueOf(event.id);
@@ -78,36 +81,27 @@ const allowanceProjector = (rootElement, planningCtrl) => {
 
         updateDaysBetween(days)(event) // init
 
-        onValueChange(event.status)(value => styleElement(value)("status-" + valueOf(event.status).toLowerCase())(status.parentElement));
         styleElement(valueOf(event.status))("status-" + valueOf(event.status).toLowerCase())(status.parentElement);
 
         remove.appendChild(dom('<input type="button" value="X"></div>'))
         const removeBtn = remove.querySelector("input");
         removeBtn.onclick = _ => {
             planningCtrl.deleteEvent(event);
-            deleteRow(event);
+            table.querySelector(`[data-event-id="` + valueOf(event.id) + `"]`).remove();
         }
 
-        forEach(event.days)(day => {
-            day.event.getObs(HOVER).onChange(isHovered => {
-                styleElement(isHovered)("row-hovering")(row)
-            });
+        // style events on row hovering
+        addRowHovering(row)(isHovered => {
+            forEach(event.days)(day => setHoverOf(day.event)(isHovered))
         })
 
-        const styleRowOnHover = isHovered => {
-            forEach(event.days)(day => {
-                day.event.getObs(HOVER).setValue(isHovered);
-            })
-        }
-
-
-        row.onmouseover = _ => styleRowOnHover(true);
-        row.onmouseleave = _ => styleRowOnHover(false);
+        // style row on day hovering
+        forEach(event.days)(day => {
+            onHoverChange(day.event)(isHovered => styleElement(isHovered)("row-hovering")(row));
+        })
     }
 
-
-    eventListCtrl.getAll().forEach(event => processEvent(event));
-    eventListCtrl.onModelAdd(event => processEvent(event));
+    tableProjector(tableData, renderTableHeader, renderListItem)
 
     appendReplacing(rootElement)(planning);
 }
@@ -121,24 +115,6 @@ const pageCss = `
     .${detailClassName}-table {
         border-collapse: collapse;
         min-width: 400px;
-    }
-
-    .no-selection {
-        border: 1px solid yellow;
-    }
-
-    td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-    }
-
-    tr:nth-child(even) {
-        background-color: #dddddd;
-    }
-
-    .row-hovering {
-        border: 5px solid orange !important;
     }
 
     .status-requested {

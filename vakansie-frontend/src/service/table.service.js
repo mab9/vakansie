@@ -89,7 +89,6 @@ const clearTableRows = table => {
     return table;
 }
 
-// todo refactor it to table service
 const bindTableSearchListener = table => search => column => {
     search.onkeyup = () => {
         // Declare variables

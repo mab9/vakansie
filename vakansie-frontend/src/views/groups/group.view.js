@@ -5,6 +5,7 @@ import {Attribute, onValueChange, setValueOf, valueOf} from "../../base/presenta
 import {Group} from "./group.model.js";
 import {appendRow, bindTableSearchListener, clearTableRows, creatRowEntries} from "../../service/table.service.js";
 import {maybe} from "../../assets/util/maybe.js";
+import {tableProjector} from "../planning/table.projector.js";
 
 export {GroupView};
 
@@ -50,7 +51,7 @@ const GroupView = (rootElement, groupCtrl) => {
         //   // i18n('view.group.title')(title); todo make it i18n
         //   const tenantGroup = groupCtrl.getTenantGroup();
         //   title.innerText = "Groups and projects for tenant: " + valueOf(tenantGroup.name);
-        title.innerText = "Groups and projects for tenant;";
+        title.innerText = "Groups and projects for tenant";
 
         rootElement.textContent = '';
         appendFirst(rootElement)(groups)
@@ -73,12 +74,21 @@ const MasterView = (rootElement, groupCtrl) => {
 
     const masterElement = dom(`
         <h2>Breadcrumb</h2>
+        <div style="width: 100%;">
+    `)
 
-        <form id="${masterClassName}-form">
-            <input type="button" id="${masterClassName}-addGroup" value="+">
-            <input type="text" id="${masterClassName}-myInput" placeholder="Search for groups...">
-        </form>
-        <table id="${masterClassName}-myTable">
+    const [breadcrumb, tableTarget] = masterElement.children;
+    const listController = groupCtrl.getListController();
+    const selectedBucket = groupCtrl.getSelectedBucket();
+    const selectedGroup = groupCtrl.getSelectedGroup();
+
+    const tableData = {
+        target: tableTarget,
+        props: {search: ["Search for Groups...", 1, () => listController.addModel(Group(selectedBucket.getSelectedModel()))]},
+        model: listController
+    }
+
+    const renderTableHeader = `
           <tr class="header">
             <th style="width:15%;">Show childs</th>
             <th style="width:50%;">Name</th>
@@ -86,20 +96,9 @@ const MasterView = (rootElement, groupCtrl) => {
             <th style="width:10%;">Project</th>
             <th style="width:10%;">Delete</th>
           </tr>
-        </table>
-    `)
+    `;
 
-    const breadcrumb = masterElement.querySelector("h2");
-    const search = masterElement.querySelector("#" + masterClassName + "-myInput");
-    const plus = masterElement.querySelector("#" + masterClassName + "-addGroup");
-    const table = masterElement.querySelector("table");
-    const listController = groupCtrl.getListController();
-    const selectedBucket = groupCtrl.getSelectedBucket();
-    const selectedGroup = groupCtrl.getSelectedGroup();
-
-    plus.onclick = () => listController.addModel(Group(selectedBucket.getSelectedModel()));
-
-    const renderListItem = group => {
+    const renderTableItem = (table, group) => {
         const row = appendRow(table)(`
           <tr>
            <td>x</td>
@@ -123,24 +122,21 @@ const MasterView = (rootElement, groupCtrl) => {
         row.onclick = _ => selectedGroup.setSelectedModel(group);
         tds[0].onclick = _ => selectedBucket.setSelectedModel(group);
         tds[4].onclick = _ => deleteRow();
-
-        // todo create something more angular ng repeat like
-        // todo check if possible to add later on the reference to an on click defiend function.
-        // something like: <tr onclick="funny"> postReferences(row, funy);
-        // something like regexmatcher  onclick="funny"  replace with defined function funny
     }
+
+    tableProjector(tableData, renderTableHeader, renderTableItem)
 
     selectedBucket.onModelSelected(group => {
         if (!group) return;
+        const table = tableTarget.querySelector("table");
         clearTableRows(table);
         const groups = groupCtrl.getChildrenByGroup(selectedBucket.getSelectedModel());
-        groups.forEach(renderListItem);
+        groups.forEach(item => renderTableItem(table, item));
         breadCrumbProjector(groupCtrl, breadcrumb);
     })
 
-    listController.onModelAdd(renderListItem);
+    listController.onModelAdd(item => renderTableItem(tableTarget.querySelector("table"), item));
 
-    bindTableSearchListener(table)(search)(1) // name column = 1;
     appendReplacing(rootElement)(masterElement);
 };
 

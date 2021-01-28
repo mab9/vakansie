@@ -1,7 +1,7 @@
 import {appendFirst, appendReplacing, appendsStyle} from "../../assets/util/appends.js";
 import {dom} from "../../assets/util/dom.js";
 import {allowanceProjector, pageCss as pageCssAllowance} from "./allowance.projector.js";
-import {holidayProjector, pageCss as pageCssHoliday} from "./holiday.projector.js";
+import {holidayProjector} from "./holiday.projector.js";
 import {i18n} from "../../service/translation.service.js";
 import {calendarProjector} from "../../calendar/calendar.projector.js";
 
@@ -9,7 +9,6 @@ export {PlanningView};
 
 // page-style change, only executed once
 appendsStyle(pageCssAllowance);
-appendsStyle(pageCssHoliday);
 
 const masterClassName = "planning-main-view"
 const detailClassName = "planning-detail-view"

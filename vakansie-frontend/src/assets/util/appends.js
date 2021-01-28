@@ -16,6 +16,9 @@ const appendReplacing = rootElement => newElements => {
 
 const appendsStyle = pageCss => {
     const style = document.createElement("STYLE");
+
+    // style element is needed to activate the syntax highlighting
+    pageCss = pageCss.replace('<style>').replace('</style>');
     style.innerHTML = pageCss;
     document.head.appendChild(style);
 }

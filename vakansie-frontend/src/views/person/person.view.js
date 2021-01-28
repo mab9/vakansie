@@ -74,10 +74,6 @@ const MasterView = (listController, selectionController, rootElement) => {
 
     // binding
     listController.onModelAdd(render);
-
-    // init list
-    // todo if list controller list size > 0 add models ...
-
 };
 
 const DetailView = (selectionController, rootElement) => {

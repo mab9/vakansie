@@ -27,18 +27,18 @@ const dayProjector = (rootElement, day, controller, activateEventCounter) => {
     const containerElement = dom(`<div></div>`)
     const element = containerElement.querySelector("div");
 
-    const isHoverOnDay = Attribute(false);
-    element.onmouseover = _ => setValueOf(isHoverOnDay)(true);
-    element.onmouseleave = _ => setValueOf(isHoverOnDay)(false);
+
 
     element.dataset.dayId = valueOf(day.id);
 
     const isMouseDown = controller.getMouseDown();
     const selectionCtrl = controller.getSelectionCtrl();
 
-    setMouseEventListener(element, isMouseDown, selectionCtrl, day);
-    setDayStyleListener(element, day, isHoverOnDay);
+
+    setDayStyles(element, day);
+    setDayHoverListeners(element, day);
     setDayStatusListener(element, day);
+    setMouseEventListener(element, isMouseDown, selectionCtrl, day);
 
     // is only defined for approval controller
     if (activateEventCounter) {
@@ -49,7 +49,24 @@ const dayProjector = (rootElement, day, controller, activateEventCounter) => {
 }
 
 /**
- * @param dayElement
+ * @param dayElement {HTMLElement}
+ * @param day {Day}
+ */
+const setDayStyles = (dayElement, day) => {
+
+    onValueChange(day.isSelected)(isSelected => styleElement(isSelected)("cal-day-dragged")(dayElement));
+
+    if (valueOf(day.holiday)) {
+        addClass(dayElement)("cal-holiday");
+        setTooltip(dayElement)(labelOf(day.holiday));
+    }
+
+    styleElement(day.isWeekendDay())("cal-weekend-day")(dayElement)
+    styleElement(!day.isInMonth())("cal-not-in-month")(dayElement)
+}
+
+/**
+ * @param dayElement {HTMLElement}
  * @param day {Day}
  */
 const setDayStatusListener = (dayElement,  day) => {
@@ -57,10 +74,9 @@ const setDayStatusListener = (dayElement,  day) => {
     const resetDayStyle = () => {
 
         // reset event status
-        dayElement.classList.remove("cal-day-" + EventStatus.APPROVED.toLowerCase());
-        dayElement.classList.remove("cal-day-" + EventStatus.REQUESTED.toLowerCase());
-        dayElement.classList.remove("cal-day-" + EventStatus.REJECTED.toLowerCase());
-        dayElement.classList.remove("cal-day-" + EventStatus.WITHDRAWN.toLowerCase());
+        for (const status in EventStatus) {
+             dayElement.classList.remove("cal-day-" + status.toLowerCase());
+        }
 
         const dayEvent = valueOf(day.event).getAll()[0];
 
@@ -85,36 +101,29 @@ const setDayStatusListener = (dayElement,  day) => {
 
 
 /**
- * @param dayElement
+ * @param dayElement {HTMLElement}
  * @param day {Day}
- * @param isHoverOnDay {Attribute}
  */
-const setDayStyleListener = (dayElement, day, isHoverOnDay) => {
-
-    onValueChange(day.isSelected)(isSelected => styleElement(isSelected)("cal-day-dragged")(dayElement));
+const setDayHoverListeners = (dayElement, day) => {
 
     const styleDayOnHover = isHovered => styleElement(isHovered)("cal-day-hovered")(dayElement)
-    onHoverChange(day.event)(isHovered => styleDayOnHover(isHovered));
     onHoverChange(day.id)(isHovered => styleDayOnHover(isHovered));
+    onHoverChange(day.event)(isHovered => styleDayOnHover(isHovered));
     onHoverChange(day.holiday)(isHovered => styleDayOnHover(isHovered));
+
+    const isHoverOnDay = Attribute(false);
+    dayElement.onmouseover = _ => setValueOf(isHoverOnDay)(true);
+    dayElement.onmouseleave = _ => setValueOf(isHoverOnDay)(false);
 
     onValueChange(isHoverOnDay)(isHovered => {
         setHoverOf(day.id)(isHovered);
         setHoverOf(day.event)(isHovered);
         setHoverOf(day.holiday)(isHovered);
     })
-
-    if (valueOf(day.holiday)) {
-        addClass(dayElement)("cal-holiday");
-        setTooltip(dayElement)(labelOf(day.holiday));
-    }
-
-    styleElement(day.isWeekendDay())("cal-weekend-day")(dayElement)
-    styleElement(!day.isInMonth())("cal-not-in-month")(dayElement)
 }
 
 /**
- * @param dayElement
+ * @param dayElement {HTMLElement}
  * @param approvalCtrl {ApprovalController}
  * @param day {Day}
  */
@@ -125,15 +134,15 @@ const setDayEventCounterListener = (dayElement, approvalCtrl, day) => {
     const selectedBucket = groupCtrl.getSelectedBucket()
 
     const resetCounter = () => {
-        if (day.isNaturalDay() && sizeOf(day.event) > 0) {
-            if (selectedBucket && valueOf(employeesLeft)) {
+        dayElement.innerHTML = "";
+
+        if (day.isNaturalDay() && !!sizeOf(day.event)) {
+            if (valueOf(employeesLeft)) {
                 const currentBucketGroup = selectedBucket.getSelectedModel();
                 dayElement.innerHTML = sizeOf(currentBucketGroup.userIds) - sizeOf(day.event);
             } else {
                 dayElement.innerHTML = sizeOf(day.event);
             }
-        } else {
-            dayElement.innerHTML = "";
         }
     }
 
@@ -152,8 +161,7 @@ const styleHoverOnEvent = isHovered => event => {
 
     const eventOne = event.getAll()[0]; // we only provide planning data for one user
     const dayListCtrl = valueOf(eventOne.days)
-    const days = dayListCtrl.getAll();
-    days.forEach(day => setHoverOf(day.event)(isHovered))
+    dayListCtrl.forEach(day => setHoverOf(day.event)(isHovered))
 }
 
 /**
