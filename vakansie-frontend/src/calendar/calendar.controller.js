@@ -3,6 +3,7 @@ import {
     onValueChange,
     setLabelOf,
     setValueOf,
+    sizeOf,
     valueOf
 } from "../base/presentationModel/presentationModel.js";
 import "../assets/util/dates.js"
@@ -20,16 +21,18 @@ export {CalendarController, itCalendarDays}
 const CalendarController = (isCtrlInitialized = false) => {  // one time creation, singleton
 
     const eventListCtrl = ListController();
+    const holidayListCtrl = ListController();
     let calendar = calendarService.getEmptyCalendar();
 
     // todo make async
     const initHolidays = (holidays = calendarService.getSuisseHolidays()) => {
-        calendar.forEach(month => {
-            month.forEach(day => {
-                const holiday = valueOf(holidays).find(item => item.day.sameDay(valueOf(day.date)));
-                setValueOf(day.holiday)(!!holiday)
-                setLabelOf(day.holiday)(holiday ? holiday.label : "")
-            })
+        itCalendarDays(calendar)(day => {
+            const holiday = valueOf(holidays).find(item => item.day.sameDay(valueOf(day.date)));
+            if (holiday) {
+                setLabelOf(day.holiday)(holiday.label)
+                setValueOf(day.holiday)(true)
+                holidayListCtrl.addModel(day);
+            }
         })
     }
 
@@ -152,11 +155,10 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
     }
 
     const getCurrentAmountEventDays = () => {
-        const events = eventListCtrl.getAll();
-        if (!events.length) return 0;
-        return eventListCtrl.getAll().map(event => {
-            return valueOf(event.days).size(); // dayListCtrl
-        }).reduce((sum, val) => sum + val);
+        if (!eventListCtrl.size()) return 0;
+        return eventListCtrl.getAll()
+            .map(event => sizeOf(event.days))
+            .reduce((sum, val) => sum + val);
     }
 
     const resetCalendar = () => {
@@ -197,6 +199,7 @@ const CalendarController = (isCtrlInitialized = false) => {  // one time creatio
         getCalendarData: () => calendar,
         getDayById: id => findDayById(id),
         getEventListCtrl: () => eventListCtrl,
+        getHolidayListCtrl: () => holidayListCtrl,
         getCreatedEvent: () => eventListCtrl.pop(),
         initHolidays: initHolidays,
         initPlanningEvents: initPlanningEvents,

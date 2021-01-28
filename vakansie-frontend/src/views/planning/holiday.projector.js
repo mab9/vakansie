@@ -2,10 +2,8 @@ import {appendFirst} from "../../assets/util/appends.js";
 import {dom} from "../../assets/util/dom.js";
 import "../../assets/util/times.js"
 import "../../assets/util/dates.js"
-import {labelOf, onHoverChange, setHoverOf, valueOf} from "../../base/presentationModel/presentationModel.js";
-import {styleElement} from "../../assets/util/cssClasses.js";
-import {itCalendarDays} from "../../calendar/calendar.controller.js";
-import {creatRowEntries} from "../../service/table.service.js";
+import {labelOf, setHoverOf, valueOf} from "../../base/presentationModel/presentationModel.js";
+import {addRowHovering, creatRowEntries} from "../../service/table.service.js";
 
 export {holidayProjector, pageCss}
 
@@ -31,28 +29,19 @@ const holidayProjector = (rootElement, planningCtrl) => {
 
     const table = holidays.querySelector("table")
     const feiertage = holidays.querySelector("span")
-    let holidayCounter = 0;
-    const calendar = planningCtrl.getCalendarData();
+    const holidayListCtrl = planningCtrl.getHolidayListCtrl();
+    feiertage.innerText = holidayListCtrl.size();
 
-    itCalendarDays(calendar)(day => {
-        if (valueOf(day.holiday)) {
-            let [holiday, date, row] = creatRowEntries(table);
-            holiday.innerText = labelOf(day.holiday);
-            date.innerText = valueOf(day.date).getFormatted();
-            holidayCounter++;
+    holidayListCtrl.forEach(day => {
+        let [holiday, date, row] = creatRowEntries(table);
+        holiday.innerText = labelOf(day.holiday);
+        date.innerText = valueOf(day.date).getFormatted();
 
-            onHoverChange(day.holiday)(isHovered => {
-                styleElement(isHovered)("row-hovering")(row)
-            });
-
-            const styleRowOnHover = isHovered => setHoverOf(day.holiday)(isHovered);
-
-            row.onmouseover = _ => styleRowOnHover(true);
-            row.onmouseleave = _ => styleRowOnHover(false);
-        }
+        addRowHovering(row)( isHovered => {
+            setHoverOf(day.holiday)(isHovered);
+        })
     })
 
-    feiertage.innerText = holidayCounter;
     appendFirst(rootElement)(holidays)
 };
 

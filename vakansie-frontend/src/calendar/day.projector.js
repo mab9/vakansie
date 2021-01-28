@@ -62,11 +62,11 @@ const setDayStatusListener = (dayElement,  day) => {
         dayElement.classList.remove("cal-day-" + EventStatus.REJECTED.toLowerCase());
         dayElement.classList.remove("cal-day-" + EventStatus.WITHDRAWN.toLowerCase());
 
-        // init day status todo check if this is the right place
         const dayEvent = valueOf(day.event).getAll()[0];
 
         if (dayEvent) {
             const dayStatus = valueOf(dayEvent.status);
+            // init day status todo check if this is the right place
             setValueOf(day.status)(dayStatus)
             if (dayStatus) { // prevent marking of events which go over the weekend or holidays
                 styleElement(day.isNaturalDay())("cal-day-" + dayStatus.toLowerCase())(dayElement)

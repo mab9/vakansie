@@ -41,6 +41,7 @@ const ListController = () => {
         onModelAdd: fnc => expressionMaker(fnc)(listModel.onAdd),
         onModelRemove: fnc => expressionMaker(fnc)(listModel.onDel),
         size: () => listModel.count(),
+        forEach: fnc => innerList.forEach(item => fnc(item)),
         getAll: () => innerList,
         reset: () => innerList.splice(0, innerList.length), // todo rework so that listeners get triggered -> getAll for each removeModel?
         pop: () => innerList[innerList.length - 1],

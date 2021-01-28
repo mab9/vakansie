@@ -86,6 +86,7 @@ const PlanningController = (isCtrlInitialized = false) => {
         getDayById: id => calendarCtrl.getDayById(id),
         deleteEvent: deleteEvent,
         getEventListCtrl: calendarCtrl.getEventListCtrl,
+        getHolidayListCtrl: calendarCtrl.getHolidayListCtrl,
     });
 };
 

@@ -1,6 +1,8 @@
 import {i18n} from "./translation.service.js";
+import {Attribute, onValueChange, setValueOf} from "../base/presentationModel/presentationModel.js";
+import {styleElement} from "../assets/util/cssClasses.js";
 
-export {generateTable, creatRowEntries, clearTableRows, bindTableSearchListener, appendRow}
+export {generateTable, creatRowEntries, clearTableRows, bindTableSearchListener, appendRow, addRowHovering}
 
 // todo add i18n
 const generateTableHead = (table, data) => {
@@ -46,6 +48,17 @@ const appendRow = table => row => {
 
     table.children[0].appendChild(tr)
     return tr;
+}
+
+const addRowHovering = row => fnc => {
+    const isHoverOnRow = Attribute(false)
+    row.onmouseover = _ => setValueOf(isHoverOnRow)(true);
+    row.onmouseleave = _ => setValueOf(isHoverOnRow)(false);
+
+    onValueChange(isHoverOnRow)(isHovered => {
+        styleElement(isHovered)("row-hovering")(row); // style row on hover
+        fnc(isHovered)
+    });
 }
 
 
