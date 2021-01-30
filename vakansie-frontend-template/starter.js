@@ -8,33 +8,33 @@ const render = () => {
                 
                  <div class="mobile-navigation--header">
                     <!-- <img src="./logo.png" alt="" class="logo" />-->
-                    <a class="mobile-navigation--header-home-logo"><i class="fa fa-globe-europe"></i>Vakansie</a>
+                    <a class="mobile-navigation--header-home-logo"><i class="fa fa-globe-africa"></i>Vakansie</a>
                     <div class="close-button"><button><i class="fa fa-close"></i></button></div>
                 </div>
             
             
                 <a href="" class="mobile-navigation--item mobile-navigation--item__active">Home</a> 
-                <a href="" class="mobile-navigation--item">Planning</a> 
-                <a href="" class="mobile-navigation--item">Approval</a> 
-                <a href="" class="mobile-navigation--item">Groups</a> 
-                <a href="" class="mobile-navigation--item">Users</a>
+                <a href="" class="mobile-navigation--item">Features</a> 
+                <a href="" class="mobile-navigation--item">Pricing</a> 
+                <a href="" class="mobile-navigation--item">Login</a> 
+                <a href="" class="mobile-navigation--item">Join Team</a> 
             </div>
 
             <div id="container">
                 <div class="header">
                     <!-- <img src="./logo.png" alt="" class="logo" />-->
-                    <a class="home-logo"><i class="fa fa-globe-europe"></i>Vakansie</a>
+                    <a class="home-logo"><i class="fa fa-globe-africa"></i>Vakansie</a>
                 </div>
                 <div class="navigation">
                     <nav>
                         <a href="" class="navigation--item navigation--item__active">Home</a> 
-                        <a href="" class="navigation--item">Planning</a> 
-                        <a href="" class="navigation--item">Approval</a> 
-                        <a href="" class="navigation--item">Groups</a> 
-                        <a href="" class="navigation--item">Users</a>
+                        <a href="" class="navigation--item">Features</a> 
+                        <a href="" class="navigation--item">Pricing</a> 
+                        <a href="" class="navigation--item">Login</a> 
+                        <a href="" class="navigation--item">Join Team</a> 
                     </nav>
                     <div class="menu-button" onclick="${() => toggleMobileNavigation()}"><button><i class="fa fa-reorder"></i></button></div>
-                    <button class="navigation--button">Get Started</button>
+                    <button class="navigation--button">Register</button>
                 </div>
                 <div class="main">
                     <div class="main--content">
