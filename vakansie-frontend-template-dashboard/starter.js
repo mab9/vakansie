@@ -33,7 +33,7 @@ const render = () => {
                         <a href="" class="navigation--item">Login</a> 
                         <a href="" class="navigation--item">Join Team</a> 
                     </nav>
-                    <div class="menu-button" onclick="${() => toggleMobileNavigation()}"><button><i class="fa fa-reorder"></i></button></div>
+                    <div class="menu-button"><button><i class="fa fa-reorder"></i></button></div>
                     <button class="navigation--button">Register</button>
                 </div>
                 <div class="main">
