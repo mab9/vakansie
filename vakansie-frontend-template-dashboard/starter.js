@@ -20,18 +20,21 @@ const render = () => {
                 <a href="" class="mobile-navigation--item">Join Team</a> 
             </div>
 
-            <div id="container">
+            <div id="container" class="collapse__open">
                 <div class="header">
                     <!-- <img src="./logo.png" alt="" class="logo" />-->
                     <a class="home-logo"><i class="fa fa-globe-africa"></i>Vakansie</a>
                 </div>
                 <div class="navigation">
                     <nav>
-                        <a href="" class="navigation--item navigation--item__active">Home</a> 
-                        <a href="" class="navigation--item">Features</a> 
-                        <a href="" class="navigation--item">Pricing</a> 
-                        <a href="" class="navigation--item">Login</a> 
-                        <a href="" class="navigation--item">Join Team</a> 
+                        <a class="navigation--item-home-logo"><i class="fa fa-globe-africa"></i>Vakansie</a>
+                        <a class="navigation--item navigation--item__active"><i class="fas fa-home"></i>Home</a> 
+                        <a class="navigation--item"><i class="fas fa-calendar-alt"></i>Calendar</a> 
+                        <a class="navigation--item"><i class="fas fa-users"></i>Employees</a> 
+                        <a class="navigation--item"><i class="fas fa-thumbs-up"></i>Events to approve</a> 
+                        <a class="navigation--item"><i class="fas fa-user"></i>My account</a> 
+                        <a class="navigation--item"><i class="fas fa-search"></i>Search events</a> 
+                        <a id="navigation--item--collaps" class="navigation--item"><i class="fas fa-angle-double-up fa-rotate-270"></i>Collapse menu</a> 
                     </nav>
                     <div class="menu-button"><button><i class="fa fa-reorder"></i></button></div>
                     <button class="navigation--button">Register</button>
@@ -48,17 +51,6 @@ const render = () => {
                         <img src="vacation.png" alt="vacations">
                     </div>
                 </div>
-                <div class="sidebar"></div>
-                <div class="ads"></div>
-                <div class="footer">
-                    <div class="socials">
-                        <a href="" class="socials--item"><i class="fa fa-github"></i></a>
-                        <a href="" class="socials--item"><i class="fa fa-instagram"></i></a>
-                        <a href="" class="socials--item"><i class="fa fa-twitter"></i></a>
-                        <a href="" class="socials--item"><i class="fa fa-linkedin"></i></a>
-                    </div>
-                    <span>marc-antoine</span>
-                </div>
             </div>
         `);
 
@@ -67,9 +59,11 @@ const render = () => {
 
     const closeBtn = layoutElement.querySelector(".close-button");
     const menuBtn = layoutElement.querySelector(".menu-button");
+    const collapseBtn = layoutElement.querySelector("#navigation--item--collaps");
 
     closeBtn.onclick = () => toggleMobileNavigation();
     menuBtn.onclick = () => toggleMobileNavigation();
+    collapseBtn.onclick = () => toggleSideMenu();
 
     const toggleMobileNavigation = () => {
         const element = document.querySelector("#mobile-navigation")
@@ -77,6 +71,25 @@ const render = () => {
         element.classList.contains(clazz)
             ? element.classList.remove(clazz)
             : element.classList.add(clazz);
+    }
+
+    const toggleSideMenu = () => {
+        const container = document.querySelector("#container")
+        const collapsIcon = document.querySelector("#navigation--item--collaps > i")
+
+        if (container.classList.contains("collapse__open")) {
+            container.classList.remove("collapse__open");
+            container.classList.add("collapse__close")
+
+            collapsIcon.classList.add("fa-rotate-90")
+            collapsIcon.classList.remove("fa-rotate-270")
+        } else {
+            container.classList.remove("collapse__close");
+            container.classList.add("collapse__open");
+
+            collapsIcon.classList.remove("fa-rotate-90")
+            collapsIcon.classList.add("fa-rotate-270")
+        }
     }
 
     document.querySelector("#root").replaceWith(layoutElement);
