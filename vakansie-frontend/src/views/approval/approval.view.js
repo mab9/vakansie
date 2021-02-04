@@ -1,6 +1,6 @@
 import {appendFirst, appendReplacing, appendsStyle} from "../../assets/util/appends.js";
 import {dom} from "../../assets/util/dom.js";
-import {calendarProjector, pageCss as pageCssMonth} from "../../calendar/calendar.projector.js";
+import {calendarProjector} from "../../calendar/calendar.projector.js";
 import {i18n} from "../../service/translation.service.js";
 import {addRowHovering, appendRow, clearTableRows, creatRowEntries} from "../../service/table.service.js";
 import {
@@ -20,7 +20,7 @@ import {tableProjector} from "../planning/table.projector.js";
 export {ApprovalView};
 
 // page-style change, only executed once
-appendsStyle(pageCssMonth);
+//appendsStyle(pageCssMonth);
 
 const masterClassName = 'approve-main-view'; // should be unique
 const detailClassName = 'approve-detail-view'; // should be unique

@@ -1,3 +1,5 @@
+import {appendsStyle} from "./appends.js";
+
 export {saveClassRemoval, addClass, styleElement,
 addClassNoSelection, saveClassRemovalNoSelection}
 
@@ -12,6 +14,8 @@ const addClass = elements => clazz => {
         }
     }
 }
+
+appendsStyle(`.no-selection { user-select: none; }`)
 
 const addClassNoSelection = element => addClass(element)(noSelection)
 const saveClassRemovalNoSelection = element => saveClassRemoval(element)(noSelection)

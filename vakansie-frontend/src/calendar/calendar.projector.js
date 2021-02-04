@@ -3,8 +3,9 @@ import "../assets/util/times.js"
 import "../assets/util/dates.js"
 import {months} from "./calendar.service.local.js";
 import {dayProjector} from "./day.projector.js";
+import {appendsStyle} from "../assets/util/appends.js";
 
-export {calendarProjector, pageCss}
+export {calendarProjector}
 
 const detailClassName = 'approval-detail'; // should be unique for this projector
 
@@ -14,6 +15,8 @@ const detailClassName = 'approval-detail'; // should be unique for this projecto
  * @param  activateEventCounter {boolean} // only approval controller is able to use this boolean. rework?
  */
 const calendarProjector = (rootElement, controller, activateEventCounter) => {
+
+    rootElement.classList.add(`${detailClassName}-grid-container`);
 
     const addHeader = () => {
         rootElement.appendChild(dom(`<div class="cal-header">Month</div>`));
@@ -34,8 +37,7 @@ const calendarProjector = (rootElement, controller, activateEventCounter) => {
 };
 
 
-
-const pageCss = `
+appendsStyle(`<style>
     button {
          margin-bottom:  0.5em ;
     }
@@ -58,10 +60,6 @@ const pageCss = `
     .${detailClassName}-grid-container > div:hover {
         border: 0;
         padding: 0 0;
-    }
-
-    .no-selection {
-        user-select: none;
     }
 
     .cal-header, .cal-first {
@@ -100,26 +98,5 @@ const pageCss = `
           rgba(192,242,244,0.5)
         )
     }
-
-    /* wird benötigt, damit der marker gesetzt werden kann */
-    nav {
-        position: relative;
-    }
-    nav a {
-        margin: 0 1em 0 0 ;
-        font-family: "Helvetica Neue", "sans-serif";
-        font-size: larger;
-        color: darkblue;
-        text-decoration: none;
-        text-transform: uppercase;
-    }
-    nav #marker {
-        position: absolute;
-        left: 0;
-        width: 0;
-        background: darkmagenta;
-        height: .2em;
-        bottom: -0.2em;
-        transition: all linear .3s ;
-    }
-`;
+    </style>
+`);
