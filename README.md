@@ -44,39 +44,51 @@ Some planned components:
 
 There will be a lot of tech stuff within this repo. To find a good structural overview about all those ideas is crucial.
 
-### Frontend 
-- provide style guide 
-- provide new approval features
-- provide 1 final styled and responsive template
-- extract parts to build a frontend js framework
-- provide templates to build responsive websites
-- build multiple frontends with different js frameworks like angular, react, vue and others
-- compare different frontend frameworks
+<details>
+    <summary>Frontend</summary>
+    <li>provide style guide</li> 
+    <li>provide new approval features</li>
+    <li>provide 1 final styled and responsive template</li>
+    <li>extract parts to build a frontend js framework</li>
+    <li>provide templates to build responsive websites</li>
+    <li>build multiple frontends with different js frameworks like angular, react, vue and others</li>
+    <li>compare different frontend frameworks</li>
+    <br>
+</details>
 
-### Backend
+<details>
+    <summary>Backend</summary>
+    <li>Build KISS backend with spring boot</li>
+    <li>Build backend from scratch without spring</li>
+    <li>Make use of spring security</li>
+    <li>Make different modules with demos for prepared and non prepared sql statements</li>
+    <li>Use and explain different patterns (Strategy, State, Decorator, Factory and more)</li>
+    <br>
+</details>
 
-- Build KISS backend with spring boot
-- Build backend from scratch without spring
-- Make use of spring security
-- Make different modules with demos for prepared and non prepared sql statements
-- Use and explain different patterns (Strategy, State, Decorator, Factory and more)
+<details>
+    <summary>Database</summary>
+    <li>Use different db technologies, NoSql, GraphQl and more</li>
+    <li>Use postgres and try to tweak the db to the best, fine tuning</li>
+    <br>
+</details>
+
+<details>
+    <summary>Testing</summary>
+    <li>Use Apache JMeter to make performance tests</li>
+    <li>Test Canary release</li>
+    <li>Use Mockito and make some examples how to use it</li>
+    <br>    
+</details>
+
+<details>
+    <summary>Installation and CI/CD</summary>
+    <li>se stack Kubernetes, Helm, docker</li> 
+    <li>se multiple environments</li>
+    <br>
+</details>
 
 
-### Database
-
-- Use different db technologies, NoSql, GraphQl and more
-- Use postgres and try to tweak the db to the best, fine tuning
-
-### Testing
-
-- Use Apache JMeter to make performance tests
-- Test Canary release
-- Use Mockito and make some examples how to use it
-
-### Installation and CI/CD
-
-- Use stack Kubernetes, Helm, docker 
-- Use multiple environments 
 
 ## Contributing to Vakansie
 
