@@ -14,10 +14,15 @@
     --c-primary-3: #ddd;
     --c-primary-4: #d2d2d2;
 
-    --c-secondary-0: rgba(60, 179, 133, .2);
-    --c-secondary-1: #3cb371;
-    --c-secondary-2: #16894c;
-    --c-secondary-3: #03582c;
+    /*--c-secondary-0: rgba(60, 179, 133, .2); */
+    /*--c-secondary-1: #3cb371; */
+    /*--c-secondary-2: #16894c; */
+    /*--c-secondary-3: #03582c; */
+
+    --c-secondary-0: #ddd6e9;  /* tint 80% */
+    --c-secondary-1: #9885be;  /* tint 40% */
+    --c-secondary-2: #755da9;  /* tint 20% */
+    --c-secondary-3: #533493;  /* tint  0% - original */
 
     --c-box-shadow-0: rgba(0, 0, 0, 0.2);
 
